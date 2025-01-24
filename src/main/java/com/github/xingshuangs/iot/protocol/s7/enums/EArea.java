@@ -42,22 +42,22 @@ public enum EArea {
     SYSTEM_INFO_OF_200_FAMILY((byte) 0x03),
 
     /**
-     * family	200系列系统标志
+     * family	200系列系统标志 （SM）
      */
     SYSTEM_FLAGS_OF_200_FAMILY((byte) 0x05),
 
     /**
-     * 200系列模拟量输入
+     * 200系列模拟量输入 (AI)
      */
     ANALOG_INPUTS_OF_200_FAMILY((byte) 0x06),
 
     /**
-     * 200系统模式量输出
+     * 200系统模式量输出 (AQ)
      */
     ANALOG_OUTPUTS_OF_200_FAMILY((byte) 0x07),
 
     /**
-     * 直接访问外设
+     * 直接访问外设 (PI,PQ)
      */
     DIRECT_PERIPHERAL_ACCESS((byte) 0x80),
 

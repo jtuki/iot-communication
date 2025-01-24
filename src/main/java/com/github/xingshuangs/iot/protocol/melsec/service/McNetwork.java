@@ -43,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
@@ -59,7 +60,7 @@ public class McNetwork extends TcpClientBasic {
     /**
      * locker
      */
-    private final Object objLock = new Object();
+    private final ReentrantLock locker = new ReentrantLock();
 
     /**
      * Communication callback, first parameter is tag, second is package content.
@@ -154,9 +155,12 @@ public class McNetwork extends TcpClientBasic {
     protected byte[] readFromServer1E(byte[] req) {
         int len;
         byte[] data = new byte[1024];
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(req);
             len = this.read(data);
+        } finally {
+            this.locker.unlock();
         }
         if (len < 0) {
             // McHeader 无效，读取长度不一致
@@ -178,7 +182,8 @@ public class McNetwork extends TcpClientBasic {
         int remainLength;
         int len;
         byte[] total;
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(req);
 
             int headerLength = this.frameType == EMcFrameType.FRAME_4E ? 15 : 11;
@@ -193,6 +198,8 @@ public class McNetwork extends TcpClientBasic {
             total = new byte[headerLength + remainLength];
             System.arraycopy(data, 0, total, 0, data.length);
             len = this.read(total, data.length, remainLength, true);
+        } finally {
+            this.locker.unlock();
         }
         if (len < remainLength) {
             // McHeader后面的数据长度，长度不一致

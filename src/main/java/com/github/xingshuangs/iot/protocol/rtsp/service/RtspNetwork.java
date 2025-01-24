@@ -50,6 +50,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import static com.github.xingshuangs.iot.protocol.rtsp.constant.RtspCommonKey.CRLF;
@@ -64,7 +65,7 @@ public class RtspNetwork extends TcpClientBasic {
     /**
      * locker
      */
-    private final Object objLock = new Object();
+    private final ReentrantLock locker = new ReentrantLock();
 
     /**
      * If need authorization.
@@ -215,7 +216,8 @@ public class RtspNetwork extends TcpClientBasic {
         int headerLen;
         String contentString = "";
         RtspMessageResponse ack;
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(reqBytes);
             // 读取并解析头
             byte[] header = new byte[4096];
@@ -239,6 +241,8 @@ public class RtspNetwork extends TcpClientBasic {
                     ack.addBodyFromString(bodyString);
                 }
             }
+        } finally {
+            this.locker.unlock();
         }
         if (headerLen == 0) {
             throw new RtspCommException("RTSP data receive length is 0");

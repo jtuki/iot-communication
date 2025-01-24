@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,7 @@ public class S7PLCServer extends TcpServerBasic {
      * Locker.
      * (数据Map操作锁)
      */
-    private final Object objLock = new Object();
+    private final ReentrantLock locker = new ReentrantLock();
 
     /**
      * Write and read lock.
@@ -94,8 +95,11 @@ public class S7PLCServer extends TcpServerBasic {
      * @return data areas
      */
     public Set<String> getAvailableAreas() {
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             return this.dataMap.keySet();
+        } finally {
+            this.locker.unlock();
         }
     }
 
@@ -107,11 +111,14 @@ public class S7PLCServer extends TcpServerBasic {
      */
     public void addDBArea(int... dbNumbers) {
         log.debug("Add DB{} to server data area", dbNumbers);
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             for (int x : dbNumbers) {
                 String name = String.format("DB%s", x);
                 this.dataMap.computeIfAbsent(name, key -> new byte[65536]);
             }
+        } finally {
+            this.locker.unlock();
         }
     }
 

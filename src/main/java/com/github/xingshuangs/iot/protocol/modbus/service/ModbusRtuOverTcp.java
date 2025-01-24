@@ -78,9 +78,12 @@ public class ModbusRtuOverTcp extends ModbusSkeletonAbstract<MbRtuRequest, MbRtu
         }
         int len;
         byte[] data = new byte[1024];
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(reqBytes);
             len = this.read(data);
+        }finally {
+            this.locker.unlock();
         }
         if (len <= 0) {
             // Modbus数据读取长度有误

@@ -41,6 +41,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 
 /**
@@ -64,7 +65,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Lock.
      * (锁)
      */
-    protected final Object objLock = new Object();
+    protected final ReentrantLock locker = new ReentrantLock();
 
     /**
      * Communication callback, first parameter is tag, second is package content.

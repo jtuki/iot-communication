@@ -84,7 +84,8 @@ public class ModbusTcp extends ModbusSkeletonAbstract<MbTcpRequest, MbTcpRespons
         MbapHeader header;
         int len;
         byte[] total;
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(req.toByteArray());
 
             byte[] data = new byte[MbapHeader.BYTE_LENGTH];
@@ -97,6 +98,8 @@ public class ModbusTcp extends ModbusSkeletonAbstract<MbTcpRequest, MbTcpRespons
             total = new byte[data.length + header.getLength() - 1];
             System.arraycopy(data, 0, total, 0, data.length);
             len = this.read(total, data.length, header.getLength() - 1);
+        } finally {
+            this.locker.unlock();
         }
         if (len < header.getLength() - 1) {
             //  MbapHeader后面的数据长度不一致

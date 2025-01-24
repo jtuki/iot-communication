@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -66,7 +67,7 @@ public class PLCNetwork extends TcpClientBasic {
     /**
      * locker.
      */
-    private final Object objLock = new Object();
+    private final ReentrantLock locker = new ReentrantLock();
 
     /**
      * PLC type.
@@ -253,7 +254,8 @@ public class PLCNetwork extends TcpClientBasic {
         TPKT tpkt;
         int len;
         byte[] total;
-        synchronized (this.objLock) {
+        try {
+            this.locker.lock();
             this.write(sendData);
 
             byte[] data = new byte[TPKT.BYTE_LENGTH];
@@ -266,6 +268,8 @@ public class PLCNetwork extends TcpClientBasic {
             total = new byte[tpkt.getLength()];
             System.arraycopy(data, 0, total, 0, data.length);
             len = this.read(total, TPKT.BYTE_LENGTH, tpkt.getLength() - TPKT.BYTE_LENGTH);
+        } finally {
+            this.locker.unlock();
         }
         if (len < total.length - TPKT.BYTE_LENGTH) {
             // TPKT后面的数据长度，长度不一致
