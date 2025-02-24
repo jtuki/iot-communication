@@ -81,4 +81,4 @@ Buy me a cup of coffee, please note your name. <br>
 [![PayPal Sponsor button](https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/xingshuang)
 <br>
 #### 2. WeChat
-![wechat](https://i.postimg.cc/brBG5vx8/image.png)
+![wechat](https://s3.bmp.ovh/imgs/2025/02/24/3707a0c54727605a.jpg)

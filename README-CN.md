@@ -77,5 +77,5 @@
 #### 1. [PayPal](https://www.paypal.com/paypalme/xingshuang)
 [![PayPal Sponsor button](https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/xingshuang)
 #### 2. 微信
-![微信](https://i.postimg.cc/brBG5vx8/image.png)
+![微信](https://s3.bmp.ovh/imgs/2025/02/24/3707a0c54727605a.jpg)
 
