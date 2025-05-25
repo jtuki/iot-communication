@@ -125,6 +125,18 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
+     * Multi-address reads byte data. Unsafe mode, use with caution!!
+     * (多地址读取字节数据) 非安全模式，如果某个地址读取不到，对应的列表索引返回是null
+     *
+     * @param addressRead address wrapper list
+     * @return byte array list
+     */
+    public List<byte[]> readMultiByteUnsafe(MultiAddressRead addressRead) {
+        List<DataItem> dataItems = this.readS7DataUnsafe(addressRead.getRequestItems());
+        return dataItems.stream().map(DataItem::getData).collect(Collectors.toList());
+    }
+
+    /**
      * Read byte.
      * (单地址字节数据读取)
      *
@@ -182,6 +194,17 @@ public class S7PLC extends PLCNetwork {
         List<RequestItem> requestItems = addresses.stream().map(AddressUtil::parseBit).collect(Collectors.toList());
         List<DataItem> dataItems = this.readS7Data(requestItems);
         return dataItems.stream().map(x -> BooleanUtil.getValue(x.getData()[0], 0)).collect(Collectors.toList());
+    }
+
+    public List<Boolean> readBooleanUnsafe(String... address) {
+        return this.readBooleanUnsafe(Arrays.asList(address));
+    }
+
+    public List<Boolean> readBooleanUnsafe(List<String> addresses) {
+        List<RequestItem> requestItems = addresses.stream().map(AddressUtil::parseBit).collect(Collectors.toList());
+        List<DataItem> dataItems = this.readS7DataUnsafe(requestItems);
+        return dataItems.stream().map(x -> !EReturnCode.SUCCESS.equals(x.getReturnCode()) ? null :
+                BooleanUtil.getValue(x.getData()[0], 0)).collect(Collectors.toList());
     }
 
     /**

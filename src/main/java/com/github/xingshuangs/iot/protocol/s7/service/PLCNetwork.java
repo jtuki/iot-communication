@@ -234,6 +234,17 @@ public class PLCNetwork extends TcpClientBasic {
     }
 
     /**
+     * Read data from server, core interaction. 非安全模式，慎用！
+     */
+    private S7Data readFromServerUnsafe(S7Data req) {
+        byte[] sendData = req.toByteArray();
+        byte[] total = this.readFromServer(sendData);
+        S7Data ack = S7Data.fromBytes(total);
+        this.checkPostedComUnsafe(req, ack);
+        return ack;
+    }
+
+    /**
      * Data interaction with the server as byte array
      * (以字节数组的方式和服务器进行数据交互)
      *
@@ -322,7 +333,7 @@ public class PLCNetwork extends TcpClientBasic {
      * @param req req data
      * @param ack ack data
      */
-    private void checkPostedCom(S7Data req, S7Data ack) {
+    private void doCheckPostedCom(S7Data req, S7Data ack, boolean enableStrictlySafeRead) {
         if (ack.getHeader() == null) {
             return;
         }
@@ -339,8 +350,11 @@ public class PLCNetwork extends TcpClientBasic {
         }
         // 发送和接收的PDU编号一致
         if (ackHeader.getPduReference() != req.getHeader().getPduReference()) {
-            // pdu引用编号不一致，数据有误
-            throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
+            if (enableStrictlySafeRead) {
+                // pdu引用编号不一致，数据有误
+                throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
+            }
+            log.warn("The PDU references are inconsistent, causing incorrect data: req[{}], ack[{}]", req.getHeader().getPduReference(), ackHeader.getPduReference());
         }
         if (ack.getDatum() == null) {
             return;
@@ -359,15 +373,41 @@ public class PLCNetwork extends TcpClientBasic {
         // 返回结果校验
         for (int i = 0; i < returnItems.size(); i++) {
             if (returnItems.get(i).getReturnCode() != EReturnCode.SUCCESS) {
-                // 返回第[%d]个结果异常，原因：%s
-                throw new S7CommException(String.format("Return [%d] result exception, cause: %s", i + 1, returnItems.get(i).getReturnCode().getDescription()));
+                if (enableStrictlySafeRead) {
+                    // 返回第[%d]个结果异常，原因：%s
+                    throw new S7CommException(String.format("Return [%d] result exception, cause: %s", i + 1, returnItems.get(i).getReturnCode().getDescription()));
+                }
+                log.warn("Return [{}] result exception, cause: {}", i + 1, returnItems.get(i).getReturnCode().getDescription());
             }
         }
+    }
+
+    /**
+     * Post-communication processing, once verifying the request and response data.
+     * (后置通信处理，对请求和响应数据进行一次校验)
+     *
+     * @param req req data
+     * @param ack ack data
+     */
+    private void checkPostedCom(S7Data req, S7Data ack) {
+        doCheckPostedCom(req, ack, true);
+    }
+
+    /**
+     * Post-communication processing, once verifying the request and response data. Unsafe mode, use with caution!!
+     * (后置通信处理，对请求和响应数据进行一次校验) 非安全模式，慎用！
+     *
+     * @param req req data
+     * @param ack ack data
+     */
+    private void checkPostedComUnsafe(S7Data req, S7Data ack) {
+        doCheckPostedCom(req, ack, false);
     }
 
     //endregion
 
     //region S7数据读写部分
+
 
     /**
      * Read S7 data.
@@ -377,6 +417,30 @@ public class PLCNetwork extends TcpClientBasic {
      * @return ack data items
      */
     public List<DataItem> readS7Data(List<RequestItem> requestItems) {
+        boolean enableStrictlySafeRead = true;
+        return doReadS7Data(requestItems, enableStrictlySafeRead);
+    }
+
+    /**
+     * Read S7 data. Unsafe mode. 谨慎使用！
+     * (读取S7协议数据)
+     *
+     * @param requestItems request items
+     * @return ack data items
+     */
+    public List<DataItem> readS7DataUnsafe(List<RequestItem> requestItems) {
+        boolean enableStrictlySafeRead = false;
+        return doReadS7Data(requestItems, enableStrictlySafeRead);
+    }
+
+    /**
+     * Read S7 data.
+     * (读取S7协议数据)
+     *
+     * @param requestItems request items
+     * @return ack data items
+     */
+    private List<DataItem> doReadS7Data(List<RequestItem> requestItems, boolean enableStrictlySafeRead) {
         if (requestItems == null || requestItems.isEmpty()) {
             // 请求项缺失，无法获取数据
             throw new S7CommException("The request item is missing and the data cannot be retrieved");
@@ -405,13 +469,19 @@ public class PLCNetwork extends TcpClientBasic {
 
                 // S7数据请求
                 S7Data req = S7Data.createReadRequest(newRequestItems);
-                S7Data ack = this.readFromServer(req);
+                S7Data ack = enableStrictlySafeRead ? this.readFromServer(req) : this.readFromServerUnsafe(req);
                 ReadWriteDatum datum = (ReadWriteDatum) ack.getDatum();
                 List<DataItem> dataItems = datum.getReturnItems().stream().map(DataItem.class::cast).collect(Collectors.toList());
 
                 // 将获取的数据重装实际结果列表中
                 for (int i = 0; i < comItemList.size(); i++) {
                     S7ComItem comItem = comItemList.get(i);
+                    if (!enableStrictlySafeRead && !EReturnCode.SUCCESS.equals(dataItems.get(i).getReturnCode())) {
+                        // 关闭了严格安全读取的情况下，对于非SUCC的读取，返回错误码给调用方自行处理
+                        resultList.get(comItem.getIndex()).setReturnCode(dataItems.get(i).getReturnCode());
+                        resultList.get(comItem.getIndex()).setData(null);
+                        continue;
+                    }
                     byte[] src = dataItems.get(i).getData();
                     byte[] des = resultList.get(comItem.getIndex()).getData();
                     System.arraycopy(src, 0, des, comItem.getSplitOffset(), src.length);
