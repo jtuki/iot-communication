@@ -350,11 +350,8 @@ public class PLCNetwork extends TcpClientBasic {
         }
         // 发送和接收的PDU编号一致
         if (ackHeader.getPduReference() != req.getHeader().getPduReference()) {
-            if (enableStrictlySafeRead) {
-                // pdu引用编号不一致，数据有误
-                throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
-            }
-            log.warn("The PDU references are inconsistent, causing incorrect data: req[{}], ack[{}]", req.getHeader().getPduReference(), ackHeader.getPduReference());
+            // pdu引用编号不一致，数据有误
+            throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
         }
         if (ack.getDatum() == null) {
             return;
