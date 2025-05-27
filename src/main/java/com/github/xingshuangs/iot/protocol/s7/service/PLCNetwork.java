@@ -481,6 +481,7 @@ public class PLCNetwork extends TcpClientBasic {
                     }
                     byte[] src = dataItems.get(i).getData();
                     byte[] des = resultList.get(comItem.getIndex()).getData();
+                    resultList.get(comItem.getIndex()).setReturnCode(dataItems.get(i).getReturnCode());
                     System.arraycopy(src, 0, des, comItem.getSplitOffset(), src.length);
                 }
             });
