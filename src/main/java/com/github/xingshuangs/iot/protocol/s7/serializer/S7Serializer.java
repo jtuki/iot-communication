@@ -68,7 +68,7 @@ public class S7Serializer implements IPLCSerializable {
     }
 
     /**
-     * Static method for creating instance object.
+     * Create a new instance.
      * 静态方法实例对象
      *
      * @param s7PLC plc object
@@ -104,7 +104,7 @@ public class S7Serializer implements IPLCSerializable {
     }
 
     /**
-     * Create S7ParseData list by S7Parameter list.
+     * Create a list of S7ParseData objects from S7Parameter objects.
      * (解析参数)
      *
      * @param parameters parameter list
@@ -116,7 +116,7 @@ public class S7Serializer implements IPLCSerializable {
             for (final S7Parameter p : parameters) {
                 if (p == null) {
                     // parameters列表中存在null
-                    throw new S7CommException("null exists in the parameters list");
+                    throw new S7CommException("parameters must not contain null elements");
                 }
                 S7ParseData s7ParseData = this.createS7ParseData(p, p.getClass().getDeclaredField("value"));
                 s7ParseDataList.add(s7ParseData);
@@ -136,19 +136,19 @@ public class S7Serializer implements IPLCSerializable {
     private void checkS7Variable(final S7Parameter parameter) {
         if (parameter.getAddress().isEmpty()) {
             // S7参数中[address]不能为空
-            throw new S7CommException("[address] in the S7 parameter cannot be empty");
+            throw new S7CommException("S7 parameter address must not be empty");
         }
         if (parameter.getCount() < 0) {
             // S7参数中[count]不能为负数
-            throw new S7CommException("[count] in the S7 parameter cannot be negative");
+            throw new S7CommException("S7 parameter count must not be negative");
         }
         if (parameter.getDataType() == EDataType.STRING && parameter.getCount() > 254) {
             // S7参数中字符串类型类型数据的[count]不能大于254
-            throw new S7CommException("The [count] value of the string type in the S7 parameter cannot be greater than 254");
+            throw new S7CommException("S7 parameter count must not exceed 254 for STRING data");
         }
         if (parameter.getDataType() != EDataType.BYTE && parameter.getDataType() != EDataType.STRING && parameter.getCount() > 1) {
             // S7参数中只有[type]=字节和字符串类型数据的[count]才能大于1，其他必须等于1
-            throw new S7CommException("In the S7 parameter, only [type]= bytes and [count] of string type data can be greater than 1, and the rest must be equal to 1");
+            throw new S7CommException("S7 parameter count must not exceed 1 unless dataType is BYTE or STRING");
         }
     }
 
@@ -161,7 +161,7 @@ public class S7Serializer implements IPLCSerializable {
     private void readDataByCondition(List<S7ParseData> s7ParseDataList) {
         if (s7ParseDataList.isEmpty()) {
             // 解析出的注解数据个数为空，无法读取数据
-            throw new S7CommException("The number of parsed annotation data is empty, and the data cannot be read");
+            throw new S7CommException("No annotated data fields were found");
         }
 
         // 读取PLC数据
@@ -170,7 +170,7 @@ public class S7Serializer implements IPLCSerializable {
 
         if (s7ParseDataList.size() != dataItems.size()) {
             // 所需的字段解析项个数与返回的数据项数量不一致，错误
-            throw new S7CommException("The number of field parsing items required is inconsistent with the number of data items returned");
+            throw new S7CommException("Parsed field count does not match the returned data item count");
         }
 
         // 提取数据
@@ -180,7 +180,7 @@ public class S7Serializer implements IPLCSerializable {
     }
 
     /**
-     * Build the S7ParseData data.
+     * Build an S7ParseData object.
      * (构建S7ParseData数据)
      *
      * @param p     S7Parameter data
@@ -234,7 +234,7 @@ public class S7Serializer implements IPLCSerializable {
     }
 
     /**
-     * Fill value of field.
+     * Fill data from the parsed S7 values.
      * (提取数据)
      *
      * @param targetClass     target class
@@ -251,12 +251,12 @@ public class S7Serializer implements IPLCSerializable {
             return result;
 
         } catch (Exception e) {
-            throw new S7CommException("Serialization fetch data error:" + e.getMessage(), e);
+            throw new S7CommException("Failed to read serialized data: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Fill value of field.
+     * Fill data from the parsed S7 values.
      * (填充数据)
      *
      * @param parameters      parameter list
@@ -270,12 +270,12 @@ public class S7Serializer implements IPLCSerializable {
                 this.fillField(parameter, item);
             }
         } catch (Exception e) {
-            throw new S7CommException("Serialization fetch data error:" + e.getMessage(), e);
+            throw new S7CommException("Failed to read serialized data: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Fill value of field.
+     * Fill a field with the parsed S7 value.
      * 填充字段数据
      *
      * @param result target object
@@ -332,7 +332,7 @@ public class S7Serializer implements IPLCSerializable {
                 item.getField().set(result, dateTime);
                 break;
             default:
-                throw new S7CommException("Data type can not be recognized");
+                throw new S7CommException("Unrecognized data type");
         }
     }
 
@@ -346,7 +346,7 @@ public class S7Serializer implements IPLCSerializable {
 
         if (s7ParseDataList.isEmpty()) {
             // 解析出的注解数据个数为空，无法读取数据
-            throw new S7CommException("The number of parsed annotation data is empty, and the data cannot be read");
+            throw new S7CommException("No annotated data fields were found");
         }
 
         // 填充字节数据
@@ -370,7 +370,7 @@ public class S7Serializer implements IPLCSerializable {
 
         if (s7ParseDataList.size() != parameters.size()) {
             // 解析出的数据个数与传入的数据个数不一致
-            throw new S7CommException("The number of parsed data is inconsistent with the number of incoming data");
+            throw new S7CommException("Parsed data count does not match the supplied data count");
         }
 
         // 填充字节数据
@@ -404,7 +404,7 @@ public class S7Serializer implements IPLCSerializable {
             return s7ParseDataList.stream().filter(x -> x.getDataItem() != null).collect(Collectors.toList());
         } catch (Exception e) {
             // 序列化填充字节数据错误
-            throw new S7CommException("Serialized fill byte data error:" + e.getMessage(), e);
+            throw new S7CommException("Failed to fill serialized byte data: " + e.getMessage(), e);
         }
     }
 
@@ -422,19 +422,19 @@ public class S7Serializer implements IPLCSerializable {
                 S7ParseData item = s7ParseDataList.get(i);
                 S7Parameter parameter = parameters.get(i);
                 if (parameter.getValue() == null) {
-                    throw new S7CommException("The value of the parameter cannot be null");
+                    throw new S7CommException("Parameter value must not be null");
                 }
                 this.extractField(item, parameter.getValue());
             }
             return s7ParseDataList.stream().filter(x -> x.getDataItem() != null).collect(Collectors.toList());
         } catch (Exception e) {
             // 序列化填充字节数据错误
-            throw new S7CommException("Serialized fill byte data error:" + e.getMessage(), e);
+            throw new S7CommException("Failed to fill serialized byte data: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Extract value of data to S7ParseData
+     * Extract a field value into S7ParseData.
      * (提取字段数)
      *
      * @param item S7ParseData
@@ -502,7 +502,7 @@ public class S7Serializer implements IPLCSerializable {
                 break;
             default:
                 // 无法识别数据类型
-                throw new S7CommException("Data type can not be recognized");
+                throw new S7CommException("Unrecognized data type");
         }
     }
     // endregion

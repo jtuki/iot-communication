@@ -41,7 +41,7 @@ import lombok.EqualsAndHashCode;
 public class McError1EData extends McData {
 
     /**
-     * Error info, 1-byte.
+     * Error info, 1 byte.
      * 错误信息，1个字节
      */
     private int error = 0x0000;

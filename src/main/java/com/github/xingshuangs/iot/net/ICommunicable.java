@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.net;
 
 
 /**
- * Communicate interface.
+ * Communication interface.
  * (通信接口)
  *
  * @author xingshuang
@@ -40,7 +40,7 @@ public interface ICommunicable {
     void close();
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data byte array
@@ -48,7 +48,7 @@ public interface ICommunicable {
     void write(final byte[] data);
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data   byte array
@@ -58,7 +58,7 @@ public interface ICommunicable {
     void write(final byte[] data, final int offset, final int length);
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data byte array
@@ -67,7 +67,7 @@ public interface ICommunicable {
     int read(final byte[] data);
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data   byte array

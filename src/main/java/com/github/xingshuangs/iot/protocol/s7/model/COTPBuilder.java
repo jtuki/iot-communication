@@ -63,7 +63,7 @@ public class COTPBuilder {
             case DT_DATA:
                 return COTPData.fromBytes(cotpBytes);
             default:
-                throw new S7CommException("The pduType data type of COTP cannot be parsed");
+                throw new S7CommException("Unrecognized COTP pduType");
         }
     }
 }

@@ -62,7 +62,7 @@ public final class RtspPlayResponse extends RtspMessageResponse {
 
     public static RtspPlayResponse fromHeaderString(String src) {
         if (src == null || src.equals("")) {
-            throw new RtspCommException("src is null or empty in RtspPlayResponse");
+            throw new RtspCommException("RtspPlayResponse: src must not be null or empty");
         }
         RtspPlayResponse response = new RtspPlayResponse();
         Map<String, String> map = response.parseHeaderAndReturnMap(src);

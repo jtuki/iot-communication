@@ -57,7 +57,7 @@ public final class RtspSetupResponse extends RtspMessageResponse {
 
     public static RtspSetupResponse fromHeaderString(String src) {
         if (src == null || src.equals("")) {
-            throw new RtspCommException("src is null or empty in RtspSetupResponse");
+            throw new RtspCommException("RtspSetupResponse: src must not be null or empty");
         }
         RtspSetupResponse response = new RtspSetupResponse();
         Map<String, String> map = response.parseHeaderAndReturnMap(src);

@@ -78,13 +78,13 @@ public enum EMcFrameType {
     private final String code;
 
     /**
-     * Request sub header.
+     * Request subheader.
      * (请求副帧头)
      */
     private final int reqSubHeader;
 
     /**
-     * Ack sub header.
+     * ACK subheader (response subheader).
      * (响应副帧头)
      */
     private final int ackSubHeader;

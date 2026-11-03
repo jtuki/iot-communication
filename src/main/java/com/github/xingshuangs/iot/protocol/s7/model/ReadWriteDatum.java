@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Read write data.
+ * Read/write data.
  * 读写数据
  *
  * @author xingshuang

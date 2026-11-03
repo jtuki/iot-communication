@@ -92,7 +92,7 @@ public class DataItem extends ReturnItem implements IObjectByteArray {
                 buff.putShort(this.count);
                 break;
             default:
-                throw new S7CommException("Data type can not be recognized");
+                throw new S7CommException("Unrecognized data type");
         }
         buff.putBytes(this.data);
         return buff.getData();
@@ -138,7 +138,7 @@ public class DataItem extends ReturnItem implements IObjectByteArray {
                 dataItem.count = buff.getUInt16();
                 break;
             default:
-                throw new S7CommException("Data type can not be recognized");
+                throw new S7CommException("Unrecognized data type");
         }
         // 返回数据类型为null，那就是没有数据
         if (dataItem.variableType != EDataVariableType.NULL) {
@@ -167,7 +167,7 @@ public class DataItem extends ReturnItem implements IObjectByteArray {
      */
     public static DataItem createReqByByte(byte[] data) {
         if (data == null || data.length == 0) {
-            throw new IllegalArgumentException("data length is null or empty");
+            throw new IllegalArgumentException("data must not be null or empty");
         }
         DataItem dataItem = new DataItem();
         dataItem.setReturnCode(EReturnCode.RESERVED);

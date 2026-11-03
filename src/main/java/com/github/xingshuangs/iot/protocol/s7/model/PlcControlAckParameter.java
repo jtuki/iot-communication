@@ -73,7 +73,7 @@ public class PlcControlAckParameter extends Parameter implements IObjectByteArra
     public static PlcControlAckParameter fromBytes(final byte[] data) {
         if (data.length < 1) {
             // PlcControlAckParameter解析有误，PlcControlAckParameter字节数组长度 < 1
-            throw new S7CommException("PlcControlAckParameter parsing error, PlcControlAckParameter byte array length < 1");
+            throw new S7CommException("PlcControlAckParameter data must contain at least 1 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         PlcControlAckParameter parameter = new PlcControlAckParameter();

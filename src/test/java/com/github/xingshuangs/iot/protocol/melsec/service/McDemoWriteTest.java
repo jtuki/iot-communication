@@ -90,7 +90,7 @@ public class McDemoWriteTest {
         // write string
         mcPLC.writeString("D100", "1234567890");
 
-        // multi write, only support int16 uint16 int32 uint32 float32
+        // multi write, support only int16 uint16 int32 uint32 float32
         McMultiAddressWrite addressWrite = new McMultiAddressWrite();
         addressWrite.addInt16("D100", 110);
         addressWrite.addUInt16("D101", 110);

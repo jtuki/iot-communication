@@ -29,7 +29,7 @@ import com.github.xingshuangs.iot.common.buff.ByteWriteBuff;
 import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 
 /**
- * Track Fragment Base Media Decode Time Box(tfdt), it is mainly used to store the absolute time of the relevant sample code.
+ * Track Fragment Base Media Decode Time Box (tfdt), storing the base decoding time of the fragment.
  * 主要是用来存放相关sample编码的绝对时间的,
  * 因为FMP4是流式的格式，所以不像MP4一样可以直接根据sample直接seek到具体位置。
  *
@@ -38,21 +38,21 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4TfdtBox extends Mp4Box {
 
     /**
-     * 1 byte, version, if version = 0, baseMediaDecodeTime length = 4 bytes, if version = 1, baseMediaDecodeTime length = 8 bytes.
+     * Version (1 byte): baseMediaDecodeTime uses 4 bytes for version 0 and 8 bytes for version 1.
      * 1字节，版本，若version=0，baseMediaDecodeTime长度=4字节，若version=1，baseMediaDecodeTime长度=8字节
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4 or 8-byte Base media decode time, starting from 0, mainly calculates the time offset of each fragment,
-     * so it is equal to the sum of the previous baseline time + the duration of all samples of the previous fragment.
-     * The baseline time of the first fragment is 0, for example, each fragment contains one sample.Each sample has a duration of 3600,
-     * so the baseline decoding time for the first shard is 0.
+     * Base media decode time (4 or 8 bytes), indicating the decoding time offset of each fragment.
+     * It equals the previous fragment's base decode time plus the total duration of that fragment's samples.
+     * The first fragment starts at 0. For example, if each fragment contains one sample with a duration of 3600,
+     * successive fragments have base decode times of 0, 3600, 7200, and so on.
      * 4或8字节Base media decode time，基准解码时间，从0开始，主要计算每个分片的时间偏移，所以其等于前一个基准时间+前一个分片所有sample
      * 持续时间的总和，第一个分片的基准时间为0，例如每个分片包含一个sample，每个sample持续时间为3600，那么第一个分片的基准解码时间为0.
      * 第二个分片为0+3600=3600，第三个分片等于3600+3600=7200，如此类推

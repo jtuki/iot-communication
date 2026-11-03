@@ -50,7 +50,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Modbus tcp server, ignore unitId.
+ * Modbus TCP server. The unit ID is ignored.
  * (ModbusTcp服务端，目前忽略unitId)
  *
  * @author xingshuang
@@ -61,7 +61,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ModbusTcpServer extends TcpServerBasic {
 
     /**
-     * Read and write lock.
+     * Read/write lock.
      * (读写锁)
      */
     private ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -86,19 +86,19 @@ public class ModbusTcpServer extends TcpServerBasic {
     private byte[] inputRegisters;
 
     /**
-     * Hold register data.
+     * Holding register data.
      * (保持寄存器)
      */
     private byte[] holdRegisters;
 
     /**
-     * current connected client number.
+     * Number of currently connected clients.
      * (客户端当前的连接数量)
      */
     private AtomicInteger connectedNumber = new AtomicInteger();
 
     /**
-     * Max available number of client.
+     * Maximum number of connected clients.
      * (客户端连接的最大允许数量)
      */
     private Integer maxAvailableNumber;
@@ -123,7 +123,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Is the client valid.
+     * Check whether the client is valid.
      * (校验客户端是否允许连入)
      *
      * @param client client socket.
@@ -200,7 +200,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Read modbus data from client.
+     * Read Modbus data from client.
      * (读取Modbus协议的数据)
      *
      * @param socket client socket
@@ -212,7 +212,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Override read client data function.
+     * Override the method that reads client data.
      * (重写读取客户端数据，针对粘包粘包的数据处理)
      *
      * @param socket client socket.
@@ -242,7 +242,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Read coil handler.
+     * Handler for reading coils.
      * (读取线圈数据)
      *
      * @param request request
@@ -276,7 +276,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Read discrete input handler.
+     * Handler for reading discrete inputs.
      * (读取读取离散输入的数据)
      *
      * @param request request
@@ -310,7 +310,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Read hold register handler.
+     * Handler for reading holding registers.
      * (读取保持寄存器的数据)
      *
      * @param request request
@@ -344,7 +344,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Read input register handler.
+     * Handler for reading input registers.
      * (读取输入寄存器的数据)
      *
      * @param request request
@@ -378,7 +378,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Write single coil handler.
+     * Handler for writing a single coil.
      * (写入单线圈数据)
      *
      * @param request request
@@ -406,7 +406,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Write single register handler.
+     * Handler for writing a single register.
      * (写入单寄存器数据)
      *
      * @param request request
@@ -437,7 +437,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Write multiple coil handler.
+     * Handler for writing multiple coils.
      * (写入多线圈数据)
      *
      * @param request request
@@ -475,7 +475,7 @@ public class ModbusTcpServer extends TcpServerBasic {
     }
 
     /**
-     * Write multiple register handler.
+     * Handler for writing multiple registers.
      * (写入多寄存器数据)
      *
      * @param request request

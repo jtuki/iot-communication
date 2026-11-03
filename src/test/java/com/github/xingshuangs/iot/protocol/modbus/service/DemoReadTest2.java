@@ -45,34 +45,34 @@ public class DemoReadTest2 {
         // read discrete input
         List<Boolean> readDiscreteInput = plc.readDiscreteInput(2, 0, 4);
 
-        // read hold register
+        // read holding register
         byte[] readHoldRegister = plc.readHoldRegister(2, 0, 4);
 
         // read input register
         byte[] readInputRegister = plc.readInputRegister(2, 0, 2);
 
-        // hold register read Boolean
+        // holding register read Boolean
         boolean readBoolean = plc.readBoolean(3, 2, 1);
 
-        // hold register read Int16
+        // holding register read Int16
         short readInt16 = plc.readInt16(3, 2, true);
 
-        // hold register read UInt16
+        // holding register read UInt16
         int readUInt16 = plc.readUInt16(3, 2, false);
 
-        // hold register read Int32
+        // holding register read Int32
         int readInt32 = plc.readInt32(4, 2, EByteBuffFormat.AB_CD);
 
-        // hold register read Int32
+        // holding register read Int32
         long readUInt32 = plc.readUInt32(4, 2, EByteBuffFormat.AB_CD);
 
-        // hold register read Float32
+        // holding register read Float32
         float readFloat32 = plc.readFloat32(4, 2, EByteBuffFormat.AB_CD);
 
-        // hold register read Float64
+        // holding register read Float64
         double readFloat64 = plc.readFloat64(4, 2, EByteBuffFormat.AB_CD);
 
-        // hold register read String
+        // holding register read String
         String readString = plc.readString(5, 2, 4);
 
         plc.close();

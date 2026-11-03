@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.protocol.melsec.enums.EMcFrameType;
 import lombok.Data;
 
 /**
- * Ack header.
+ * ACK header (response header).
  * 响应头
  *
  * @author xingshuang
@@ -46,14 +46,14 @@ public class McHeaderAck implements IObjectByteArray {
     protected EMcFrameType frameType = EMcFrameType.FRAME_3E;
 
     /**
-     * Sub header, 2-bytes.
+     * Sub header, 2 bytes.
      * 副帧头，2字节，根据报文的类型定义设置的值。
      * 1E帧，1个字节
      */
     protected int subHeader = 0;
 
     /**
-     * End code, 2-bytes.
+     * End code, 2 bytes.
      * 结束代码，2字节， 1E帧只有1个字节
      * 存储指令处理结果。
      * 正常结束时将存储0。

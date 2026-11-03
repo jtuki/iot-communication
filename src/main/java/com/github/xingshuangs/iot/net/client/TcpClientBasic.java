@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.github.xingshuangs.iot.common.constant.GeneralConst.LOCALHOST;
 
 /**
- * TCP client basic class
+ * Base class for TCP clients.
  *
  * @author xingshuang
  */
@@ -60,13 +60,13 @@ public class TcpClientBasic implements ICommunicable {
     protected Socket socket;
 
     /**
-     * Connect timeout in millisecond, 10_000ms default.
+     * Connection timeout in milliseconds, 10,000 ms by default.
      * (连接超时时间，默认是10s)
      */
     protected int connectTimeout = 10_000;
 
     /**
-     * Receive timeout in millisecond, 10_000ms default.
+     * Receive timeout in milliseconds, 10,000 ms by default.
      * (接收数据超时时间，默认是10s)
      */
     protected int receiveTimeout = 10_000;
@@ -78,7 +78,7 @@ public class TcpClientBasic implements ICommunicable {
     protected final InetSocketAddress socketAddress;
 
     /**
-     * Flag, is socket has error.
+     * Whether a socket error has occurred.
      * (socket是否发生错误)
      */
     protected final AtomicBoolean socketError;
@@ -136,7 +136,7 @@ public class TcpClientBasic implements ICommunicable {
     //region 公共方法
 
     /**
-     * Check connected state.
+     * Check whether the socket is connected.
      * (校验连接状态，true为连接，false为断开)
      *
      * @return connected state，true: connected，false: disconnected.
@@ -146,7 +146,7 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Connect server.
+     * Connect to the server.
      * (连接)
      *
      * @throws SocketRuntimeException Socket Runtime Exception
@@ -159,7 +159,7 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Get available socket object.
+     * Get an available socket.
      * (获取有效的socket对象)
      *
      * @return socket object
@@ -185,7 +185,7 @@ public class TcpClientBasic implements ICommunicable {
             this.socket.connect(this.socketAddress, this.connectTimeout);
             this.socketError.set(false);
             // 创建并连接{}服务端[{}]成功
-            log.debug("Create socket and connect to {} server [{}] succeed", this.tag, this.socketAddress);
+            log.debug("Successfully created a socket and connected to the {} server [{}]", this.tag, this.socketAddress);
             this.doAfterConnected();
             return socket;
         } catch (IOException e) {
@@ -210,7 +210,7 @@ public class TcpClientBasic implements ICommunicable {
     //endregion
 
     /**
-     * Do after connected.
+     * Run the post-connection actions.
      * 连(接成功之后要做的动作)
      */
     protected void doAfterConnected() {
@@ -220,7 +220,7 @@ public class TcpClientBasic implements ICommunicable {
     //region 读写方法
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param data byte array
@@ -231,7 +231,7 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param data   byte array
@@ -244,13 +244,13 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to write.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
      * @throws SocketRuntimeException Socket Runtime Exception
      */
     public void write(final byte[] data, final int offset, final int length, final int maxLength) {
@@ -264,7 +264,7 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data byte array
@@ -276,11 +276,11 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data    byte array
-     * @param timeout timeout with ms, 0: no timeout
+     * @param timeout timeout in milliseconds; 0 means no timeout
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -289,7 +289,7 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data   byte array
@@ -303,13 +303,13 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data        byte array
      * @param offset      the start offset in the data.
      * @param length      the number of bytes to read.
-     * @param waitForMore If the data is not enough, whether to wait for more data, most of them are not waiting, waiting is suitable for subcontracting sticky packages(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
+     * @param waitForMore whether to keep reading until the requested length is reached; useful for messages split across TCP reads(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -318,13 +318,13 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data    byte array
      * @param offset  the start offset in the data.
      * @param length  the number of bytes to read.
-     * @param timeout timeout with ms, 0: no timeout
+     * @param timeout timeout in milliseconds; 0 means no timeout
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -333,14 +333,14 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to read.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @param timeout   timeout with ms, 0: no timeout
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param timeout   timeout in milliseconds; 0 means no timeout
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -349,15 +349,15 @@ public class TcpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param data        byte array
      * @param offset      the start offset in the data.
      * @param length      the number of bytes to read.
-     * @param maxLength   the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @param timeout     timeout with ms, 0: no timeout
-     * @param waitForMore If the data is not enough, whether to wait for more data, most of them are not waiting, waiting is suitable for subcontracting sticky packages(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
+     * @param maxLength   maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param timeout     timeout in milliseconds; 0 means no timeout
+     * @param waitForMore whether to keep reading until the requested length is reached; useful for messages split across TCP reads(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */

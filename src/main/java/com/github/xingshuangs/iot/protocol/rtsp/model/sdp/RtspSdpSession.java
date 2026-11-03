@@ -116,7 +116,7 @@ public class RtspSdpSession {
 
     public static RtspSdpSession fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("session, src is null or empty");
+            throw new IllegalArgumentException("RtspSdpSession: src must not be null or empty");
         }
         RtspSdpSession session = new RtspSdpSession();
         Map<String, String> map = StringSpUtil.splitTwoStepByLine(src, CRLF, EQUAL);

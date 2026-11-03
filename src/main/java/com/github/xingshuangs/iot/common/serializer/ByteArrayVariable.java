@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.common.enums.EDataType;
 import java.lang.annotation.*;
 
 /**
- * Annotation of byte array variable.
+ * Annotation describing a variable in a byte array.
  * (字节数组变量参数)
  */
 @Target(value = {ElementType.FIELD})
@@ -56,7 +56,7 @@ public @interface ByteArrayVariable {
     int bitOffset() default 0;
 
     /**
-     * Count, if count bigger than 1, then must use list type.
+     * Element count. Use a list type when the count is greater than 1.
      * (数量，数量大于1的时候对应的数据必须使用list)
      *
      * @return count
@@ -71,15 +71,15 @@ public @interface ByteArrayVariable {
     EDataType type() default EDataType.BYTE;
 
     /**
-     * Is little endian.
+     * Whether to use little-endian byte order.
      * (是否小端模式)
      *
-     * @return is little endian
+     * @return whether to use little-endian byte order
      */
     boolean littleEndian() default false;
 
     /**
-     * 4 - or 8-byte encoding format.
+     * 4- or 8-byte encoding format.
      * (数据格式)
      *
      * @return format

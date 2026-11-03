@@ -40,7 +40,7 @@ public class BooleanUtil {
     }
 
     /**
-     * Boolean to byte. True is 0x01, false is 0x00.
+     * Convert a boolean to a byte: true becomes 0x01 and false becomes 0x00.
      *
      * @param data boolean data
      * @return byte data.
@@ -72,13 +72,13 @@ public class BooleanUtil {
      */
     public static byte setBit(byte data, int bit, boolean res) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("bit > 7 || bit < 0");
+            throw new IndexOutOfBoundsException("bit must be between 0 and 7");
         }
         return res ? (byte) (((data & 0xFF) | (1 << bit)) & 0xFF) : (byte) ((data & 0xFF) & ~(1 << bit) & 0xFF);
     }
 
     /**
-     * Gets the value of the byte specified bit. If bit is 1, return true, else false.
+     * Get the specified bit of a byte; return true if the bit is set.
      * (获取字节指定位的值)
      *
      * @param data source byte data
@@ -87,13 +87,13 @@ public class BooleanUtil {
      */
     public static boolean getValue(byte data, int bit) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("0 <= bit <= 7");
+            throw new IndexOutOfBoundsException("bit must be between 0 and 7");
         }
         return (((data & 0xFF) & (1 << bit)) != 0);
     }
 
     /**
-     * Gets the value of the byte specified bit. If bit is 1, then return true, else false.
+     * Get the specified bit of a byte; return true if the bit is set.
      * (获取字节指定位的值)
      *
      * @param data source byte data
@@ -102,7 +102,7 @@ public class BooleanUtil {
      */
     public static int getValueToInt(byte data, int bit) {
         if (bit > 7 || bit < 0) {
-            throw new IndexOutOfBoundsException("0 <= bit <= 7");
+            throw new IndexOutOfBoundsException("bit must be between 0 and 7");
         }
         return (((data & 0xFF) & (1 << bit)) >> bit);
     }
@@ -121,7 +121,7 @@ public class BooleanUtil {
         }
         if (src.length * 8 < quantity) {
             // quantity数量操作字节数组的位总和
-            throw new IllegalArgumentException("The sum of the bits of the operation byte array");
+            throw new IllegalArgumentException("quantity exceeds the number of bits in src");
         }
         int count = 1;
         List<Boolean> res = new ArrayList<>();
@@ -145,7 +145,7 @@ public class BooleanUtil {
      */
     public static byte[] listToByteArray(List<Boolean> list) {
         if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("list is null or empty");
+            throw new IllegalArgumentException("list must not be null or empty");
         }
         int index = 0;
         byte[] values = new byte[(list.size() / 8) + (list.size() % 8 == 0 ? 0 : 1)];

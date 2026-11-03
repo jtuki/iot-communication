@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Package type class.
+ * Packet type enumeration.
  * 数据包的类型
  *
  * @author xingshuang
@@ -37,13 +37,13 @@ import java.util.Map;
 public enum ERtcpPackageType {
 
     /**
-     * Send report.
+     * Sender report.
      * 发送端报告,200
      */
     SR((byte) 0xC8),
 
     /**
-     * Receive report.
+     * Receiver report.
      * 接收端报告,201
      */
     RR((byte) 0xC9),

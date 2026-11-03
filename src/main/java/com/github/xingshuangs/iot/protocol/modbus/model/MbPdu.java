@@ -82,7 +82,7 @@ public class MbPdu implements IObjectByteArray {
         byte aByte = buff.getByte();
         EMbFunctionCode functionCode = EMbFunctionCode.from(aByte);
         if (functionCode == null) {
-            throw new ModbusCommException("Function code can not be recognized, " + String.format("0x%02X", aByte));
+            throw new ModbusCommException("Unrecognized function code: " + String.format("0x%02X", aByte));
         }
 
         switch (functionCode) {
@@ -112,7 +112,7 @@ public class MbPdu implements IObjectByteArray {
             case ERROR_WRITE_MULTIPLE_REGISTER:
                 return MbErrorResponse.fromBytes(data, offset);
             default:
-                throw new ModbusCommException("Function code can not be recognized：" + functionCode.getDescription());
+                throw new ModbusCommException("Unrecognized function code: " + functionCode.getDescription());
         }
     }
 
@@ -138,7 +138,7 @@ public class MbPdu implements IObjectByteArray {
         byte aByte = buff.getByte();
         EMbFunctionCode functionCode = EMbFunctionCode.from(aByte);
         if (functionCode == null) {
-            throw new ModbusCommException("Function code can not be recognized, " + aByte);
+            throw new ModbusCommException("Unrecognized function code: " + aByte);
         }
 
         switch (functionCode) {
@@ -159,7 +159,7 @@ public class MbPdu implements IObjectByteArray {
             case WRITE_MULTIPLE_REGISTER:
                 return MbWriteMultipleRegisterRequest.fromBytes(data, offset);
             default:
-                throw new ModbusCommException("Function code can not be recognized：" + functionCode.getDescription());
+                throw new ModbusCommException("Unrecognized function code: " + functionCode.getDescription());
         }
     }
 }

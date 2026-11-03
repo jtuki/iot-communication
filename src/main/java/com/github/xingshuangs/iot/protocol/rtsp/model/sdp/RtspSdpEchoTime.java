@@ -43,7 +43,7 @@ public class RtspSdpEchoTime {
     private Integer echoInterval;
 
     /**
-     * During time.
+     * Duration.
      * (持续时长)
      */
     private Integer duringTime;

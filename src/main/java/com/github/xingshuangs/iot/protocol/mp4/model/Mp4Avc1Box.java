@@ -38,57 +38,57 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4Avc1Box extends Mp4Box {
 
     /**
-     * 6-bytes.
+     * 6 bytes.
      */
     private final byte[] reserved1;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final int dataReferenceIndex;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] preDefined1;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] reserved2;
 
     /**
-     * 12-bytes
+     * 12 bytes
      */
     private final byte[] preDefined2;
 
     /**
-     * 2-bytes, width
+     * 2-byte width
      */
     private final int width;
 
     /**
-     * 2-bytes, height
+     * 2-byte height
      */
     private final int height;
 
     /**
-     * 4-bytes, horizontal resolution, default value.
+     * 4-byte horizontal resolution, default value.
      */
     private final int horizResolution;
 
     /**
-     * 4-bytes, vertical resolution, default value
+     * 4-byte vertical resolution, default value
      */
     private final int vertResolution;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final byte[] reserved3;
 
     /**
-     * 2-bytes, frame count, the fmp4 package is set to 1
+     * 2-byte frame count, the fmp4 package is set to 1
      */
     private final int frameCount;
 
@@ -99,12 +99,12 @@ public class Mp4Avc1Box extends Mp4Box {
     private final byte[] compressNameInfo;
 
     /**
-     * 2-bytes，depth，set to 24
+     * 2-byte，depth，set to 24
      */
     private final int depth;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] preDefined3;
 

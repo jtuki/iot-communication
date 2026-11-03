@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.common.buff.ByteWriteBuff;
 import lombok.Data;
 
 /**
- * Rtp package class.
+ * RTP packet.
  * (RTP数据包)
  *
  * @author xingshuang
@@ -89,7 +89,7 @@ public class RtpPackage implements IObjectByteArray {
      */
     public static RtpPackage fromBytes(final byte[] data, final int offset) {
         if (data.length < 12) {
-            throw new IndexOutOfBoundsException("RtpPackage, data length < 12");
+            throw new IndexOutOfBoundsException("RtpPackage data must contain at least 12 bytes");
         }
         int index = offset;
         RtpPackage res = new RtpPackage();

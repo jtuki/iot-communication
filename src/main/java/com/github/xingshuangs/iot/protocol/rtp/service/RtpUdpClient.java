@@ -46,7 +46,7 @@ import java.util.function.Consumer;
 public class RtpUdpClient extends UdpClientBasic implements IRtspDataStream {
 
     /**
-     * Is thread terminal.
+     * Thread termination flag.
      * (是否终止线程)
      */
     private boolean terminal = false;
@@ -70,7 +70,7 @@ public class RtpUdpClient extends UdpClientBasic implements IRtspDataStream {
     private CompletableFuture<Void> future;
 
     /**
-     * Rtcp client.
+     * RTCP client.
      * (rtcp的客户端)
      */
     private RtcpUdpClient rtcpUdpClient;
@@ -125,11 +125,11 @@ public class RtpUdpClient extends UdpClientBasic implements IRtspDataStream {
     }
 
     /**
-     * Wait for receive data.
+     * Wait for incoming data.
      * (接收数据的线程)
      */
     private void waitForReceiveData() {
-        log.debug("[RTSP + UDP] RTP enable asynchronous data receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + UDP] Starting the asynchronous RTP receiving thread, remote address [/{}:{}]",
                 this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
         while (!this.terminal) {
             try {
@@ -140,7 +140,7 @@ public class RtpUdpClient extends UdpClientBasic implements IRtspDataStream {
                 RtpPackage rtp = RtpPackage.fromBytes(data);
                 if (data.length > rtp.byteArrayLength()) {
                     // rtp数据还有未处理部分，未处理字节个数[{}]
-                    log.warn("rtp data has unprocessed parts, number of unprocessed bytes [{}]", data.length - rtp.byteArrayLength());
+                    log.warn("RTP packet contains unprocessed data, remaining bytes [{}]", data.length - rtp.byteArrayLength());
                 }
                 if (this.rtcpUdpClient != null) {
                     this.rtcpUdpClient.processRtpPackage(rtp);
@@ -157,7 +157,7 @@ public class RtpUdpClient extends UdpClientBasic implements IRtspDataStream {
                 }
             }
         }
-        log.debug("[RTSP + UDP] RTP disables asynchronous data receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + UDP] Stopped the asynchronous RTP receiving thread, remote address [/{}:{}]",
                 this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
     }
 }

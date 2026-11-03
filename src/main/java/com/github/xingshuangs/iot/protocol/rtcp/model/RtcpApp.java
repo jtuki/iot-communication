@@ -100,7 +100,7 @@ public final class RtcpApp extends RtcpBasePackage {
      */
     public static RtcpApp fromBytes(final byte[] data, final int offset) {
         if (data.length < 12) {
-            throw new IndexOutOfBoundsException("RtcpBye, data length < 12");
+            throw new IndexOutOfBoundsException("RtcpApp data must contain at least 12 bytes");
         }
         RtcpApp res = new RtcpApp();
         res.header = RtcpHeader.fromBytes(data, offset);

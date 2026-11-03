@@ -29,74 +29,77 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Function code enum.
+ * Modbus function codes, including exception response codes.
  * (功能码枚举)
+ * <p>
+ * Constant names retain legacy terminology; comments use Modbus function names.
  *
  * @author xingshuang
  */
 public enum EMbFunctionCode {
 
     /**
-     * Read coil.
+     * Read Coils.
      * 读线圈
      */
     READ_COIL((byte) 0x01, "read coil"),
 
     /**
-     * Read discrete input.
+     * Read Discrete Inputs.
      * 读离散量输入
      */
     READ_DISCRETE_INPUT((byte) 0x02, "read discrete input"),
 
     /**
-     * Read hold register.
+     * Read Holding Registers (HOLD in the constant name means "holding").
      * 读保持寄存器
      */
     READ_HOLD_REGISTER((byte) 0x03, "read hold register"),
 
     /**
-     * Read input register.
+     * Read Input Registers.
      * 读输入寄存器
      */
     READ_INPUT_REGISTER((byte) 0x04, "read input register"),
 
     /**
-     * Write single coil.
+     * Write Single Coil.
      * 写单个线圈
      */
     WRITE_SINGLE_COIL((byte) 0x05, "write single coil"),
 
     /**
+     * Write Single Register.
      * 写单个寄存器
      */
     WRITE_SINGLE_REGISTER((byte) 0x06, "write single register"),
 
     /**
-     * Write multiple coil.
+     * Write Multiple Coils.
      * 写多个线圈
      */
     WRITE_MULTIPLE_COIL((byte) 0x0F, "write multiple coil"),
 
     /**
-     * Write multiple register.
+     * Write Multiple Registers.
      * 写多个寄存器
      */
     WRITE_MULTIPLE_REGISTER((byte) 0x10, "write multiple register"),
 
     /**
-     * Read document record.
+     * Read File Record (DOCUMENT_RECORD is the legacy name for a file record).
      * 读文件记录
      */
     READ_DOCUMENT_RECORD((byte) 0x14, "read document record"),
 
     /**
-     * Shield write register.
+     * Mask Write Register (SHIELD is the legacy name for the mask operation).
      * 屏蔽写寄存器
      */
     SHIELD_WRITE_REGISTER((byte) 0x16, "shield write register"),
 
     /**
-     * Read write multiple register.
+     * Read/Write Multiple Registers.
      * 读/写多个寄存器
      */
     READ_WRITE_MULTIPLE_REGISTER((byte) 0x17, "read write multiple register"),
@@ -108,67 +111,67 @@ public enum EMbFunctionCode {
     READ_DEVICE_IDENTIFICATION_CODE((byte) 0x2B, "read device identification code"),
 
     /**
-     * Error read coil.
+     * Exception response for {@link #READ_COIL}.
      * 读线圈错误
      */
     ERROR_READ_COIL((byte) 0x81, "error read coil"),
 
     /**
-     * Error read discrete input.
+     * Exception response for {@link #READ_DISCRETE_INPUT}.
      * 读离散量输入错误
      */
     ERROR_READ_DISCRETE_INPUT((byte) 0x82, "error read discrete input"),
 
     /**
-     * Error read hold register.
+     * Exception response for {@link #READ_HOLD_REGISTER}.
      * 读保持寄存器错误
      */
     ERROR_READ_HOLD_REGISTER((byte) 0x83, "error read hold register"),
 
     /**
-     * Error read input register.
+     * Exception response for {@link #READ_INPUT_REGISTER}.
      * 读输入寄存器错误
      */
     ERROR_READ_INPUT_REGISTER((byte) 0x84, "error read input register"),
 
     /**
-     * Error write single coil.
+     * Exception response for {@link #WRITE_SINGLE_COIL}.
      * 写单个线圈错误
      */
     ERROR_WRITE_SINGLE_COIL((byte) 0x85, "error write single coil"),
 
     /**
-     * Error write single register.
+     * Exception response for {@link #WRITE_SINGLE_REGISTER}.
      * 写单个寄存器错误
      */
     ERROR_WRITE_SINGLE_REGISTER((byte) 0x86, "error write single register"),
 
     /**
-     * Error write multiple coil.
+     * Exception response for {@link #WRITE_MULTIPLE_COIL}.
      * 写多个线圈错误
      */
     ERROR_WRITE_MULTIPLE_COIL((byte) 0x8F, "error write multiple coil"),
 
     /**
-     * Error write multiple register.
+     * Exception response for {@link #WRITE_MULTIPLE_REGISTER}.
      * 写多个寄存器错误
      */
     ERROR_WRITE_MULTIPLE_REGISTER((byte) 0x90, "error write multiple register"),
 
     /**
-     * Error read document record.
+     * Exception response for {@link #READ_DOCUMENT_RECORD}.
      * 读文件记录错误
      */
     ERROR_READ_DOCUMENT_RECORD((byte) 0x94, "error read document record"),
 
     /**
-     * Error shield write register.
+     * Exception response for {@link #SHIELD_WRITE_REGISTER}.
      * 屏蔽写寄存器错误
      */
     ERROR_SHIELD_WRITE_REGISTER((byte) 0x96, "error shield write register"),
 
     /**
-     * Error read write multiple register.
+     * Exception response for {@link #READ_WRITE_MULTIPLE_REGISTER}.
      * 读/写多个寄存器错误
      */
     ERROR_READ_WRITE_MULTIPLE_REGISTER((byte) 0x97, "error read write multiple register"),

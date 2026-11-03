@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
- * Sample UDP Client
+ * Sample UDP client.
  *
  * @author xingshuang
  */
@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 public class UdpClientSample extends UdpClientBasic {
 
     /**
-     * flag, is thread terminal.
+     * Thread termination flag.
      * (是否终止线程)
      */
     private boolean terminal = false;
@@ -69,11 +69,11 @@ public class UdpClientSample extends UdpClientBasic {
 
     private void waitForReceiveData() {
         // 开启接收数据线程，远程的IP:{}，端口号：{}
-        log.debug("Open the receiving thread, remote IP:{}, port number :{}", this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
+        log.debug("Starting the receiving thread, remote IP: {}, port: {}", this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
         while (!this.terminal) {
             try {
                 byte[] data = this.read();
-                log.debug("data length：{}", data.length);
+                log.debug("Data length: {}", data.length);
                 if (this.commCallback != null) {
                     this.commCallback.accept(data);
                 }

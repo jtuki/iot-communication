@@ -80,7 +80,7 @@ public class BitWriteBuff {
      */
     public void writeByteBits(byte value, int bitCount, boolean lsbFirst) {
         if (bitCount < 0 || bitCount > 8) {
-            throw new IllegalArgumentException("bitCount must be 0~8");
+            throw new IllegalArgumentException("bitCount must be between 0 and 8");
         }
 
         int val = value & 0xFF;

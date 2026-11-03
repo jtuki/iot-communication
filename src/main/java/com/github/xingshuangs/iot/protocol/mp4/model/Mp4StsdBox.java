@@ -30,7 +30,7 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 
 /**
  * Sample Description Box(stbl-stsd)，
- * Storing the description information necessary for decoding, it is also a container box, which contains avc1 subboxes for H264 streams.
+ * This container stores the information required for decoding and contains an avc1 child box for H.264 streams.
  * 存放解码必须的描述信息,其也是一个container box，对于H264码流来说其包含avc1子box
  *
  * @author xingshuang
@@ -38,17 +38,17 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4StsdBox extends Mp4Box {
 
     /**
-     * 1-byte, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int entryCount;
 

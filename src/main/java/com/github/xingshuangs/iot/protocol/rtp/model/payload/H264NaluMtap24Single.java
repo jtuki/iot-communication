@@ -98,7 +98,7 @@ public class H264NaluMtap24Single extends H264NaluSingle {
      */
     public static H264NaluMtap24Single fromBytes(final byte[] data, final int offset) {
         if (data.length < 3) {
-            throw new IndexOutOfBoundsException("H264NaluStapSingle, data length < 3");
+            throw new IndexOutOfBoundsException("H264NaluMtap24Single data must contain at least 3 bytes");
         }
         int index = offset;
         ByteReadBuff buff = ByteReadBuff.newInstance(data, index);

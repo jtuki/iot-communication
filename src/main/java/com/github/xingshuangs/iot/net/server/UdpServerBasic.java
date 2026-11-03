@@ -94,7 +94,7 @@ public class UdpServerBasic {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data    byte array
@@ -106,7 +106,7 @@ public class UdpServerBasic {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data    byte array
@@ -121,7 +121,7 @@ public class UdpServerBasic {
     }
 
     /**
-     * Write data by datagram packet.
+     * Write data from a datagram packet.
      * (写入数据)
      *
      * @param packet DatagramPacket object
@@ -147,7 +147,7 @@ public class UdpServerBasic {
     }
 
     /**
-     * Read data into DatagramPacket object
+     * Read data into a DatagramPacket.
      * (读取数据)
      *
      * @param data   byte array
@@ -162,7 +162,7 @@ public class UdpServerBasic {
     }
 
     /**
-     * Read data into DatagramPacket object
+     * Read data into a DatagramPacket.
      * (读取数据)
      *
      * @param packet DatagramPacket object

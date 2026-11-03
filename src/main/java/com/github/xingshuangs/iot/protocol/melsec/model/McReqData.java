@@ -31,7 +31,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Req data.
+ * Request data.
  * (协议体数据：公共请求数据)
  *
  * @author xingshuang
@@ -47,13 +47,13 @@ public class McReqData extends McData {
     protected EMcSeries series = EMcSeries.Q_L;
 
     /**
-     * Command, 2-bytes.
+     * Command, 2 bytes.
      * (指令，2个字节)
      */
     protected EMcCommand command = EMcCommand.DEVICE_ACCESS_BATCH_READ_IN_UNITS;
 
     /**
-     * Sub command, 2-bytes.
+     * Sub command, 2 bytes.
      * (子指令，2个字节)
      */
     protected int subcommand = 0x0000;

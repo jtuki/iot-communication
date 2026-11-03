@@ -38,77 +38,77 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4EsdsBox extends Mp4Box {
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int version;
 
     /**
-     * 3-bytes
+     * 3 bytes
      */
     private final byte[] flags;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int descriptorType1;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int length1;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final int esId;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int streamPriority;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int descriptorType2;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int length2;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int codec;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int streamType;
 
     /**
-     * 3-bytes
+     * 3 bytes
      */
     private final byte[] bufferSize;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int maxBitrate;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int avgBitrate;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int descriptorType3;
 
     /**
-     * 1-bytes
+     * 1 byte
      */
     private final int length3;
 

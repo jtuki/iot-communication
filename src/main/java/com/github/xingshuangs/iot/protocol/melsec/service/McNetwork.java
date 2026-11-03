@@ -58,18 +58,18 @@ import java.util.function.BiPredicate;
 public class McNetwork extends TcpClientBasic {
 
     /**
-     * locker
+     * Communication locker.
      */
     private final ReentrantLock locker = new ReentrantLock();
 
     /**
-     * Communication callback, first parameter is tag, second is package content.
+     * Communication callback; the first parameter is the tag and the second is the message content.
      * (通信回调，第一个参数是tag标签，指示该报文含义；第二个参数是具体报文内容)
      */
     private BiConsumer<String, byte[]> comCallback;
 
     /**
-     * Persistence, true: long connection, false: short connection.
+     * Connection persistence; true keeps the connection open between requests.
      * (是否持久化，默认是持久化，对应长连接，true：长连接，false：短连接)
      */
     private boolean persistence = true;
@@ -120,7 +120,7 @@ public class McNetwork extends TcpClientBasic {
     }
 
     /**
-     * Read data from server, core interaction.
+     * Read response data from the server.
      * (从服务器读取数据)
      *
      * @param req McMessageReq
@@ -146,7 +146,7 @@ public class McNetwork extends TcpClientBasic {
     }
 
     /**
-     * Read data from server of 1E.
+     * Read data from the server using a 1E frame.
      * (1E帧的通信交互)
      *
      * @param req req
@@ -164,7 +164,7 @@ public class McNetwork extends TcpClientBasic {
         }
         if (len < 0) {
             // McHeader 无效，读取长度不一致
-            throw new McCommException(" McHeader is invalid, read length is inconsistent");
+            throw new McCommException("Incomplete MC header");
         }
         byte[] total = new byte[len];
         System.arraycopy(data, 0, total, 0, len);
@@ -172,7 +172,7 @@ public class McNetwork extends TcpClientBasic {
     }
 
     /**
-     * Read data from server of 4E and 3E.
+     * Read data from the server using a 3E or 4E frame.
      * (3E帧和4E帧的通信交互)
      *
      * @param req req
@@ -191,7 +191,7 @@ public class McNetwork extends TcpClientBasic {
             len = this.read(data);
             if (len < headerLength) {
                 // McHeader 无效，读取长度不一致
-                throw new McCommException(" McHeader is invalid, read length is inconsistent");
+                throw new McCommException("Incomplete MC header");
             }
             McHeader3EAck header = (McHeader3EAck) McHeaderAck.fromBytes(data, this.frameType);
             remainLength = header.getDataLength() - 2;
@@ -203,38 +203,38 @@ public class McNetwork extends TcpClientBasic {
         }
         if (len < remainLength) {
             // McHeader后面的数据长度，长度不一致
-            throw new McCommException("The length of the data behind the McHeader is inconsistent");
+            throw new McCommException("Incomplete response data after the MC header");
         }
         return total;
     }
 
     /**
-     * Check req data and ack data.
+     * Check the result using the request and ACK data.
      * (校验请求数据和响应数据)
      *
      * @param req req data
-     * @param ack ack data
+     * @param ack response data
      */
     protected void checkResult(McMessageReq req, McMessageAck ack) {
         if (this.frameType == EMcFrameType.FRAME_4E && ack.getHeader().getSubHeader() != EMcFrameType.FRAME_4E.getAckSubHeader()) {
             // 4E帧类型，响应副帧头和请求副帧头不一致，请求副帧头+ req.getHeader().getSubHeader() + "，响应副帧头：" + ack.getHeader().getEndCode()
-            throw new McCommException("4E frame type, the response sub header is inconsistent with the request sub header" +
-                    ", the request sub header：" + req.getHeader().getSubHeader() + ", the response sub header：" + ack.getHeader().getEndCode());
+            throw new McCommException("4E response subheader does not match the expected value for the request" +
+                    ", request subheader: " + req.getHeader().getSubHeader() + ", response end code: " + ack.getHeader().getEndCode());
         }
         if (this.frameType == EMcFrameType.FRAME_3E && ack.getHeader().getSubHeader() != EMcFrameType.FRAME_3E.getAckSubHeader()) {
             // "3E帧类型，响应副帧头和请求副帧头不一致，请求副帧头：" + req.getHeader().getSubHeader() + "，响应副帧头：" + ack.getHeader().getEndCode()
-            throw new McCommException("3E frame type, the response sub header is inconsistent with the request sub header" +
-                    ", the request sub header：" + req.getHeader().getSubHeader() + ", the response sub header：" + ack.getHeader().getEndCode());
+            throw new McCommException("3E response subheader does not match the expected value for the request" +
+                    ", request subheader: " + req.getHeader().getSubHeader() + ", response end code: " + ack.getHeader().getEndCode());
         }
         if (this.frameType == EMcFrameType.FRAME_1E && ack.getHeader().getSubHeader() != req.getHeader().getSubHeader() + 0x80) {
             // "3E帧类型，响应副帧头和请求副帧头不一致，请求副帧头：" + req.getHeader().getSubHeader() + "，响应副帧头：" + ack.getHeader().getEndCode()
-            throw new McCommException("1E frame type, the response sub header is inconsistent with the request sub header, error = 0x80" +
-                    ", the request sub header：" + req.getHeader().getSubHeader() + ", the response sub header：" + ack.getHeader().getEndCode());
+            throw new McCommException("1E response subheader does not match the expected value for the request (offset: 0x80)" +
+                    ", request subheader: " + req.getHeader().getSubHeader() + ", response end code: " + ack.getHeader().getEndCode());
         }
         if (ack.getHeader().getEndCode() != 0) {
             String errorContent = this.extractError(ack.getHeader().getEndCode());
             // 响应返回异常，异常码
-            String errorStr = String.format("The response returns an exception, an exception code:%d，%s", ack.getHeader().getEndCode(), errorContent);
+            String errorStr = String.format("MC exception response, error code: %d, cause: %s", ack.getHeader().getEndCode(), errorContent);
             throw new McCommException(errorStr);
         }
     }
@@ -298,7 +298,7 @@ public class McNetwork extends TcpClientBasic {
     //region 软元件批量读取和写入
 
     /**
-     * Read device batch by raw way, not support A series.
+     * Read a batch of raw device data. A-series PLCs are not supported.
      * (软元件最原始的批量读取，不支持A系列)
      *
      * @param command           command
@@ -331,7 +331,7 @@ public class McNetwork extends TcpClientBasic {
     }
 
     /**
-     * Write device batch by raw way, not support A series.
+     * Write a batch of raw device data. A-series PLCs are not supported.
      * (软元件最原始的批量写入，不支持A系列)
      *
      * @param command           command
@@ -378,7 +378,7 @@ public class McNetwork extends TcpClientBasic {
             throw new NullPointerException("deviceAddress");
         }
         if (deviceAddress.getDevicePointsCount() < 1) {
-            throw new McCommException("1 < device point count");
+            throw new McCommException("Device point count must be at least 1");
         }
         if (deviceAddress.getDeviceCode() == EMcDeviceCode.LTS
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LTC
@@ -386,7 +386,7 @@ public class McNetwork extends TcpClientBasic {
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LSTC
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LZ
         ) {
-            throw new McCommException("restricted access LTS、LTC、LSTS、LSTC、LZ");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LSTS, LSTC, LZ");
         }
         try {
             int actualLength = deviceAddress.getDevicePointsCount();
@@ -426,7 +426,7 @@ public class McNetwork extends TcpClientBasic {
             throw new NullPointerException("deviceContent");
         }
         if (deviceContent.getDevicePointsCount() < 1) {
-            throw new McCommException("1 < device point count");
+            throw new McCommException("Device point count must be at least 1");
         }
         if (deviceContent.getDeviceCode() == EMcDeviceCode.LTS
                 || deviceContent.getDeviceCode() == EMcDeviceCode.LTC
@@ -436,7 +436,7 @@ public class McNetwork extends TcpClientBasic {
                 || deviceContent.getDeviceCode() == EMcDeviceCode.LSTN
                 || deviceContent.getDeviceCode() == EMcDeviceCode.LZ
         ) {
-            throw new McCommException("restricted access LTS、LTC、LTN、LSTS、LSTC、LSTN、LZ");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LTN, LSTS, LSTC, LSTN, LZ");
         }
 
         try {
@@ -477,11 +477,11 @@ public class McNetwork extends TcpClientBasic {
             throw new NullPointerException("deviceAddress");
         }
         if (deviceAddress.getDevicePointsCount() < 1) {
-            throw new McCommException("1 < device point count");
+            throw new McCommException("Device point count must be at least 1");
         }
         if (!EMcDeviceCode.checkBitType(deviceAddress.getDeviceCode())) {
             // 只能是位软元件
-            throw new McCommException("It can only be bit device code");
+            throw new McCommException("Device code must be a bit device code");
         }
         if (deviceAddress.getDeviceCode() == EMcDeviceCode.LTS
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LTC
@@ -489,7 +489,7 @@ public class McNetwork extends TcpClientBasic {
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LSTC
                 || deviceAddress.getDeviceCode() == EMcDeviceCode.LZ
         ) {
-            throw new McCommException("restricted access LTS、LTC、LSTS、LSTC、LZ");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LSTS, LSTC, LZ");
         }
 
         try {
@@ -533,11 +533,11 @@ public class McNetwork extends TcpClientBasic {
             throw new NullPointerException("deviceContent");
         }
         if (deviceContent.getDevicePointsCount() < 1) {
-            throw new McCommException("1 < device point count");
+            throw new McCommException("Device point count must be at least 1");
         }
         if (!EMcDeviceCode.checkBitType(deviceContent.getDeviceCode())) {
             // 只能是位软元件
-            throw new McCommException("It can only be bit device code");
+            throw new McCommException("Device code must be a bit device code");
         }
 
         if (deviceContent.getDeviceCode() == EMcDeviceCode.LTS
@@ -549,7 +549,7 @@ public class McNetwork extends TcpClientBasic {
                 || deviceContent.getDeviceCode() == EMcDeviceCode.LCN
                 || deviceContent.getDeviceCode() == EMcDeviceCode.LZ
         ) {
-            throw new McCommException("restricted access LTS、LTC、LTN、LSTS、LSTC、LSTN、LCN、LZ");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LTN, LSTS, LSTC, LSTN, LCN, LZ");
         }
 
         try {
@@ -593,18 +593,18 @@ public class McNetwork extends TcpClientBasic {
      */
     public List<McDeviceContent> readDeviceRandomInWord(List<McDeviceAddress> wordAddresses, List<McDeviceAddress> dwordAddresses) {
         if (wordAddresses == null || dwordAddresses == null) {
-            throw new NullPointerException("wordAddresses or dwordAddresses");
+            throw new NullPointerException("wordAddresses and dwordAddresses must not be null");
         }
         if (wordAddresses.isEmpty() && dwordAddresses.isEmpty()) {
-            throw new IllegalArgumentException("wordAddresses and dwordAddresses is empty");
+            throw new IllegalArgumentException("wordAddresses and dwordAddresses must not both be empty");
         }
         if (this.series.getFrameType() == EMcFrameType.FRAME_1E) {
-            throw new McCommException("Frame 1E not supported in read device random in word");
+            throw new McCommException("1E frames do not support random device reads in word units");
         }
         boolean wordAllMatch = this.checkDeviceRandomCode(wordAddresses);
         boolean dwordAllMatch = this.checkDeviceRandomCode(dwordAddresses);
         if (!wordAllMatch || !dwordAllMatch) {
-            throw new McCommException("restricted access LTS、LTC、LSTS、LSTC、LCS、LCC");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LSTS, LSTC, LCS, LCC");
         }
         try {
             List<McDeviceContent> result = new ArrayList<>();
@@ -664,15 +664,15 @@ public class McNetwork extends TcpClientBasic {
      */
     public void writeDeviceRandomInWord(List<McDeviceContent> wordContents, List<McDeviceContent> dwordContents) {
         if (wordContents == null || dwordContents == null) {
-            throw new NullPointerException("wordContents or dwordContents");
+            throw new NullPointerException("wordContents and dwordContents must not be null");
         }
         if (wordContents.isEmpty() && dwordContents.isEmpty()) {
-            throw new IllegalArgumentException("wordContents and dwordContents is empty");
+            throw new IllegalArgumentException("wordContents and dwordContents must not both be empty");
         }
         boolean wordAllMatch = this.checkDeviceRandomCode(wordContents);
         boolean dwordAllMatch = this.checkDeviceRandomCode(dwordContents);
         if (!wordAllMatch || !dwordAllMatch) {
-            throw new McCommException("restricted access LTS、LTC、LSTS、LSTC、LCS、LCC");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LSTS, LSTC, LCS, LCC");
         }
 
         try {
@@ -705,13 +705,13 @@ public class McNetwork extends TcpClientBasic {
      */
     public void writeDeviceRandomInBit(List<McDeviceContent> bitAddresses) {
         if (bitAddresses == null || bitAddresses.isEmpty()) {
-            throw new IllegalArgumentException("bitAddresses is null or empty");
+            throw new IllegalArgumentException("bitAddresses must not be null or empty");
         }
         // 软元件必须是位软元件
         boolean allMatch = bitAddresses.stream().allMatch(x -> EMcDeviceCode.checkBitType(x.getDeviceCode()));
         if (!allMatch) {
             // 只能是位软元件
-            throw new McCommException("It can only be bit device code");
+            throw new McCommException("Device code must be a bit device code");
         }
         try {
             int maxLength = this.series.getDeviceRandomWriteInBitPointsCount();
@@ -751,7 +751,7 @@ public class McNetwork extends TcpClientBasic {
         this.checkDeviceBatchMultiBlocksCondition(wordAddresses, bitAddresses);
 
         if (this.series.getFrameType() == EMcFrameType.FRAME_1E) {
-            throw new McCommException("Frame 1E not supported in reading device batch multi blocks");
+            throw new McCommException("1E frames do not support batch reads across multiple device blocks");
         }
         try {
             List<McDeviceContent> result = new ArrayList<>();
@@ -795,13 +795,13 @@ public class McNetwork extends TcpClientBasic {
     private void checkDeviceBatchMultiBlocksCondition(List<? extends McDeviceAddress> words,
                                                       List<? extends McDeviceAddress> bits) {
         if (words == null || bits == null) {
-            throw new NullPointerException("wordAddresses or bitAddresses");
+            throw new NullPointerException("Word and bit device lists must not be null");
         }
         if (words.isEmpty() && bits.isEmpty()) {
-            throw new IllegalArgumentException("the number of wordAddresses and bitAddresses is empty");
+            throw new IllegalArgumentException("Word and bit device lists must not both be empty");
         }
         if (this.series.getFrameType() == EMcFrameType.FRAME_1E) {
-            throw new McCommException("Frame 1E not supported in writing device batch multi blocks");
+            throw new McCommException("1E frames do not support batch writes across multiple device blocks");
         }
         // TODO: 待确认
 //        if (this.frameType == EMcFrameType.FRAME_3E) {
@@ -811,17 +811,17 @@ public class McNetwork extends TcpClientBasic {
         boolean b1 = words.stream().allMatch(x -> EMcDeviceCode.checkWordType(x.getDeviceCode()));
         if (!b1) {
             // 字软元件对应错误
-            throw new McCommException("word device code error");
+            throw new McCommException("Invalid word device code");
         }
         boolean b2 = bits.stream().allMatch(x -> EMcDeviceCode.checkBitType(x.getDeviceCode()));
         if (!b2) {
             // 位软元件对应错误
-            throw new McCommException("bit device code error");
+            throw new McCommException("Invalid bit device code");
         }
         boolean wordAllMatch = this.checkDeviceBatchMultiBlocksCode(words);
         boolean bitAllMatch = this.checkDeviceBatchMultiBlocksCode(bits);
         if (!wordAllMatch || !bitAllMatch) {
-            throw new McCommException("restricted access LTS、LTC、LTN、LSTS、LSTC、LSTN、LCS、LCC、LCN、LZ");
+            throw new McCommException("Access is restricted for device codes: LTS, LTC, LTN, LSTS, LSTC, LSTN, LCS, LCC, LCN, LZ");
         }
     }
 

@@ -47,7 +47,7 @@ public class RequestBaseItem implements IObjectByteArray {
     protected byte specificationType = (byte) 0x12;
 
     /**
-     * Length of following.
+     * Length of the following data.
      * 其余部分的长度规范 <br>
      * 字节大小：1 <br>
      * 字节序数：1

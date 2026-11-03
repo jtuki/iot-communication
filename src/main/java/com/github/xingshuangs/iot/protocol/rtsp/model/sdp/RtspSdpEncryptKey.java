@@ -28,7 +28,7 @@ package com.github.xingshuangs.iot.protocol.rtsp.model.sdp;
 import lombok.Data;
 
 /**
- * Encrypt key.
+ * Encryption key.
  * (加密秘钥)
  *
  * @author xingshuang

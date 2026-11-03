@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 
 /**
- * Modbus communication basic skeleton, abstract class.
+ * Abstract base class for Modbus communication.
  * (Modbus网络通信的基础结构，抽象类)
  *
  * @author xingshuang
@@ -57,7 +57,7 @@ import java.util.function.BiConsumer;
 public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
 
     /**
-     * Unit id, slave id also.
+     * Unit ID (also called the slave ID).
      * (unit id or slave id)
      */
     protected int unitId = 1;
@@ -69,13 +69,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     protected final ReentrantLock locker = new ReentrantLock();
 
     /**
-     * Communication callback, first parameter is tag, second is package content.
+     * Communication callback; the first parameter is the tag and the second is the message content.
      * (通信回调，第一个参数是tag标签，指示该报文含义；第二个参数是具体报文内容)
      */
     protected BiConsumer<String, byte[]> comCallback;
 
     /**
-     * Persistence, true: long connection, false: short connection.
+     * Connection persistence; true keeps the connection open between requests.
      * (是否持久化，默认是持久化，对应长连接，true：长连接，false：短连接)
      */
     protected boolean persistence = true;
@@ -99,13 +99,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     private int maxLengthOfReadDiscreteInput = 2000;
 
     /**
-     * The maximum length of read hold register in a single communication.
+     * The maximum length of read holding register in a single communication.
      * 单次通信读保持寄存器的最大长度
      */
     private int maxLengthOfReadHoldRegister = 125;
 
     /**
-     * The maximum length of write hold register in a single communication.
+     * The maximum length of write holding register in a single communication.
      * 单次通信写保持寄存器的最大长度
      */
     private int maxLengthOfWriteHoldRegister = 123;
@@ -142,23 +142,23 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read data from server.
      * (从服务器读取数据)
      *
-     * @param req modbus request
-     * @return modbus response.
+     * @param req Modbus request
+     * @return Modbus response.
      */
     protected abstract R readFromServer(T req);
 
     /**
-     * Check result by req and ack.
+     * Validate the result using the request and response.
      * (校验请求数据和响应数据)
      *
      * @param req req data.
-     * @param ack ack data.
+     * @param ack response data.
      */
     protected abstract void checkResult(T req, R ack);
 
 
     /**
-     * Read modbus data.
+     * Read Modbus data.
      * (读取modbus数据)
      *
      * @param unitId unit id or slave id
@@ -175,7 +175,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read coil.
      * (读取线圈)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity coil quantity
      * @return boolean list
      */
@@ -188,7 +188,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * (读取线圈)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity coil quantity
      * @return boolean list
      */
@@ -201,7 +201,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read coil byte array
      * (读取线圈字节数据)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity coil quantity
      * @return byte array
      */
@@ -214,16 +214,16 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * (读取线圈字节数据)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity coil quantity
      * @return byte array
      */
     public byte[] readCoilBytes(int unitId, int address, int quantity) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity<1");
+            throw new IllegalArgumentException("quantity must be at least 1");
         }
         BitWriteBuff buff = new BitWriteBuff(quantity);
         LoopGroupAlg.loopExecute(quantity, this.maxLengthOfReadCoil, (off, len) -> {
@@ -238,7 +238,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Write coil.
      * (写单线圈)
      *
-     * @param address    modbus address
+     * @param address    Modbus address
      * @param coilStatus coil status
      */
     public void writeCoil(int address, boolean coilStatus) {
@@ -250,12 +250,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * (写单线圈)
      *
      * @param unitId     unit id or slave id
-     * @param address    modbus address
+     * @param address    Modbus address
      * @param coilStatus coil status
      */
     public void writeCoil(int unitId, int address, boolean coilStatus) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
 
         MbWriteSingleCoilRequest reqPdu = new MbWriteSingleCoilRequest(address, coilStatus);
@@ -266,7 +266,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Write multiple coils.
      * (写多线圈)
      *
-     * @param address    modbus address
+     * @param address    Modbus address
      * @param coilStatus coil status list
      */
     public void writeCoil(int address, List<Boolean> coilStatus) {
@@ -274,19 +274,19 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple coil.
+     * Write multiple coils.
      * (写多线圈)
      *
      * @param unitId     unit id or slave id
-     * @param address    modbus address
+     * @param address    Modbus address
      * @param coilStatus coil status list
      */
     public void writeCoil(int unitId, int address, List<Boolean> coilStatus) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (coilStatus.isEmpty()) {
-            throw new IllegalArgumentException("coilStatus list is empty");
+            throw new IllegalArgumentException("coilStatus list must not be empty");
         }
 
         LoopGroupAlg.loopExecute(coilStatus.size(), this.maxLengthOfWriteCoil, (off, len) -> {
@@ -301,7 +301,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read discrete input.
      * (读取离散输入)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity
      * @return boolean list
      */
@@ -310,11 +310,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read discrete input,
+     * Read discrete inputs.
      * (读取离散输入)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity
      * @return boolean list
      */
@@ -327,7 +327,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read discrete input byte array
      * (读取离散输入字节数据)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity
      * @return boolean list
      */
@@ -340,16 +340,16 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * (读取离散输入字节数据)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity
      * @return byte array
      */
     public byte[] readDiscreteInputBytes(int unitId, int address, int quantity) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity<1");
+            throw new IllegalArgumentException("quantity must be at least 1");
         }
 
         BitWriteBuff buff = new BitWriteBuff(quantity);
@@ -362,10 +362,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read multiple hold register.
+     * Read multiple holding registers.
      * (读取保持寄存器， modbus 1个寄存器占2个字节)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity of register
      * @return byte array
      */
@@ -374,20 +374,20 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read multiple hold register.
+     * Read multiple holding registers.
      * (读取保持寄存器， modbus 1个寄存器占2个字节)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity quantity of register
      * @return byte array
      */
     public byte[] readHoldRegister(int unitId, int address, int quantity) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity < 1");
+            throw new IllegalArgumentException("quantity must be at least 1");
         }
 
         // TODO: 实际在slave中测试，没有125的约束，暂时先这么写着
@@ -406,10 +406,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
 
 
     /**
-     * Write single hold register.
+     * Write single holding register.
      * (以数值形式写入单个保持寄存器， modbus 1个寄存器占2个字节)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param value   value, 2 bytes
      */
     public void writeHoldRegister(int address, int value) {
@@ -417,19 +417,19 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write single hold register.
+     * Write single holding register.
      * (以数值形式写入单个保持寄存器， modbus 1个寄存器占2个字节)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param value   value, 2 bytes
      */
     public void writeHoldRegister(int unitId, int address, int value) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (value < 0 || value > 65535) {
-            throw new IllegalArgumentException("value < 0 || value > 65535");
+            throw new IllegalArgumentException("value must be between 0 and 65535");
         }
 
         MbWriteSingleRegisterRequest reqPdu = new MbWriteSingleRegisterRequest(address, value);
@@ -437,10 +437,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple hold register.
+     * Write multiple holding registers.
      * (以byte array形式写入保持寄存器， modbus 1个寄存器占2个字节)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param values  value list
      */
     public void writeHoldRegister(int address, byte[] values) {
@@ -448,16 +448,16 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple hold register.
+     * Write multiple holding registers.
      * (以byte array形式写入保持寄存器， modbus 1个寄存器占2个字节)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param values  value list
      */
     public void writeHoldRegister(int unitId, int address, byte[] values) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         byte[] newValues = values;
         if (values.length % 2 != 0) {
@@ -473,10 +473,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple hold register.
+     * Write multiple holding registers.
      * (以数值数组形式写入多个保持寄存器， modbus 1个寄存器占2个字节)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param values  value list
      */
     public void writeHoldRegister(int address, List<Integer> values) {
@@ -484,16 +484,16 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple hold register.
+     * Write multiple holding registers.
      * (以数值数组形式写入多个保持寄存器， modbus 1个寄存器占2个字节)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param values  value list
      */
     public void writeHoldRegister(int unitId, int address, List<Integer> values) {
         if (values.isEmpty()) {
-            throw new IllegalArgumentException("values is empty");
+            throw new IllegalArgumentException("values must not be empty");
         }
 
         ByteWriteBuff buff = ByteWriteBuff.newInstance(values.size() * 2);
@@ -502,10 +502,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple input register.
+     * Write multiple input registers.
      * (读取输入寄存器， modbus 1个寄存器占2个字节)
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity register quantity
      * @return byte array
      */
@@ -514,20 +514,20 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write multiple input register.
+     * Write multiple input registers.
      * (读取输入寄存器， modbus 1个寄存器占2个字节)
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param quantity register quantity
      * @return byte array
      */
     public byte[] readInputRegister(int unitId, int address, int quantity) {
         if (address < 0 || address > 65535) {
-            throw new IllegalArgumentException("address < 0 || address > 65535");
+            throw new IllegalArgumentException("address must be between 0 and 65535");
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity < 1");
+            throw new IllegalArgumentException("quantity must be at least 1");
         }
 
         ByteWriteBuff buff = ByteWriteBuff.newInstance(quantity * 2);
@@ -546,7 +546,7 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
      * Read boolean.
      * (读取一个boolean类型数据，只有一个address的数据，位索引[0,15])
      *
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param bitIndex bit index [0,15]
      * @return true, false
      */
@@ -555,17 +555,17 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read boolean from hold register.
+     * Read boolean from holding register.
      * (读取一个boolean类型数据，只有一个address的数据，位索引[0,15])
      *
      * @param unitId   unit id or slave id
-     * @param address  modbus address
+     * @param address  Modbus address
      * @param bitIndex bit index[0,15]
      * @return true, false
      */
     public boolean readBoolean(int unitId, int address, int bitIndex) {
         if (bitIndex < 0 || bitIndex > 15) {
-            throw new IllegalArgumentException("bitIndex < 0 || bitIndex > 15");
+            throw new IllegalArgumentException("bitIndex must be between 0 and 15");
         }
 
         byte[] res = this.readHoldRegister(unitId, address, 1);
@@ -575,10 +575,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int16 from hold register.
+     * Read Int16 from holding register.
      * (读取一个Int16 2字节数据，默认大端模式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return int16 data, 2 bytes
      */
     public short readInt16(int address) {
@@ -586,11 +586,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int16 from hold register.
+     * Read Int16 from holding register.
      * (读取一个Int16 2字节数据)
      *
      * @param address      address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @return int16 data, 2 bytes
      */
     public short readInt16(int address, boolean littleEndian) {
@@ -598,11 +598,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int16 from hold register.
+     * Read Int16 from holding register.
      * (读取一个Int16 2字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return int16 data, 2 bytes
      */
     public short readInt16(int unitId, int address) {
@@ -610,12 +610,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int16 from hold register.
+     * Read Int16 from holding register.
      * (读取一个Int16 2字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @return int16 data, 2 bytes
      */
     public short readInt16(int unitId, int address, boolean littleEndian) {
@@ -624,10 +624,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt16 from hold register.
+     * Read UInt16 from holding register.
      * (读取一个UInt16 2字节数据，默认大端模式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return UInt16 data, 2 bytes
      */
     public int readUInt16(int address) {
@@ -635,11 +635,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt16 from hold register.
+     * Read UInt16 from holding register.
      * (读取一个UInt16 2字节数据)
      *
      * @param address      address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @return UInt16 data, 2 bytes
      */
     public int readUInt16(int address, boolean littleEndian) {
@@ -647,11 +647,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt16 from hold register.
+     * Read UInt16 from holding register.
      * (读取一个UInt16 2字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return UInt16 data, 2 bytes
      */
     public int readUInt16(int unitId, int address) {
@@ -659,12 +659,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt16 from hold register.
+     * Read UInt16 from holding register.
      * (读取一个UInt16 2字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @return UInt16 data, 2 bytes
      */
     public int readUInt16(int unitId, int address, boolean littleEndian) {
@@ -673,10 +673,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int32 from hold register. BA_DC default.
+     * Read Int32 from holding register. BA_DC format by default.
      * (读取一个Int32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return Int32 data, 4 bytes
      */
     public int readInt32(int address) {
@@ -684,10 +684,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int32 from hold register.
+     * Read Int32 from holding register.
      * (读取一个Int32 4字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Int32 data, 4 bytes
      */
@@ -696,11 +696,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int32 from hold register.
+     * Read Int32 from holding register.
      * (读取一个Int32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return Int32 data, 4 bytes
      */
     public int readInt32(int unitId, int address) {
@@ -708,11 +708,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int32 from hold register.
+     * Read Int32 from holding register.
      * (读取一个Int32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Int32 data, 4 bytes
      */
@@ -721,12 +721,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int32 from hold register.
+     * Read Int32 from holding register.
      * (读取一个Int32 4字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      * @return Int32 data, 4 bytes
      */
@@ -736,10 +736,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt32 from hold register. BA_DC default.
+     * Read UInt32 from holding register. BA_DC format by default.
      * (读取一个UInt32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return UInt32 data, 4 bytes
      */
     public long readUInt32(int address) {
@@ -747,10 +747,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt32 from hold register.
+     * Read UInt32 from holding register.
      * (读取一个UInt32 4字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return UInt32 data, 4 bytes
      */
@@ -759,11 +759,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt32 from hold register.
+     * Read UInt32 from holding register.
      * (读取一个UInt32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return UInt32 data, 4 bytes
      */
     public long readUInt32(int unitId, int address) {
@@ -771,11 +771,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt32 from hold register.
+     * Read UInt32 from holding register.
      * (读取一个UInt32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return UInt32 data, 4 bytes
      */
@@ -784,12 +784,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read UInt32 from hold register.
+     * Read UInt32 from holding register.
      * (读取一个UInt32 4字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      * @return UInt32 data, 4 bytes
      */
@@ -799,10 +799,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int64 from hold register.
+     * Read Int64 from holding register.
      * (读取一个Int64 8字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return Int64 data, 8 bytes
      */
     public long readInt64(int address) {
@@ -810,10 +810,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int64 from hold register.
+     * Read Int64 from holding register.
      * (读取一个Int64 8字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Int64 data, 8 bytes
      */
@@ -822,11 +822,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int64 from hold register.
+     * Read Int64 from holding register.
      * (读取一个Int64 8字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return Int64 data, 8 bytes
      */
     public long readInt64(int unitId, int address) {
@@ -834,11 +834,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int64 from hold register.
+     * Read Int64 from holding register.
      * (读取一个Int64 8字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Int64 data, 8 bytes
      */
@@ -847,12 +847,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Int64 from hold register.
+     * Read Int64 from holding register.
      * (读取一个Int64 8字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      * @return Int64 data, 8 bytes
      */
@@ -862,10 +862,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float32 from hold register. BA_DC default.
+     * Read Float32 from holding register. BA_DC format by default.
      * (读取一个Float32的数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return Float32 data, 4 bytes
      */
     public float readFloat32(int address) {
@@ -873,10 +873,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float32 from hold register.
+     * Read Float32 from holding register.
      * (读取一个Float32的数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Float32 data, 4 bytes
      */
@@ -885,11 +885,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float32 from hold register.
+     * Read Float32 from holding register.
      * (读取一个Float32的数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return Float32 data, 4 bytes
      */
     public float readFloat32(int unitId, int address) {
@@ -897,11 +897,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float32 from hold register.
+     * Read Float32 from holding register.
      * (读取一个Float32的数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 4 bytes
      * @return Float32 data, 4 bytes
      */
@@ -910,12 +910,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float32 from hold register.
+     * Read Float32 from holding register.
      * (读取一个Float32的数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      * @return Float32 data, 4 bytes
      */
@@ -925,10 +925,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float64 from hold register.
+     * Read Float64 from holding register.
      * (读取一个Float64的数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @return Float64 data, 8 bytes
      */
     public double readFloat64(int address) {
@@ -936,10 +936,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float64 from hold register.
+     * Read Float64 from holding register.
      * (读取一个Float64的数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 8 bytes
      * @return Float64 data, 8 bytes
      */
@@ -948,11 +948,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float64 from hold register.
+     * Read Float64 from holding register.
      * (读取一个Float64的数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @return Float64 data, 8 bytes
      */
     public double readFloat64(int unitId, int address) {
@@ -960,11 +960,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float64 from hold register.
+     * Read Float64 from holding register.
      * (读取一个Float64的数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param format  format of 8 bytes
      * @return Float64 data, 8 bytes
      */
@@ -973,12 +973,12 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read Float64 from hold register.
+     * Read Float64 from holding register.
      * (读取一个Float64的数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param address      Modbus address
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 8 bytes
      * @return Float64 data, 8 bytes
      */
@@ -988,10 +988,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read string from hold register. ASCII default.
+     * Read string from a holding register. ASCII by default.
      * (String（字符串）数据类型存储一串单字节字符)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param length  string length
      * @return string
      */
@@ -1000,10 +1000,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read string from hold register.
+     * Read string from a holding register.
      * (String（字符串）数据类型存储一串单字节字符)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param length  string length
      * @param charset charset
      * @return string
@@ -1013,11 +1013,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read string from hold register.
+     * Read string from a holding register.
      * (String（字符串）数据类型存储一串单字节字符)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param length  string length
      * @return string
      */
@@ -1026,11 +1026,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Read string from hold register.
+     * Read string from a holding register.
      * (String（字符串）数据类型存储一串单字节字符)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param length  string length
      * @param charset charset
      * @return string
@@ -1044,10 +1044,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     //region 通用保持寄存器 写入数据
 
     /**
-     * Write Int16 to hold register. Big endian default.
+     * Write Int16 to holding register. Big-endian by default.
      * (写入一个Int16 2字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt16(int address, short data) {
@@ -1055,23 +1055,23 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int16 to hold register.
+     * Write Int16 to holding register.
      * (写入一个Int16 2字节数据)
      *
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian，true：Yes，false：No
+     * @param littleEndian whether to use little-endian byte order，true：Yes，false：No
      */
     public void writeInt16(int address, short data, boolean littleEndian) {
         this.writeInt16(this.unitId, address, data, littleEndian);
     }
 
     /**
-     * Write Int16 to hold register.
+     * Write Int16 to holding register.
      * (写入一个Int16 2字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt16(int unitId, int address, short data) {
@@ -1079,13 +1079,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int16 to hold register.
+     * Write Int16 to holding register.
      * (写入一个Int16 2字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian，true：Yes，false：No
+     * @param littleEndian whether to use little-endian byte order，true：Yes，false：No
      */
     public void writeInt16(int unitId, int address, short data, boolean littleEndian) {
         byte[] bytes = ByteWriteBuff.newInstance(2, littleEndian)
@@ -1095,10 +1095,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt16 to hold register. Big endian default.
+     * Write UInt16 to holding register. Big-endian by default.
      * (写入一个UInt16 2字节数据，默认大端模式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeUInt16(int address, int data) {
@@ -1106,23 +1106,23 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt16 to hold register. Big endian default.
+     * Write UInt16 to holding register. Big-endian by default.
      * (写入一个UInt16 2字节数据，默认大端模式)
      *
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      */
     public void writeUInt16(int address, int data, boolean littleEndian) {
         this.writeUInt16(this.unitId, address, data, littleEndian);
     }
 
     /**
-     * Write UInt16 to hold register. Big endian default.
+     * Write UInt16 to holding register. Big-endian by default.
      * (写入一个UInt16 2字节数据，默认大端模式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeUInt16(int unitId, int address, int data) {
@@ -1130,13 +1130,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt16 to hold register. Big endian default.
+     * Write UInt16 to holding register. Big-endian by default.
      * (写入一个UInt16 2字节数据，默认大端模式)
      *
      * @param unitId       unit id or slave id
      * @param address      address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      */
     public void writeUInt16(int unitId, int address, int data, boolean littleEndian) {
         byte[] bytes = ByteWriteBuff.newInstance(2, littleEndian)
@@ -1146,10 +1146,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int32 to hold register. BA_DC format default.
+     * Write Int32 to holding register. BA_DC format by default.
      * (写入一个Int32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt32(int address, int data) {
@@ -1157,10 +1157,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int32 to hold register. BA_DC format default.
+     * Write Int32 to holding register. BA_DC format by default.
      * (写入一个Int32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1169,11 +1169,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int32 to hold register. BA_DC format default.
+     * Write Int32 to holding register. BA_DC format by default.
      * (写入一个Int32 4字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt32(int unitId, int address, int data) {
@@ -1181,11 +1181,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int32 to hold register. BA_DC format default.
+     * Write Int32 to holding register. BA_DC format by default.
      * (写入一个Int32 4字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1194,13 +1194,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int32 to hold register. BA_DC format default.
+     * Write Int32 to holding register. BA_DC format by default.
      * (写入一个Int32 4字节数据，默认BA_DC格式)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      */
     public void writeInt32(int unitId, int address, int data, boolean littleEndian, EByteBuffFormat format) {
@@ -1211,10 +1211,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt32 to hold register. BA_DC format default.
+     * Write UInt32 to holding register. BA_DC format by default.
      * (写入一个UInt32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeUInt32(int address, long data) {
@@ -1222,10 +1222,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt32 to hold register. BA_DC format default.
+     * Write UInt32 to holding register. BA_DC format by default.
      * (写入一个UInt32 4字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1234,11 +1234,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt32 to hold register. BA_DC format default.
+     * Write UInt32 to holding register. BA_DC format by default.
      * (写入一个UInt32 4字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeUInt32(int unitId, int address, long data) {
@@ -1246,11 +1246,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt32 to hold register. BA_DC format default.
+     * Write UInt32 to holding register. BA_DC format by default.
      * (写入一个UInt32 4字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1259,13 +1259,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write UInt32 to hold register. BA_DC format default.
+     * Write UInt32 to holding register. BA_DC format by default.
      * (写入一个UInt32 4字节数据，默认BA_DC格式)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      */
     public void writeUInt32(int unitId, int address, long data, boolean littleEndian, EByteBuffFormat format) {
@@ -1276,10 +1276,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int64 to hold register. BA_DC format default.
+     * Write Int64 to holding register. BA_DC format by default.
      * (写入一个Int64 8字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt64(int address, long data) {
@@ -1287,10 +1287,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int64 to hold register. BA_DC format default.
+     * Write Int64 to holding register. BA_DC format by default.
      * (写入一个Int64 8字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 8 bytes
      */
@@ -1299,11 +1299,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int64 to hold register. BA_DC format default.
+     * Write Int64 to holding register. BA_DC format by default.
      * (写入一个Int64 8字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeInt64(int unitId, int address, long data) {
@@ -1311,11 +1311,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int64 to hold register. BA_DC format default.
+     * Write Int64 to holding register. BA_DC format by default.
      * (写入一个Int64 8字节数据，默认BA_DC格式)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 8 bytes
      */
@@ -1324,13 +1324,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write Int64 to hold register. BA_DC format default.
+     * Write Int64 to holding register. BA_DC format by default.
      * (写入一个Int64 8字节数据，默认BA_DC格式)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 8 bytes
      */
     public void writeInt64(int unitId, int address, long data, boolean littleEndian, EByteBuffFormat format) {
@@ -1341,10 +1341,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float32 to hold register.
+     * Write float32 to holding register.
      * (写入一个Float32 4字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeFloat32(int address, float data) {
@@ -1352,10 +1352,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float32 to hold register.
+     * Write float32 to holding register.
      * (写入一个Float32 4字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1364,11 +1364,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float32 to hold register.
+     * Write float32 to holding register.
      * (写入一个Float32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeFloat32(int unitId, int address, float data) {
@@ -1376,11 +1376,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float32 to hold register.
+     * Write float32 to holding register.
      * (写入一个Float32 4字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 4 bytes
      */
@@ -1389,13 +1389,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float32 to hold register.
+     * Write float32 to holding register.
      * (写入一个Float32 4字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 4 bytes
      */
     public void writeFloat32(int unitId, int address, float data, boolean littleEndian, EByteBuffFormat format) {
@@ -1406,10 +1406,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float64 to hold register. BA_DC format.
+     * Write float64 to holding register. BA_DC format.
      * (写入一个Float64 8字节数据，默认BA_DC格式)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeFloat64(int address, double data) {
@@ -1417,10 +1417,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float64 to hold register.
+     * Write float64 to holding register.
      * (写入一个Float64 8字节数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 8 bytes
      */
@@ -1429,11 +1429,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float64 to hold register.
+     * Write float64 to holding register.
      * (写入一个Float64 8字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      */
     public void writeFloat64(int unitId, int address, double data) {
@@ -1441,11 +1441,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float64 to hold register.
+     * Write float64 to holding register.
      * (写入一个Float64 8字节数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data
      * @param format  format of 8 bytes
      */
@@ -1454,13 +1454,13 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write float64 to hold register.
+     * Write float64 to holding register.
      * (写入一个Float64 8字节数据)
      *
      * @param unitId       unit id or slave id
-     * @param address      modbus address
+     * @param address      Modbus address
      * @param data         data
-     * @param littleEndian is little endian, true: yes, false: no.
+     * @param littleEndian whether to use little-endian byte order
      * @param format       format of 8 bytes
      */
     public void writeFloat64(int unitId, int address, double data, boolean littleEndian, EByteBuffFormat format) {
@@ -1471,10 +1471,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write string to hold register. ASCII default.
+     * Write string to a holding register. ASCII by default.
      * (写入一个String数据，默认ASCII编码)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data string
      */
     public void writeString(int address, String data) {
@@ -1482,10 +1482,10 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write string to hold register.
+     * Write string to a holding register.
      * (写入一个String数据)
      *
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data string
      * @param charset charset
      */
@@ -1494,11 +1494,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write string to hold register.
+     * Write string to a holding register.
      * (写入一个String数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data string
      */
     public void writeString(int unitId, int address, String data) {
@@ -1506,11 +1506,11 @@ public abstract class ModbusSkeletonAbstract<T, R> extends TcpClientBasic {
     }
 
     /**
-     * Write string to hold register.
+     * Write string to a holding register.
      * (写入一个String数据)
      *
      * @param unitId  unit id or slave id
-     * @param address modbus address
+     * @param address Modbus address
      * @param data    data string
      * @param charset charset
      */

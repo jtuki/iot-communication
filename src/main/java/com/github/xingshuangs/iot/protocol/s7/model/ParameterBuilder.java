@@ -76,7 +76,7 @@ public class ParameterBuilder {
             case SETUP_COMMUNICATION:
                 return SetupComParameter.fromBytes(data);
             default:
-                throw new S7CommException("function code of Parameter is not exist");
+                throw new S7CommException("Parameter function code does not exist");
         }
     }
 }

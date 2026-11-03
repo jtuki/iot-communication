@@ -98,16 +98,16 @@ public class S7PLC extends PLCNetwork {
      */
     public byte[] readRaw(EParamVariableType variableType, int count, EArea area, int dbNumber, int byteAddress, int bitAddress) {
         if (count <= 0) {
-            throw new IllegalArgumentException("count<=0");
+            throw new IllegalArgumentException("count must be greater than 0");
         }
         if (dbNumber < 0) {
-            throw new IllegalArgumentException("dbNumber<0");
+            throw new IllegalArgumentException("dbNumber must not be negative");
         }
         if (byteAddress < 0) {
-            throw new IllegalArgumentException("byteAddress<0");
+            throw new IllegalArgumentException("byteAddress must not be negative");
         }
         if (bitAddress < 0 || bitAddress > 7) {
-            throw new IllegalArgumentException("bitAddress<0||bitAddress>7");
+            throw new IllegalArgumentException("bitAddress must be between 0 and 7");
         }
         RequestItem requestItem = RequestItem.createByParams(variableType, count, area, dbNumber, byteAddress, bitAddress);
         DataItem dataItem = this.readS7Data(requestItem);
@@ -115,7 +115,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Multi-address reads byte data
+     * Read byte data from multiple addresses.
      * (多地址读取字节数据)
      *
      * @param addressRead address wrapper list
@@ -187,7 +187,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int16, 2-bytes.
+     * Read int16, 2 bytes.
      * (读取一个Int16 2字节数据)
      *
      * @param address address string
@@ -199,7 +199,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int16, 2-bytes.
+     * Read int16, 2 bytes.
      * (读取Int16 2字节数据列表)
      *
      * @param address address string
@@ -210,7 +210,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int16, 2-bytes.
+     * Read int16, 2 bytes.
      * (读取Int16 2字节数据列表)
      *
      * @param addresses address strings
@@ -223,7 +223,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint16, 2-bytes.
+     * Read uint16, 2 bytes.
      * (读取一个UInt16 2字节数据)
      *
      * @param address address string
@@ -235,7 +235,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint16, 2-bytes.
+     * Read uint16, 2 bytes.
      * (读取UInt16 2字节数据列表)
      *
      * @param address address string
@@ -246,7 +246,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint16, 2-bytes.
+     * Read uint16, 2 bytes.
      * (读取UInt16 2字节数据列表)
      *
      * @param addresses address strings
@@ -259,7 +259,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int32, 4-bytes.
+     * Read int32, 4 bytes.
      * (读取一个Int32 4字节数据)
      *
      * @param address address string
@@ -271,7 +271,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int32, 4-bytes.
+     * Read int32, 4 bytes.
      * (读取UInt32 4字节数据列表)
      *
      * @param address address string
@@ -282,7 +282,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int32, 4-bytes.
+     * Read int32, 4 bytes.
      * (读取UInt32 4字节数据列表)
      *
      * @param addresses address strings
@@ -295,7 +295,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint32, 4-bytes.
+     * Read uint32, 4 bytes.
      * (读取一个UInt32 4字节数据)
      *
      * @param address address string
@@ -307,7 +307,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint32, 4-bytes.
+     * Read uint32, 4 bytes.
      * (读取UInt32 4字节数据列表)
      *
      * @param address address string
@@ -318,7 +318,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read uint32, 4-bytes.
+     * Read uint32, 4 bytes.
      * (读取UInt32 4字节数据列表)
      *
      * @param addresses address strings
@@ -331,7 +331,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int64, 8-bytes.
+     * Read int64, 8 bytes.
      * (读取一个Int64 8字节数据)
      *
      * @param address address string
@@ -343,7 +343,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int64, 8-bytes.
+     * Read int64, 8 bytes.
      * (读取Int64 8字节数据列表)
      *
      * @param address address string
@@ -354,7 +354,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read int64, 8-bytes.
+     * Read int64, 8 bytes.
      * (读取Int64 8字节数据列表)
      *
      * @param addresses address strings
@@ -367,7 +367,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float32, 4-bytes.
+     * Read float32, 4 bytes.
      * (读取一个Float32的数据)
      *
      * @param address address string
@@ -379,7 +379,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float32, 4-bytes.
+     * Read float32, 4 bytes.
      * (读取多个Float32的数据)
      *
      * @param address address string
@@ -390,7 +390,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float32, 4-bytes.
+     * Read float32, 4 bytes.
      * (读取多个Float32的数据)
      *
      * @param addresses address strings
@@ -403,7 +403,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float64, 8-bytes.
+     * Read float64, 8 bytes.
      * (读取一个Float64的数据)
      *
      * @param address address string
@@ -415,7 +415,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float64, 8-bytes.
+     * Read float64, 8 bytes.
      * (读取多个Float64的数据)
      *
      * @param address 多个地址
@@ -426,7 +426,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read float64, 8-bytes.
+     * Read float64, 8 bytes.
      * (读取多个Float64的数据)
      *
      * @param addresses address strings
@@ -468,7 +468,7 @@ public class S7PLC extends PLCNetwork {
      */
     public String readString(String address, int length) {
         if (length <= 0 || length > 254) {
-            throw new IllegalArgumentException("length <= 0 || length > 254");
+            throw new IllegalArgumentException("length must be between 1 and 254");
         }
         int offset = this.plcType == EPlcType.S200_SMART ? 1 : 2;
         DataItem dataItem = this.readS7Data(AddressUtil.parseByte(address, offset + length));
@@ -509,7 +509,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read time: milliseconds, ms, for example, 1000ms, 4-bytes.
+     * Read time: milliseconds, ms, for example, 1000ms, 4 bytes.
      * (读取时间，时间为毫秒时间，ms，例如1000ms)
      *
      * @param address address string
@@ -520,7 +520,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read date, for example, 2023-04-04, 2-bytes.
+     * Read date, for example, 2023-04-04, 2 bytes.
      * (读取日期，例如：2023-04-04)
      *
      * @param address address string
@@ -532,7 +532,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read the time of day, for example: 23:56:31, 4-bytes.
+     * Read the time of day, for example: 23:56:31, 4 bytes.
      * (读取一天中的时间，例如：23:56:31)
      *
      * @param address address string
@@ -544,7 +544,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read date and time, 12-bytes.
+     * Read date and time, 12 bytes.
      * (读取日期和时间的数据类型)
      *
      * @param address address string
@@ -556,7 +556,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read counter, 2-bytes.
+     * Read counter, 2 bytes.
      * (读取计数器数据, 取值范围：0 … 999（最多 3 位十进制数）)
      *
      * @param address address string
@@ -568,7 +568,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read timer, 2-bytes.
+     * Read timer, 2 bytes.
      * 02 25 = 1000 * 25 = 25000ms
      * (读取定时器数据)
      *
@@ -600,19 +600,19 @@ public class S7PLC extends PLCNetwork {
     public void writeRaw(EParamVariableType variableType, int count, EArea area, int dbNumber, int byteAddress,
                          int bitAddress, EDataVariableType dataVariableType, byte[] data) {
         if (count <= 0) {
-            throw new IllegalArgumentException("count<=0");
+            throw new IllegalArgumentException("count must be greater than 0");
         }
         if (dbNumber < 0) {
-            throw new IllegalArgumentException("dbNumber<0");
+            throw new IllegalArgumentException("dbNumber must not be negative");
         }
         if (byteAddress < 0) {
-            throw new IllegalArgumentException("byteAddress<0");
+            throw new IllegalArgumentException("byteAddress must not be negative");
         }
         if (bitAddress < 0 || bitAddress > 7) {
-            throw new IllegalArgumentException("bitAddress<0||bitAddress>7");
+            throw new IllegalArgumentException("bitAddress must be between 0 and 7");
         }
         if (data == null || data.length == 0) {
-            throw new IllegalArgumentException("data");
+            throw new IllegalArgumentException("data must not be null or empty");
         }
         RequestItem requestItem = RequestItem.createByParams(variableType, count, area, dbNumber, byteAddress, bitAddress);
         DataItem dataItem = DataItem.createReq(data, dataVariableType);
@@ -653,7 +653,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write uint16, 2-bytes.
+     * Write uint16, 2 bytes.
      * (写入UInt16数据)
      *
      * @param address address string
@@ -664,7 +664,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write int16, 2-bytes.
+     * Write int16, 2 bytes.
      * (写入Int16数据)
      *
      * @param address address string
@@ -675,7 +675,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write uint32, 4-bytes.
+     * Write uint32, 4 bytes.
      * (写入UInt32数据)
      *
      * @param address address string
@@ -686,7 +686,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write int32, 4-bytes.
+     * Write int32, 4 bytes.
      * (写入Int32数据)
      *
      * @param address address string
@@ -697,7 +697,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write int64, 8-bytes.
+     * Write int64, 8 bytes.
      * (写入Int64数据)
      *
      * @param address address string
@@ -708,7 +708,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write float32, 4-bytes.
+     * Write float32, 4 bytes.
      * (写入Float32数据)
      *
      * @param address address string
@@ -719,7 +719,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write float64, 8-bytes.
+     * Write float64, 8 bytes.
      * (写入Float64数据)
      *
      * @param address address string
@@ -752,7 +752,7 @@ public class S7PLC extends PLCNetwork {
      */
     public void writeString(String address, String data) {
         if (data == null) {
-            throw new IllegalArgumentException("data=null");
+            throw new IllegalArgumentException("data must not be null");
         }
         int offset = this.plcType == EPlcType.S200_SMART ? 0 : 1;
         // 填充字节长度数据
@@ -791,7 +791,7 @@ public class S7PLC extends PLCNetwork {
 //    }
 
     /**
-     * Write time, the time is milliseconds, ms, 4-bytes.
+     * Write time, the time is milliseconds, ms, 4 bytes.
      * (写入时间，时间为毫秒时间，ms)
      *
      * @param address address string
@@ -802,7 +802,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write date, 2-bytes.
+     * Write date, 2 bytes.
      * (写入日期)
      *
      * @param address address string
@@ -814,7 +814,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write the time of day, 4-bytes.
+     * Write the time of day, 4 bytes.
      * (写入一天中的时间)
      *
      * @param address address string
@@ -826,7 +826,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write date and time, 12-bytes.
+     * Write date and time, 12 bytes.
      * (写入具体的时间)
      *
      * @param address  address string
@@ -838,7 +838,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Write counter, 2-bytes.
+     * Write counter, 2 bytes.
      * (读取计数器数据, 取值范围：0 … 999（最多 3 位十进制数）)
      *
      * @param address address string
@@ -964,7 +964,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read cnc manufacture date.
+     * Read the CNC manufacturing date.
      * CNC的生产日期<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 00 00 0C 00 00 04 01 12 08 82 01 46 78 00 01 1A 01<br>
      * 接收[45]：03 00 00 2D 02 F0 80 32 03 00 00 00 00 00 02 00 18 00 00 04 01 FF 09 00 14 30 34 2E 30 38 2E 30 37 2E 30 30 2E 30 32 30 20 20 20 20 00
@@ -1038,7 +1038,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read remain position.
+     * Read the remaining distance.
      * 获取剩余坐标系<br>
      * 发送[59]：03 00 00 3B 02 F0 80 32 01 00 00 00 00 00 2A 00 00 04 04 12 08 82 41 00 03 00 01 74 01 12 08 82 41 00 03 00 02 74 01 12 08 82 41 00 03 00 03 74 01 12 08 82 41 00 03 00 04 74 01<br>
      * 接收[69]：03 00 00 45 02 F0 80 32 03 00 00 00 00 00 02 00 30 00 00 04 04 FF 09 00 08 00 00 00 00 00 00 00 00 FF 09 00 08 00 00 00 00 00 00 00 00 FF 09 00 08 00 00 00 00 00 00 00 00 FF 09 00 08 00 00 00 00 00 00 00 00
@@ -1058,7 +1058,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read T work piece position.
+     * Read the T workpiece position.
      * T工件坐标<br>
      * 发送[49]：03 00 00 31 02 F0 80 32 01 00 00 00 00 00 20 00 00 04 03 12 08 82 41 00 01 00 04 12 01 12 08 82 41 00 01 00 05 12 01 12 08 82 41 00 01 00 06 12 01<br>
      * 接收[57]：03 00 00 39 02 F0 80 32 03 00 00 00 00 00 02 00 24 00 00 04 03 FF 09 00 08 00 00 00 00 00 00 00 80 FF 09 00 08 00 00 00 00 00 00 00 80 FF 09 00 08 00 00 00 00 00 00 00 80
@@ -1108,7 +1108,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read act spindle speed.
+     * Read the actual spindle speed.
      * 实际主轴转速<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 13 00 0C 00 00 04 01 12 08 82 41 00 02 00 01 72 01<br>
      * 接收[33]：03 00 00 21 02 F0 80 32 03 00 00 00 13 00 02 00 0C 00 00 04 01 FF 09 00 08 00 00 00 00 00 00 00 00
@@ -1123,7 +1123,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read set spindle speed.
+     * Read the configured spindle speed.
      * 设定主轴转速<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 00 00 0C 00 00 04 01 12 08 82 41 00 04 00 01 72 01<br>
      * 接收[33]：03 00 00 21 02 F0 80 32 03 00 00 00 00 00 02 00 0C 00 00 04 01 FF 09 00 08 00 00 00 00 00 00 59 40
@@ -1168,7 +1168,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read set feed rate.
+     * Read the configured feed rate.
      * 获取设定进给速率<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 13 00 0C 00 00 04 01 12 08 82 41 00 02 00 01 7F 01<br>
      * 接收[33]：03 00 00 21 02 F0 80 32 03 00 00 00 13 00 02 00 0C 00 00 04 01 FF 09 00 08 00 00 00 00 00 00 00 00
@@ -1183,7 +1183,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read act feed rate.
+     * Read the actual feed rate.
      * 获取实际进给速率<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 13 00 0C 00 00 04 01 12 08 82 41 00 01 00 01 7F 01<br>
      * 接收[33]：03 00 00 21 02 F0 80 32 03 00 00 00 13 00 02 00 0C 00 00 04 01 FF 09 00 08 00 00 00 00 00 00 00 00
@@ -1198,7 +1198,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read work mode.
+     * Read the operating mode.
      * 工作模式的请求，0:JOG, 1:MDA, 2:AUTO, 其他<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 00 00 0C 00 00 04 01 12 08 82 21 00 03 00 01 7F 01<br>
      * 接收[27]：03 00 00 1B 02 F0 80 32 03 00 00 00 00 00 02 00 06 00 00 04 01 FF 09 00 02 00 00
@@ -1243,7 +1243,7 @@ public class S7PLC extends PLCNetwork {
     }
 
     /**
-     * Read remain time.
+     * Read the remaining time.
      * 剩余时间<br>
      * 发送[29]：03 00 00 1D 02 F0 80 32 01 00 00 00 00 00 0C 00 00 04 01 12 08 82 41 01 2A 00 01 7F 01<br>
      * 接收[33]：03 00 00 21 02 F0 80 32 03 00 00 00 00 00 02 00 0C 00 00 04 01 FF 09 00 08 00 00 00 00 00 00 00 00
@@ -1316,7 +1316,7 @@ public class S7PLC extends PLCNetwork {
      */
     public int byteArrayToTimer(byte[] src) {
         if (src == null || src.length != 2) {
-            throw new IllegalArgumentException("Timer byte array length must be 2");
+            throw new IllegalArgumentException("Timer byte array must contain exactly 2 bytes");
         }
         byte timerBaseByte = (byte) ((src[0] >> 4) & 0x03);
         ETimerBase timerBase = ETimerBase.from(timerBaseByte);
@@ -1333,7 +1333,7 @@ public class S7PLC extends PLCNetwork {
      */
     public int byteArrayToCounter(byte[] src) {
         if (src == null || src.length != 2) {
-            throw new IllegalArgumentException("Counter byte array length must be 2");
+            throw new IllegalArgumentException("Counter byte array must contain exactly 2 bytes");
         }
         // 0-999
         return BCDUtil.toInt(src, 3);
@@ -1348,7 +1348,7 @@ public class S7PLC extends PLCNetwork {
      */
     public LocalDate byteArrayToDate(byte[] src) {
         if (src == null || src.length != 2) {
-            throw new IllegalArgumentException("Date byte array length must be 2");
+            throw new IllegalArgumentException("Date byte array must contain exactly 2 bytes");
         }
         int offset = ByteReadBuff.newInstance(src).getUInt16();
         return LocalDate.of(1990, 1, 1).plusDays(offset);
@@ -1363,7 +1363,7 @@ public class S7PLC extends PLCNetwork {
      */
     public LocalTime byteArrayToTimeOfDay(byte[] src) {
         if (src == null || src.length != 4) {
-            throw new IllegalArgumentException("TimeOfDay byte array length must be 4");
+            throw new IllegalArgumentException("TimeOfDay byte array must contain exactly 4 bytes");
         }
         long value = ByteReadBuff.newInstance(src).getUInt32();
         return LocalTime.ofSecondOfDay(value / 1000);
@@ -1378,7 +1378,7 @@ public class S7PLC extends PLCNetwork {
      */
     public LocalDateTime byteArrayToDTL(byte[] src) {
         if (src == null || src.length != 12) {
-            throw new IllegalArgumentException("Counter byte array length must be 12");
+            throw new IllegalArgumentException("DTL byte array must contain exactly 12 bytes");
         }
         ByteReadBuff buff = ByteReadBuff.newInstance(src);
         int year = buff.getUInt16();

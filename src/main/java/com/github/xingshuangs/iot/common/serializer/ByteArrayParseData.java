@@ -30,7 +30,7 @@ import lombok.Data;
 import java.lang.reflect.Field;
 
 /**
- * Byte array data used to parse.
+ * Byte array data to parse.
  *
  * @author xingshuang
  */
@@ -38,7 +38,7 @@ import java.lang.reflect.Field;
 public class ByteArrayParseData {
 
     /**
-     * Annotation of byte array.
+     * Annotation describing a byte array mapping.
      * (字节数组注解参数)
      */
     ByteArrayVariable variable;

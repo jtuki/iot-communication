@@ -102,7 +102,7 @@ public final class RtcpBye extends RtcpBasePackage {
      */
     public static RtcpBye fromBytes(final byte[] data, final int offset) {
         if (data.length < 8) {
-            throw new IndexOutOfBoundsException("RtcpBye, data length < 8");
+            throw new IndexOutOfBoundsException("RtcpBye data must contain at least 8 bytes");
         }
         RtcpBye res = new RtcpBye();
         res.header = RtcpHeader.fromBytes(data, offset);

@@ -32,7 +32,7 @@ import com.github.xingshuangs.iot.protocol.melsec.enums.EMcSeries;
 import java.util.List;
 
 /**
- * Req builder class.
+ * Request builder.
  * (MC请求构建器)
  *
  * @author xingshuang

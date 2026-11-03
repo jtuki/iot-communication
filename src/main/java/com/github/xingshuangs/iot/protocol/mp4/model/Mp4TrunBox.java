@@ -31,8 +31,8 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 import java.util.List;
 
 /**
- * Track Fragment Run Box(trun) records information about samples in moof,
- * such as the size,duration,offset and other information of each sample.
+ * The Track Fragment Run Box (trun) records sample information for a movie fragment,
+ * including each sample's size, duration, and offset.
  * Track Fragment Run Box(trun),记录moof中有关sample的相关信息，如每个sample的size,duration,offset等信息，
  *
  * @author xingshuang
@@ -40,18 +40,18 @@ import java.util.List;
 public class Mp4TrunBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * Represents how much the actual data position in the mdat matching with moof is offset from the beginning of moof,
-     * which is equal to the length of the entire moof + the head length of mdat
+     * Offset from the start of moof to the sample data in the associated mdat box,
+     * equal to the moof size plus the mdat header size.
      * 4-bytes 表示和moof配套的mdat中实际数据位置距离moof开头有多少偏移，其等于整个moof的长度+mdat的头长度
      */
     private final int offset;

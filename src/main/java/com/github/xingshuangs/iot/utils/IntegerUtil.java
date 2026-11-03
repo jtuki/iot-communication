@@ -65,7 +65,7 @@ public class IntegerUtil {
      * Converts int to a 4-byte array, using big-endian mode by default.
      * (将int转换为字节数组，默认采用大端模式)
      *
-     * @param data int data
+     * @param data int value
      * @return byte array
      */
     public static byte[] toByteArray(int data) {
@@ -108,7 +108,7 @@ public class IntegerUtil {
      */
     public static byte[] toCustomByteArray(long data, int offset, int length, boolean littleEndian) {
         if (offset + length > 4) {
-            throw new IndexOutOfBoundsException("offset + length > 4");
+            throw new IndexOutOfBoundsException("offset + length must not exceed 4");
         }
         byte[] bytes = toByteArray((int) data, littleEndian);
         byte[] res = new byte[length];
@@ -150,10 +150,10 @@ public class IntegerUtil {
      */
     public static int toInt32(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("data length < 4");
+            throw new IndexOutOfBoundsException("IntegerUtil data must contain at least 4 bytes");
         }
         if (offset + 4 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 4 > data length");
+            throw new IndexOutOfBoundsException("offset + 4 must not exceed the data array length");
         }
         int b = littleEndian ? 3 : 0;
         int d = littleEndian ? 1 : -1;
@@ -186,10 +186,10 @@ public class IntegerUtil {
      */
     public static int toInt32In3Bytes(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 3) {
-            throw new IndexOutOfBoundsException("data length < 3");
+            throw new IndexOutOfBoundsException("IntegerUtil data must contain at least 3 bytes");
         }
         if (offset + 3 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 3 > data length");
+            throw new IndexOutOfBoundsException("offset + 3 must not exceed the data array length");
         }
         int b = littleEndian ? 2 : 0;
         int d = littleEndian ? 1 : -1;

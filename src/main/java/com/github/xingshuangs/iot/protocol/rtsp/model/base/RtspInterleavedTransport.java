@@ -67,7 +67,7 @@ public class RtspInterleavedTransport extends RtspTransport {
 
     public static RtspInterleavedTransport fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("RtspTransport, src is null or empty");
+            throw new IllegalArgumentException("RtspInterleavedTransport: src must not be null or empty");
         }
         RtspInterleavedTransport transport = new RtspInterleavedTransport();
         String[] split = src.split(";");
@@ -92,10 +92,10 @@ public class RtspInterleavedTransport extends RtspTransport {
     @Override
     public String toString() {
         if (this.protocol == null || this.protocol.equals("")) {
-            throw new RtspCommException("protocol of RtspTransport is null or empty");
+            throw new RtspCommException("RtspTransport protocol must not be null or empty");
         }
         if (this.castMode == null || this.castMode.equals("")) {
-            throw new RtspCommException("castMode of RtspTransport is null or empty");
+            throw new RtspCommException("RtspTransport castMode must not be null or empty");
         }
         List<String> res = new ArrayList<>();
         res.add(this.protocol);

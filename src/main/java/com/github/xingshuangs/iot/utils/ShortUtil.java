@@ -59,7 +59,7 @@ public class ShortUtil {
      * Convert int to a 2-byte array, using big-endian mode by default.
      * (将int转换为字节数组)
      *
-     * @param data int data
+     * @param data int value
      * @return byte array
      */
     public static byte[] toByteArray(int data) {
@@ -147,10 +147,10 @@ public class ShortUtil {
      */
     public static int toUInt16(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 2) {
-            throw new IndexOutOfBoundsException("data length < 2");
+            throw new IndexOutOfBoundsException("ShortUtil data must contain at least 2 bytes");
         }
         if (offset + 2 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 2 > data length");
+            throw new IndexOutOfBoundsException("offset + 2 must not exceed the data array length");
         }
         int b = littleEndian ? 1 : 0;
         int d = littleEndian ? 1 : -1;

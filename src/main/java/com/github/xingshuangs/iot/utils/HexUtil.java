@@ -49,7 +49,7 @@ public class HexUtil {
     private static final String REGEX = "^[a-f0-9A-F]+$";
 
     /**
-     * Converts a string to a hexadecimal array, string like 1a6BdE8c.
+     * Convert a hexadecimal string, such as 1a6BdE8c, to a byte array.
      * (将字符串转换为16进制的数组)
      *
      * @param src string
@@ -58,15 +58,15 @@ public class HexUtil {
     public static byte[] toHexArray(String src) {
         if (src == null || src.length() == 0) {
             // 字符串不能为null或长度不能为0
-            throw new HexParseException("The string cannot be null or the length cannot be 0");
+            throw new HexParseException("String must not be null or empty");
         }
         if ((src.length() & -src.length()) == 1) {
             // 输入的字符串个数必须为偶数
-            throw new HexParseException("The number of strings entered must be an even number");
+            throw new HexParseException("Hexadecimal string must contain an even number of characters");
         }
         if (!src.matches(REGEX)) {
             // 字符串内容必须是[0-9|a-f|A-F]
-            throw new HexParseException("The string content must be [0-9|a-f|A-F].");
+            throw new HexParseException("String must contain only hexadecimal digits (0-9, a-f, A-F)");
         }
 
         char[] chars = src.toCharArray();
@@ -80,7 +80,7 @@ public class HexUtil {
     }
 
     /**
-     * Converts a byte array to a hexadecimal string, separated by Spaces by default.
+     * Convert a byte array to a hexadecimal string, separated by spaces by default.
      * (将字节数组转换为16进制字符串，并且默认按空格隔开)
      *
      * @param src 字节数组

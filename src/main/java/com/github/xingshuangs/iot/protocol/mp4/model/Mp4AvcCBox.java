@@ -29,8 +29,7 @@ import com.github.xingshuangs.iot.common.buff.ByteWriteBuff;
 import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 
 /**
- * Sample Description box (stbl-stsd), which stores the description information necessary for decoding,
- * is also a container box. For H264 streams, it contains avc1 subboxes.
+ * AVC configuration box (avcC), containing the decoder configuration, SPS, and PPS for an H.264 stream.
  * Sample Description Box(stbl-stsd)，存放解码必须的描述信息,其也是一个container box，对于H264码流来说其包含avc1子box
  *
  * @author xingshuang
@@ -38,43 +37,43 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4AvcCBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 1-bytes, profile
+     * 1-byte profile
      */
     private final int profile;
 
     /**
-     * 1-bytes, profile compat
+     * 1-byte profile compat
      */
     private final int profileCompat;
 
     /**
-     * 1-bytes, level
+     * 1-byte level
      */
     private final int level;
 
     /**
-     * 1 byte nalu length Number of bytes. This bit indicates the length of the nalu after the start bit is removed.
-     * The first five digits of this byte are 1 by default. The last three values +1 represent the number of bytes
-     * taken up by the frame size, we use 4 bytes to store the frame size, so 3 here, which is 0xFC|0x03=0xFF.
+     * NAL unit length field size (1 byte). The low two bits store the length field size minus one.
+     * The upper six bits are reserved and set to 1. Adding 1 to the low two bits gives the number of bytes
+     * used for each NAL unit length. This implementation uses 4 bytes, so the value is 0xFC | 0x03 = 0xFF.
      * 1字节nalu长度头字节数, 此位标识nalu去掉起始位后，前面多少位用来表示nalu长度，此字节前五位默认为1,
      * 后三位值+1表示帧size占用的字节数，我们用4个字节来存储帧大小，所以这里为3，即为0xFC|0x03=0xFF
      */
     private final int lengthSizeMinusOne;
 
     /**
-     * 1 byte number of sps, the first three bits are reserved, the default bit is 1, the last five bits represent
-     * the number of sps, we only put one sps, so E0|01=E1.
+     * SPS count (1 byte). The upper three bits are reserved and set to 1; the lower five bits store
+     * the number of SPS entries. This implementation uses one SPS, so the value is 0xE0 | 0x01 = 0xE1.
      * 1字节sps个数，前3位预留，默认位1，后五位表示sps个数，我们只放了一个sps，因此为E0|01=E1
      */
     private final int spsCount;
 
     /**
-     * 2-bytes, sps frame length
+     * 2-byte sps frame length
      */
     private final int spsLength;
 
@@ -84,12 +83,12 @@ public class Mp4AvcCBox extends Mp4Box {
     private final byte[] sps;
 
     /**
-     * 1-bytes, pps count.
+     * 1-byte pps count.
      */
     private final int ppsCount;
 
     /**
-     * 2-bytes, pps frame length
+     * 2-byte pps frame length
      */
     private final int ppsLength;
 

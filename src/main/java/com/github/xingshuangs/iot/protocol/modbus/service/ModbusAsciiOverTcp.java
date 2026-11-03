@@ -41,7 +41,7 @@ import static com.github.xingshuangs.iot.common.constant.GeneralConst.LOCALHOST;
 import static com.github.xingshuangs.iot.common.constant.GeneralConst.MODBUS_PORT;
 
 /**
- * Modbus ascii over tcp.
+ * Modbus ASCII over TCP.
  * (modbus 1个寄存器占2个字节)
  *
  * @author xingshuang
@@ -106,7 +106,7 @@ public class ModbusAsciiOverTcp extends ModbusSkeletonAbstract<MbAsciiRequest, M
         }
         if (len <= 0) {
             // Modbus数据读取长度有误
-            throw new ModbusCommException("The length of Modbus data read is incorrect");
+            throw new ModbusCommException("Incomplete Modbus response data");
         }
         byte[] total = new byte[len];
         System.arraycopy(data, 0, total, 0, len);
@@ -128,7 +128,7 @@ public class ModbusAsciiOverTcp extends ModbusSkeletonAbstract<MbAsciiRequest, M
     protected void checkResult(MbAsciiRequest req, MbAsciiResponse ack) {
         if (!ack.checkLrc()) {
             // 响应数据LRC校验失败
-            throw new ModbusCommException("Response data LRC verification failed");
+            throw new ModbusCommException("Response data failed the LRC check");
         }
         if (ack.getPdu() == null) {
             throw new ModbusCommException("PDU is null");
@@ -136,12 +136,12 @@ public class ModbusAsciiOverTcp extends ModbusSkeletonAbstract<MbAsciiRequest, M
         if (ack.getPdu().getFunctionCode().getCode() == (req.getPdu().getFunctionCode().getCode() | (byte) 0x80)) {
             MbErrorResponse response = (MbErrorResponse) ack.getPdu();
             // 响应返回异常，异常码:
-            throw new ModbusCommException("The response returns an exception, the exception code:" + response.getErrorCode().getDescription());
+            throw new ModbusCommException("Modbus exception response, error: " + response.getErrorCode().getDescription());
         }
         if (ack.getPdu().getFunctionCode().getCode() != req.getPdu().getFunctionCode().getCode()) {
             MbErrorResponse response = (MbErrorResponse) ack.getPdu();
             // 返回功能码和发送功能码不一致，异常码:
-            throw new ModbusCommException("The return function code is inconsistent with the send function code. The exception code is:" + response.getErrorCode().getDescription());
+            throw new ModbusCommException("Response function code does not match the request function code, error: " + response.getErrorCode().getDescription());
         }
     }
 
@@ -154,7 +154,7 @@ public class ModbusAsciiOverTcp extends ModbusSkeletonAbstract<MbAsciiRequest, M
         } finally {
             if (!this.persistence) {
                 // 由于短连接方式，通信完毕触发关闭连接通道，服务端IP
-                log.debug("Due to the short connection mode, the communication is completed and the connection channel is triggered to close, Server IP[{}]", this.socketAddress);
+                log.debug("Closing the connection after communication in non-persistent mode, server address [{}]", this.socketAddress);
                 this.close();
             }
         }

@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.common.serializer;
 
 
 /**
- * PLC serialize interface.
+ * PLC serialization interface.
  * (PLC序列化接口)
  *
  * @author xingshuang

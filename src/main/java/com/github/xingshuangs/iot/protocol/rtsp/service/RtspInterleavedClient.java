@@ -46,7 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * Interleaved client for tcp.
+ * Client for interleaved RTP/RTCP over TCP.
  *
  * @author xingshuang
  */
@@ -56,7 +56,7 @@ public class RtspInterleavedClient implements IRtspDataStream {
     public static final Integer BUFFER_SIZE = 4096;
 
     /**
-     * Is thread terminal.
+     * Thread termination flag.
      */
     private boolean terminal = false;
 
@@ -73,25 +73,25 @@ public class RtspInterleavedClient implements IRtspDataStream {
     private final IPayloadParser iPayloadParser;
 
     /**
-     * Data statistics of rtp and rtcp.
+     * RTP and RTCP statistics.
      * (RTP和RTCP的数据统计)
      */
     private final RtcpDataStatistics statistics = new RtcpDataStatistics();
 
     /**
-     * Rtp video channel number.
+     * RTP video channel number.
      * (视频rtp的通道编号)
      */
     private int rtpVideoChannelNumber = 0;
 
     /**
-     * Rtcp video channel number.
+     * RTCP video channel number.
      * (视频rtcp的通道编号)
      */
     private int rtcpVideoChannelNumber = 1;
 
     /**
-     * Rtsp client.
+     * RTSP client.
      * (连接对象)
      */
     private final TcpClientBasic rtspClient;
@@ -165,12 +165,12 @@ public class RtspInterleavedClient implements IRtspDataStream {
     }
 
     /**
-     * Receive data thread handler.
+     * Run the data receiving loop.
      * (接收数据线程)
      */
     private void waitForReceiveData() {
         InetSocketAddress socketAddress = this.rtspClient.getSocketAddress();
-        log.debug("[RTSP + TCP] Interleaved enable asynchronous data receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + TCP] Starting the asynchronous interleaved receiving thread, remote address [/{}:{}]",
                 socketAddress.getAddress().getHostAddress(), socketAddress.getPort());
         while (!this.terminal) {
             try {
@@ -198,7 +198,7 @@ public class RtspInterleavedClient implements IRtspDataStream {
                 log.error(e.getMessage(), e);
             }
         }
-        log.debug("[RTSP + TCP] Interleaved closes asynchronous receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + TCP] Stopped the asynchronous interleaved receiving thread, remote address [/{}:{}]",
                 socketAddress.getAddress().getHostAddress(), socketAddress.getPort());
     }
 
@@ -215,7 +215,7 @@ public class RtspInterleavedClient implements IRtspDataStream {
         }
         int readLength = this.rtspClient.read(header, 1, 3, 1024, 0, true);
         if (readLength != 3) {
-            throw new RtspCommException("Header read length is incorrect");
+            throw new RtspCommException("Incomplete interleaved frame header");
         }
         int offset = 4;
         int length = ByteReadBuff.newInstance(header, 2).getUInt16();
@@ -225,13 +225,13 @@ public class RtspInterleavedClient implements IRtspDataStream {
         int read = this.rtspClient.read(total, offset, length, 1024, 0, true);
         if (offset + read != total.length) {
             log.error(HexUtil.toHexString(total));
-            throw new RtspCommException("The read length is incorrect，original length[" + (total.length) + "], present length[" + (offset + read) + "]");
+            throw new RtspCommException("Incomplete interleaved frame, expected length [" + (total.length) + "], actual length [" + (offset + read) + "]");
         }
         return total;
     }
 
     /**
-     * Rtcp video data handle.
+     * RTCP video data handler.
      * (处理视频的RTCP)
      *
      * @param interleaved data
@@ -242,7 +242,7 @@ public class RtspInterleavedClient implements IRtspDataStream {
     }
 
     /**
-     * Rtp video data handle.
+     * RTP video data handler.
      * (处理视频RTP)
      *
      * @param interleaved data

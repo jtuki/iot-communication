@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Write multiple coil request.
+ * Request to write multiple coils.
  * (请求写多个线圈)
  *
  * @author xingshuang

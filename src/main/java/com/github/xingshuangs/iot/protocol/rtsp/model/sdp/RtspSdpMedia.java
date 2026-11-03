@@ -63,7 +63,7 @@ public class RtspSdpMedia {
     private RtspSdpBandwidth bandwidth;
 
     /**
-     * Encrypt key.
+     * Encryption key.
      * 加密秘钥(可选)
      */
     private RtspSdpEncryptKey encryptKey;
@@ -76,7 +76,7 @@ public class RtspSdpMedia {
 
     public static RtspSdpMedia fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("media, src is null or empty");
+            throw new IllegalArgumentException("RtspSdpMedia: src must not be null or empty");
         }
         RtspSdpMedia media = new RtspSdpMedia();
         List<String> list = StringSpUtil.splitOneStepByLine(src, CRLF);

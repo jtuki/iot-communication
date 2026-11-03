@@ -31,14 +31,14 @@ import com.github.xingshuangs.iot.protocol.rtp.model.frame.RawFrame;
 import java.util.function.Consumer;
 
 /**
- * Interface of payload parser.
+ * Payload parser interface.
  * (负载解析器)
  *
  * @author xingshuang
  */
 public interface IPayloadParser {
     /**
-     * Process rtp package.
+     * Process an RTP packet.
      * (处理数据包)
      *
      * @param rtp rtp数据包

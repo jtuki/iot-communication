@@ -40,27 +40,27 @@ import java.time.LocalDateTime;
 public class Mp4TkhdBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4-bytes creation time
+     * 4-byte creation time
      */
     private final LocalDateTime creationTime;
 
     /**
-     * 4-bytes modification time
+     * 4-byte modification time
      */
     private final LocalDateTime modificationTime;
 
     /**
-     * 4-bytes timescale
+     * 4-byte timescale
      */
     private final int trackId;
 
@@ -70,7 +70,7 @@ public class Mp4TkhdBox extends Mp4Box {
     private final byte[] reserve1;
 
     /**
-     * 4-bytes duration
+     * 4-byte duration
      */
     private final int duration;
 
@@ -80,7 +80,7 @@ public class Mp4TkhdBox extends Mp4Box {
     private final byte[] reserve2;
 
     /**
-     * 2-bytes the video layer, which is sort before and after, here is all the videos, set it to 0.
+     * 2-byte the video layer, which is sort before and after, here is all the videos, set it to 0.
      * 视频layer，相当于前后排序，这里就一路视频，设置为0
      */
     private final int layer;
@@ -102,19 +102,19 @@ public class Mp4TkhdBox extends Mp4Box {
     private final byte[] reserve4;
 
     /**
-     * 36-bytes transformation matrix
+     * 36-byte transformation matrix
      * 变换矩阵
      */
     private final byte[] unityMatrix;
 
     /**
-     * 4-bytes video width
+     * 4-byte video width
      * 视频宽
      */
     private final int width;
 
     /**
-     * 4-bytes video height
+     * 4-byte video height
      * 视频高
      */
     private final int height;

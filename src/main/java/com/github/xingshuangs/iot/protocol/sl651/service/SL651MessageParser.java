@@ -244,7 +244,7 @@ public class SL651MessageParser {
             }
 
             if (index <= startIndex) {
-                throw new SocketRuntimeException("SL651 body parse dead loop detected at index: " + index);
+                throw new SocketRuntimeException("SL651 body parser made no progress at index: " + index);
             }
         }
         return resultList;

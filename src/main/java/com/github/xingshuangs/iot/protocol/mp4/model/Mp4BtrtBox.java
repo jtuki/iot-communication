@@ -37,17 +37,17 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4BtrtBox extends Mp4Box {
 
     /**
-     * 4-bytes，cache size.
+     * 4-byte，cache size.
      */
     private final int bufferSizeDB;
 
     /**
-     * 4-bytes, max bit rate.
+     * 4-byte max bit rate.
      */
     private final int maxBitRate;
 
     /**
-     * 4-bytes, average bit rate.
+     * 4-byte average bit rate.
      */
     private final int avgBitRate;
 

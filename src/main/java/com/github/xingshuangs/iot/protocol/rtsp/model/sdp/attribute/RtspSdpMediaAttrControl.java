@@ -54,12 +54,12 @@ public class RtspSdpMediaAttrControl {
 
     public static RtspSdpMediaAttrControl fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("MediaAttrControl of Sdp data error");
+            throw new IllegalArgumentException("Invalid SDP media control attribute");
         }
         RtspSdpMediaAttrControl control = new RtspSdpMediaAttrControl();
         int i = src.indexOf(EQUAL);
         if (i < 0) {
-            throw new RtspCommException("RtspSdpMediaAttrControl data error");
+            throw new RtspCommException("Invalid RtspSdpMediaAttrControl data");
         }
         int trackIDIndex = src.indexOf("trackID");
         if (trackIDIndex < 0) {

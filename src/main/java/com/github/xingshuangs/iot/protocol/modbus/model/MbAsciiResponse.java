@@ -33,7 +33,7 @@ import com.github.xingshuangs.iot.utils.LRCUtil;
 import lombok.Data;
 
 /**
- * Response of ASCII modbus.
+ * Modbus ASCII response.
  * (ASCII的modbus响应)
  *
  * @author xingshuang
@@ -42,7 +42,7 @@ import lombok.Data;
 public class MbAsciiResponse implements IObjectByteArray {
 
     /**
-     * Unit id, or slave id.
+     * Unit ID (also called the slave ID).
      * 单元标识符<br>
      * 字节大小：1个字节
      * 字节序数：0

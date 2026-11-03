@@ -104,7 +104,7 @@ public class H264NaluStapB extends H264NaluBase {
      */
     public static H264NaluStapB fromBytes(final byte[] data, final int offset) {
         if (data.length < 1) {
-            throw new IndexOutOfBoundsException("H264NaluStapSingle, data length < 1");
+            throw new IndexOutOfBoundsException("H264NaluStapB data must contain at least 1 bytes");
         }
         int index = offset;
         H264NaluStapB res = new H264NaluStapB();

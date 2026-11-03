@@ -113,11 +113,11 @@ public class RtspInterleaved implements IObjectByteArray {
      */
     public static RtspInterleaved fromBytes(final byte[] data, final int offset) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("RtspInterleaved, data length < 4");
+            throw new IndexOutOfBoundsException("RtspInterleaved data must contain at least 4 bytes");
         }
         if (data[offset] != VERSION) {
             // 报文版本不一致，第一个字节不是0x24
-            throw new IllegalArgumentException("The versions of the packets are different, the first byte is not 0x24");
+            throw new IllegalArgumentException("Invalid interleaved frame marker: expected 0x24 as the first byte");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         RtspInterleaved res = new RtspInterleaved();

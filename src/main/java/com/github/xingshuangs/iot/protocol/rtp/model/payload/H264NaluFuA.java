@@ -93,7 +93,7 @@ public class H264NaluFuA extends H264NaluBase {
      */
     public static H264NaluFuA fromBytes(final byte[] data, final int offset) {
         if (data.length < 1) {
-            throw new IndexOutOfBoundsException("H264NaluSingle, data length < 1");
+            throw new IndexOutOfBoundsException("H264NaluFuA data must contain at least 1 bytes");
         }
         H264NaluFuA res = new H264NaluFuA();
         int index = offset;

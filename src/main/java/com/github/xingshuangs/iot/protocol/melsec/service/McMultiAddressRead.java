@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Multi address read.
+ * Multi-address read operations.
  * 多地址读
  *
  * @author xingshuang

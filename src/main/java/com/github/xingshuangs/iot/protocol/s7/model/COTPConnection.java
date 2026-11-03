@@ -34,7 +34,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * COTP connection class.
+ * COTP connection.
  * COTP连接部分
  *
  * @author xingshuang
@@ -162,7 +162,7 @@ public class COTPConnection extends COTP implements IObjectByteArray {
     }
 
     /**
-     * CRConnect Request object.
+     * Create a COTP connection request (CR).
      *
      * @param local  source tsap
      * @param remote destination tsap
@@ -188,7 +188,7 @@ public class COTPConnection extends COTP implements IObjectByteArray {
     }
 
     /**
-     * CRConnect Request object.
+     * Create a COTP connection confirmation (CC).
      *
      * @param request request data
      * @return COTPConnection
@@ -221,7 +221,7 @@ public class COTPConnection extends COTP implements IObjectByteArray {
     public static COTPConnection fromBytes(final byte[] data) {
         if (data.length < BYTE_LENGTH) {
             // COTPConnection数据字节长度不够，无法解析
-            throw new S7CommException("The COTPConnection data bytes are not long enough to parse");
+            throw new S7CommException("Insufficient data to parse COTPConnection");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         COTPConnection connection = new COTPConnection();

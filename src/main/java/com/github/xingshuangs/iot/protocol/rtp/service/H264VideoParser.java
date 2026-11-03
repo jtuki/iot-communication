@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 public class H264VideoParser implements IPayloadParser {
 
     /**
-     * Payload number.
+     * Payload type number.
      * (负载编号)
      */
     private final Integer payloadNumber;
@@ -73,13 +73,13 @@ public class H264VideoParser implements IPayloadParser {
     private final List<H264VideoFrame> cacheFrameList = new ArrayList<>();
 
     /**
-     * Frame handle.
+     * Frame handler.
      * （帧处理事件）
      */
     private Consumer<RawFrame> frameHandle;
 
     /**
-     * RTP package cache list.
+     * List of cached RTP packets.
      */
     private final List<RtpPackage> rtpPackageList = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class H264VideoParser implements IPayloadParser {
     }
 
     /**
-     * Execute the Nalu cache and pack it into a frame.
+     * Assemble the cached NAL units into a frame.
      * 执行Nalu的缓存，打包成一帧
      *
      * @return H264VideoFrame
@@ -162,7 +162,7 @@ public class H264VideoParser implements IPayloadParser {
     }
 
     /**
-     * Extract the byte data list of NALU.
+     * Extract the byte arrays of the NAL units.
      * (提取NALU的字节数据列表)
      *
      * @return byte array list
@@ -197,7 +197,7 @@ public class H264VideoParser implements IPayloadParser {
     }
 
     /**
-     * Processing of data packet loss.
+     * Check whether packet loss is within the allowed threshold.
      * (对数据丢包的处理)
      *
      * @return true；match，false：not match
@@ -214,38 +214,38 @@ public class H264VideoParser implements IPayloadParser {
         RtpPackage rtp = this.naluBuffers.get(0);
         H264NaluHeader naluHeader = H264NaluHeader.fromBytes(rtp.getPayload());
         if (naluHeader.getType() == EH264NaluType.IDR_SLICE && lostNumber > idrSliceMinNumber) {
-            log.debug("When a Single NALU is processed, data sequence numbers are discontinuous, resulting in key frame data loss due to packet loss. The frame data is discarded. The total number of [{}] and the number of lost [{}] exceeds [{}].", this.naluBuffers.size(), lostNumber, idrSliceMinNumber);
+            log.debug("Discarding a key frame (Single NALU): buffered packets [{}], sequence gaps [{}], allowed gaps [{}]", this.naluBuffers.size(), lostNumber, idrSliceMinNumber);
             return false;
         } else if (naluHeader.getType() == EH264NaluType.NON_IDR_SLICE && lostNumber > nonIdrSliceMinNumber) {
-            log.debug("When a Single NALU is processed, data sequence numbers are discontinuous, resulting in non-key frame data loss due to packet loss. The frame data is discarded. The total number of [{}] and the number of lost [{}] exceeds [{}].", this.naluBuffers.size(), lostNumber, nonIdrSliceMinNumber);
+            log.debug("Discarding a non-key frame (Single NALU): buffered packets [{}], sequence gaps [{}], allowed gaps [{}]", this.naluBuffers.size(), lostNumber, nonIdrSliceMinNumber);
             return false;
         } else if (naluHeader.getType() == EH264NaluType.FU_A) {
             H264NaluFuHeader naluFuHeader = H264NaluFuHeader.fromBytes(rtp.getPayload(), 1);
             if (naluFuHeader.getType() == EH264NaluType.IDR_SLICE && lostNumber > idrSliceMinNumber) {
-                log.debug("When processing the NALU of FUA, the data sequence number is discontinuous, resulting in the data loss of key frame data due to packet loss. The frame data is discarded. The total number of [{}] and the number of lost [{}] exceed [{}].", this.naluBuffers.size(), lostNumber, idrSliceMinNumber);
+                log.debug("Discarding a key frame (FU-A): buffered packets [{}], sequence gaps [{}], allowed gaps [{}]", this.naluBuffers.size(), lostNumber, idrSliceMinNumber);
                 return false;
             } else if (naluFuHeader.getType() == EH264NaluType.NON_IDR_SLICE && lostNumber > nonIdrSliceMinNumber) {
-                log.debug("When processing the NALU of FUA, the data sequence number is discontinuous, resulting in the data loss of non-key frame data due to packet loss. The frame data is discarded. The total number of [{}] and the number of lost [{}] exceed [{}].", this.naluBuffers.size(), lostNumber, nonIdrSliceMinNumber);
+                log.debug("Discarding a non-key frame (FU-A): buffered packets [{}], sequence gaps [{}], allowed gaps [{}]", this.naluBuffers.size(), lostNumber, nonIdrSliceMinNumber);
                 return false;
             }
         } else if (naluHeader.getType() != EH264NaluType.IDR_SLICE && naluHeader.getType() != EH264NaluType.NON_IDR_SLICE) {
-            log.error("The data type of NALU in RTP cannot be recognized, the frame data is discarded, frame type [{}]", naluHeader.getType());
+            log.error("Discarding the frame: unsupported RTP NAL unit type [{}]", naluHeader.getType());
             return false;
         }
         return true;
     }
 
     /**
-     * Process rtp package.
+     * Process an RTP packet.
      * (处理RTP包)
      *
-     * @param rtpPackage rtp package
+     * @param rtpPackage RTP packet
      */
     @Override
     public void processPackage(RtpPackage rtpPackage) {
         // 过滤负载编号不一致的rtp
         if (rtpPackage.getHeader().getPayloadType() != this.payloadNumber) {
-            log.warn("payload numbers are inconsistent, expect[{}], actual[{}], ignore this message.", this.payloadNumber, rtpPackage.getHeader().getPayloadType());
+            log.warn("Ignoring the packet: payload type mismatch, expected [{}], actual [{}]", this.payloadNumber, rtpPackage.getHeader().getPayloadType());
             return;
         }
         RtpPackage rtp = this.addLastRtpPackage(rtpPackage);
@@ -281,7 +281,7 @@ public class H264VideoParser implements IPayloadParser {
             case STAP_B:
                 break;
             default:
-                log.error("RTP parsing unknown data type [{}], timestamp [{}]", header.getType(), rtp.getHeader().getTimestamp());
+                log.error("Unsupported RTP NAL unit type [{}], timestamp [{}]", header.getType(), rtp.getHeader().getTimestamp());
                 break;
         }
     }
@@ -290,7 +290,7 @@ public class H264VideoParser implements IPayloadParser {
      * Caching RTP packets, mainly for cases where UDP is received out of order.
      * (缓存RTP数据包，主要针对UDP接收不按顺序的情况)
      *
-     * @param rtp rtp package
+     * @param rtp RTP packet
      * @return RtpPackage
      */
     private RtpPackage addLastRtpPackage(RtpPackage rtp) {
@@ -303,7 +303,7 @@ public class H264VideoParser implements IPayloadParser {
         if (currentRtp != null
                 && this.lastRtpPackage != null
                 && this.lastRtpPackage.getHeader().getSequenceNumber() > currentRtp.getHeader().getSequenceNumber()) {
-            log.debug("The sequence number is not always ascending when receiving RTP data");
+            log.debug("Received RTP packets out of sequence");
         }
         this.lastRtpPackage = currentRtp;
         return currentRtp;
@@ -339,7 +339,7 @@ public class H264VideoParser implements IPayloadParser {
     }
 
     /**
-     * Handle DTS of frame.
+     * Calculate the frame DTS.
      *
      * @param frame video frame
      * @return last frame
@@ -368,7 +368,7 @@ public class H264VideoParser implements IPayloadParser {
     }
 
     /**
-     * Add last frame for cache, use for calculating dts.
+     * Cache the last frame to calculate DTS.
      *
      * @param frame h264 video frame
      */

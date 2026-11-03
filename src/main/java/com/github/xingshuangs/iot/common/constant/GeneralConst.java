@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.common.constant;
 
 
 /**
- * General const data.
+ * General constants.
  * (通用常量)
  *
  * @author xingshuang
@@ -38,7 +38,7 @@ public class GeneralConst {
     }
 
     /**
-     * Localhost ip
+     * Local IP address.
      * (本地ip，127.0.0.1)
      */
     public static final String LOCALHOST = "127.0.0.1";
@@ -80,13 +80,13 @@ public class GeneralConst {
     public static final int TYPE_DWORD = 2;
 
     /**
-     * Request package tag name.
+     * Request message tag.
      * (请求)
      */
     public static final String PACKAGE_REQ = "REQ";
 
     /**
-     * Response package tag name.
+     * Response message tag.
      * (响应)
      */
     public static final String PACKAGE_ACK = "ACK";

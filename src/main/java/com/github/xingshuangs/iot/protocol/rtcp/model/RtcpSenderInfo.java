@@ -60,7 +60,7 @@ public class RtcpSenderInfo implements IObjectByteArray {
     private LocalDateTime ntpTimestamp;
 
     /**
-     * Rtp timestamp.
+     * RTP timestamp.
      * RTP时间戳（32bit）：与RTP时间戳计算方式一致，是根据采样率进行递增，由于与RTP时间戳一致同时又知道当前的NTP时间，因此可以用于音视频时间同步使用。
      */
     private LocalDateTime rtpTimestamp;
@@ -114,7 +114,7 @@ public class RtcpSenderInfo implements IObjectByteArray {
      */
     public static RtcpSenderInfo fromBytes(final byte[] data, final int offset) {
         if (data.length < 20) {
-            throw new IndexOutOfBoundsException("RtcpSenderInfo, data length < 20");
+            throw new IndexOutOfBoundsException("RtcpSenderInfo data must contain at least 20 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         RtcpSenderInfo res = new RtcpSenderInfo();

@@ -63,12 +63,12 @@ import static com.github.xingshuangs.iot.protocol.rtsp.constant.RtspCommonKey.CR
 public class RtspNetwork extends TcpClientBasic {
 
     /**
-     * locker
+     * Communication locker.
      */
     private final ReentrantLock locker = new ReentrantLock();
 
     /**
-     * If need authorization.
+     * Whether authentication is required.
      * (是否需要授权认证)
      */
     private boolean needAuthorization = false;
@@ -110,7 +110,7 @@ public class RtspNetwork extends TcpClientBasic {
     protected RtspTransport transport;
 
     /**
-     * RTP infos.
+     * RTP stream information.
      * (RTP的信息)
      */
     protected List<RtspRtpInfo> rtpInfos = new ArrayList<>();
@@ -134,13 +134,13 @@ public class RtspNetwork extends TcpClientBasic {
     private Consumer<String> commCallback;
 
     /**
-     * Frame handle.
+     * Frame handler.
      * (数据帧处理)
      */
     private Consumer<RawFrame> frameHandle;
 
     /**
-     * Destroy handle.
+     * Cleanup handler.
      * (销毁的处理事件)
      */
     private Runnable destroyHandle;
@@ -200,7 +200,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Read form server.
+     * Read from the server.
      * (从服务器读取数据)
      *
      * @param req request
@@ -245,7 +245,7 @@ public class RtspNetwork extends TcpClientBasic {
             this.locker.unlock();
         }
         if (headerLen == 0) {
-            throw new RtspCommException("RTSP data receive length is 0");
+            throw new RtspCommException("No RTSP response data was received");
         }
         if (this.commCallback != null) {
             this.commCallback.accept(contentString);
@@ -255,7 +255,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Send data to server without return.
+     * Send data to the server without waiting for a response.
      * (发送数据给服务器，但不返回)
      *
      * @param req request
@@ -274,7 +274,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Check after communicate.
+     * Check communication results after receiving the response.
      * (通信后置校验)
      *
      * @param req request
@@ -283,11 +283,11 @@ public class RtspNetwork extends TcpClientBasic {
     private void checkPostedCom(RtspMessageRequest req, RtspMessageResponse ack) {
         if (!req.getVersion().equals(ack.getVersion())) {
             // 请求和响应的版本号不一致
-            throw new RtspCommException("The version numbers of the request and response are inconsistent");
+            throw new RtspCommException("Request and response versions do not match");
         }
         if (req.getCSeq() != ack.getCSeq()) {
             // 请求和响应的序列号不一致
-            throw new RtspCommException("The sequence numbers of the request and response are inconsistent");
+            throw new RtspCommException("Request and response sequence numbers do not match");
         }
     }
 
@@ -307,7 +307,7 @@ public class RtspNetwork extends TcpClientBasic {
             // 需要授权
             this.needAuthorization = true;
             if (this.authenticator == null) {
-                throw new RtspCommException(String.format("RTSP[%s] authenticator is null", request.getMethod()));
+                throw new RtspCommException(String.format("RTSP [%s]: authenticator must not be null", request.getMethod()));
             }
             this.authenticator.addServerInfoByString(response.getWwwAuthenticate());
             this.authenticator.addClientInfo(this.uri.toString(), request.getMethod().getCode());
@@ -315,14 +315,14 @@ public class RtspNetwork extends TcpClientBasic {
             response = this.readFromServer(request);
         }
         if (response.getStatusCode() != ERtspStatusCode.OK) {
-            throw new RtspCommException(String.format("RTSP[%s] status code is [%s]", request.getMethod().getCode(),
+            throw new RtspCommException(String.format("RTSP [%s]: unexpected status code [%s]", request.getMethod().getCode(),
                     response.getStatusCode().getCode()));
         }
         return response;
     }
 
     /**
-     * Option method operation.
+     * Perform an OPTIONS request.
      */
     protected void option() {
         RtspOptionRequest request = new RtspOptionRequest(this.uri);
@@ -333,7 +333,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Describe method operation.
+     * Perform a DESCRIBE request.
      */
     protected void describe() {
         this.checkBeforeRequest(ERtspMethod.DESCRIBE);
@@ -344,17 +344,17 @@ public class RtspNetwork extends TcpClientBasic {
         RtspDescribeResponse response = (RtspDescribeResponse) this.sendRequest(request);
 
         if (response.getSdp().getSession() == null) {
-            throw new RtspCommException(String.format("RTSP[%s] no Session", ERtspMethod.DESCRIBE));
+            throw new RtspCommException(String.format("RTSP [%s]: session information is missing", ERtspMethod.DESCRIBE));
         }
         if (response.getSdp().getMedias().isEmpty()) {
-            throw new RtspCommException(String.format("RTSP[%s] no Media", ERtspMethod.DESCRIBE));
+            throw new RtspCommException(String.format("RTSP [%s]: media information is missing", ERtspMethod.DESCRIBE));
         }
         this.sdp = response.getSdp();
         this.trackInfo = RtspTrackInfo.createTrackInfo(this.sdp);
     }
 
     /**
-     * Setup method operation.
+     * Perform a SETUP request.
      */
     protected void setup() {
         if (this.transportProtocol == ERtspTransportProtocol.UDP) {
@@ -365,7 +365,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * UDP setup method operation.
+     * Perform a SETUP request for UDP transport.
      */
     private void setupUdp() {
         for (RtspSdpMedia media : this.sdp.getMedias()) {
@@ -397,7 +397,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * TCP setup method operation.
+     * Perform a SETUP request for TCP transport.
      */
     private void setupTcp() {
         int interleavedCount = 0;
@@ -425,7 +425,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Do setup.
+     * Set up the session.
      *
      * @param actualUri    actual URI
      * @param reqTransport transport
@@ -450,7 +450,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Play method operation.
+     * Perform a PLAY request.
      */
     protected void play() {
         this.checkBeforeRequest(ERtspMethod.PLAY);
@@ -466,7 +466,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Teardown method operation.
+     * Perform a TEARDOWN request.
      */
     protected void teardown() {
         this.clearSocketConnection();
@@ -488,7 +488,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Get parameter method operation.
+     * Perform a GET_PARAMETER request.
      */
     protected void getParameter() {
         this.checkBeforeRequest(ERtspMethod.GET_PARAMETER);
@@ -524,15 +524,15 @@ public class RtspNetwork extends TcpClientBasic {
      */
     private void checkBeforeRequest(ERtspMethod method) {
         if (!methods.contains(method)) {
-            throw new RtspCommException(String.format("RTSP nonsupport [%s]", method.getCode()));
+            throw new RtspCommException(String.format("RTSP does not support [%s]", method.getCode()));
         }
         if (this.needAuthorization && this.authenticator == null) {
-            throw new RtspCommException(String.format("RTSP[%s] authenticator is null", method.getCode()));
+            throw new RtspCommException(String.format("RTSP [%s]: authenticator must not be null", method.getCode()));
         }
     }
 
     /**
-     * Do frame handle
+     * Handle a frame.
      * (处理帧数据)
      *
      * @param frame frame data
@@ -544,7 +544,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Wait for all socket close.
+     * Wait for all sockets to close.
      * (等待所有socket客户端结束)
      */
     protected void socketClientJoinForFinished() {
@@ -560,7 +560,7 @@ public class RtspNetwork extends TcpClientBasic {
     }
 
     /**
-     * Is socket clients all closed.
+     * Whether all client sockets are closed.
      * (socket客户端线程是否都已经结束)
      *
      * @return true：finished，false：not finished.

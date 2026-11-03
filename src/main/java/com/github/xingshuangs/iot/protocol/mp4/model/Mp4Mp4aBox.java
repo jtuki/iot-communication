@@ -37,47 +37,47 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4Mp4aBox extends Mp4Box {
 
     /**
-     * 6-bytes
+     * 6 bytes
      */
     private final byte[] reserved1;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final int dataReferenceIndex;
 
     /**
-     * 8-bytes
+     * 8 bytes
      */
     private final byte[] reserved2;
 
     /**
-     * 2-bytes channel count.
+     * 2-byte channel count.
      */
     private final int channelCount;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final int sampleSize;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] preDefined;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] reserved3;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final int audioSampleRate;
 
     /**
-     * 2-bytes
+     * 2 bytes
      */
     private final byte[] reserved4;
 

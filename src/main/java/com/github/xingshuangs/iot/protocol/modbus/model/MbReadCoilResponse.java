@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Read coil response.
+ * Response to a coil read request.
  * (响应读取线圈)
  *
  * @author xingshuang

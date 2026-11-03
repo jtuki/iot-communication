@@ -59,7 +59,7 @@ public class S7ComItem {
     private int splitOffset;
 
     /**
-     * Ripe data size after split.
+     * Split data size ({@code ripeSize}).
      * (分割后的数据大小)
      */
     private int ripeSize;

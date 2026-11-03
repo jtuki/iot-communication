@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wrapper address for writing.
+ * Multiple addresses for write operations.
  * 多地址写
  *
  * @author xingshuang
@@ -238,7 +238,7 @@ public class MultiAddressWrite {
     }
 
     /**
-     * Add string by custom.
+     * Add a string using a custom format.
      * (自定义添加字符串)
      *
      * @param address address string

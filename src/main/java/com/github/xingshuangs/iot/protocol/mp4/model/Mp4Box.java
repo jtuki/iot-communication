@@ -37,8 +37,8 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4Box implements IObjectByteArray {
 
     /**
-     * 32-bit box type, usually 4 characters, such as "ftyp", "moov", etc. These box types are predefined and respectively represent fixed meanings.
-     * Its value is an ASCII value of the type. When type is a uuid, it means that the data in the Box is a user-defined extension type.
+     * Box type, encoded as four ASCII characters such as "ftyp" or "moov". Each predefined type has a specific meaning.
+     * The "uuid" type identifies a user-defined extension.
      * 32位为box type，一般是4个字符，如“ftyp”、“moov”等，这些box type都是已经预定义好的，分别表示固定的意义,
      * 其值为类型的ASCII值，当type是uuid时，代表Box中的数据是用户自定义扩展类型
      */
@@ -46,7 +46,7 @@ public class Mp4Box implements IObjectByteArray {
 
 
     /**
-     * The standard box starts with 4 bytes (32 bits) as box size. box size includes the size of box header and box body.
+     * A standard box starts with a 4-byte size field, which includes both the box header and body.
      * 标准的box开头的4个字节（32位）为box size，box size值包括box header和box body整个box的大小
      *
      * @return total byte length

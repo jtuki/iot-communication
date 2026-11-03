@@ -28,8 +28,8 @@ package com.github.xingshuangs.iot.protocol.mp4.model;
 import lombok.Data;
 
 /**
- * Related properties of the sample,
- * DependsOn=1, IsNonSync =1, ISnonsync = 0, DependsOn=1, ISnonsync = 0, as long as keyframe is touched, DependsOn=2, others = 0.
+ * Sample dependency and synchronization flags.
+ * In single-sample fragments, keyframes use DependsOn=2; non-keyframes use DependsOn=1 and IsNonSync=1. Other flags are 0.
  * 采样的相关属性
  * 这里以单个分片单个sample的模式，只要碰到关键帧，DependsOn=2 ，其他等于0，非关键帧DependsOn=1，IsNonSync等于1，其他等于0,
  *

@@ -39,19 +39,19 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
  */
 public class Mp4FtypBox extends Mp4Box {
     /**
-     * 4-bytes, major brand，this is ASCII for isom.
+     * 4-byte major brand，this is ASCII for isom.
      * 这里为isom的ASCII
      */
     private final String majorBrand;
 
     /**
-     * 4-bytes,minor version，the lowest compatible version, in this case version 1.0.
+     * 4-byte minor version，the lowest compatible version, in this case version 1.0.
      * 最低兼容版本，这里为1.0版本
      */
     private final int minorVersion;
 
     /**
-     * 4-bytes, compatible brands，compatible versions, isom and avc1 ASCII
+     * 4-byte compatible brands，compatible versions, isom and avc1 ASCII
      * 兼容版本，isom和avc1的ASCII
      */
     private final String compatibleBrands;

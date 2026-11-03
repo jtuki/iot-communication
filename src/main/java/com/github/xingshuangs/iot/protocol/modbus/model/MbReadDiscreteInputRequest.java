@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Read discrete input request.
+ * Request to read discrete inputs.
  * 请求读离散量输入
  *
  * @author xingshuang

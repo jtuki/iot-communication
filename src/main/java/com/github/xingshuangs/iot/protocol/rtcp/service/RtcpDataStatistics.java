@@ -69,7 +69,7 @@ public class RtcpDataStatistics {
     private int packetsLostSinceLastReset = 0;
 
     /**
-     * Cumulative packet lost.
+     * Cumulative number of lost packets.
      * (累计丢包数量)
      */
     private int cumulativePacketLost = 0;
@@ -87,31 +87,31 @@ public class RtcpDataStatistics {
     private long sampleTimestampSum = 0;
 
     /**
-     * Last rtp timestamp.
+     * Timestamp from the last RTP packet.
      * （上一次的RTP时间戳）
      */
     private long lastRtpTimestamp = 0;
 
     /**
-     * Last rtp ssrc.
+     * SSRC from the last RTP packet.
      * （上一次RTP的SSRC）
      */
     private long lastRtpSsrc = 0;
 
     /**
-     * Last ntp time sender report received.
+     * NTP timestamp from the last received sender report.
      * （上一次RTCP发送SR的NTP时间）
      */
     private long lastNtpTimeSenderReportReceived = 0;
 
     /**
-     * Last time rtcp report received.
+     * Time when the last RTCP report was received.
      * （上一次接收到的SR的时间）
      */
     private long lastTimeRtcpReportReceived = 0;
 
     /**
-     * Last local time receive rtp.
+     * Local time when the last RTP packet was received.
      * (上一次接收到RTP的时间，本地当前的时间戳）
      */
     private long lastLocalTimeReceiveRtp = 0;
@@ -121,10 +121,10 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Process rtp package.
+     * Process an RTP packet.
      * (处理RTP数据包)
      *
-     * @param rtp  rtp package
+     * @param rtp  RTP packet
      * @param send send callback by bytes
      */
     public void processRtpPackage(RtpPackage rtp, Consumer<byte[]> send) {
@@ -158,7 +158,7 @@ public class RtcpDataStatistics {
             send.accept(receiverAndByteContent);
             this.lastLocalTimeReceiveRtp = System.currentTimeMillis();
             int fractionLost = this.packetsLostSinceLastReset * 100 / this.packetsReceivedSinceLastReset;
-            log.debug("Data Statistics: package lost number[{}], totoal number[{}], fraction lost[{}%]", this.cumulativePacketLost, this.packetsReceivedSinceLastReset, fractionLost);
+            log.debug("Packet statistics: cumulative packets lost [{}], packets received since last reset [{}], loss rate [{}%]", this.cumulativePacketLost, this.packetsReceivedSinceLastReset, fractionLost);
         }
     }
 
@@ -172,14 +172,14 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Process rtcp package.
+     * Process an RTCP packet.
      * (处理RTCP数据包)
      *
      * @param basePackages rtcp数据包列表
      */
     public void processRtcpPackage(List<RtcpBasePackage> basePackages) {
         for (RtcpBasePackage rtcp : basePackages) {
-            log.debug("RTCP receives [{}] data，{}", rtcp.getHeader().getPackageType(), rtcp);
+            log.debug("Received RTCP packet of type [{}]: {}", rtcp.getHeader().getPackageType(), rtcp);
             if (rtcp instanceof RtcpSenderReport) {
                 this.lastNtpTimeSenderReportReceived = ((RtcpSenderReport) rtcp).getSenderInfo().getMswTimestamp();
                 this.lastTimeRtcpReportReceived = System.currentTimeMillis();
@@ -220,7 +220,7 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Create sdes report.
+     * Create an SDES report.
      * (创建SDES报告)
      *
      * @return RtcpSdesReport
@@ -238,7 +238,7 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Create bye.
+     * Create a BYE packet.
      * 创建Byte
      *
      * @return RtcpBye
@@ -248,7 +248,7 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Create receiver and sdes content.
+     * Create the combined receiver report and SDES packet.
      * (创建RR内容的报告字节数组)
      *
      * @return byte array
@@ -264,7 +264,7 @@ public class RtcpDataStatistics {
     }
 
     /**
-     * Create receiver and byte content.
+     * Create the combined receiver report and BYE packet.
      * (创建byte的报告字节数组)
      *
      * @return byte array
@@ -272,7 +272,7 @@ public class RtcpDataStatistics {
     public byte[] createReceiverAndByteContent() {
         RtcpReceiverReport receiverReport = this.createReceiverReport();
         RtcpBye aByte = this.createByte();
-        log.debug("RTCP sends [{}], [{}] data", receiverReport.getHeader().getPackageType(), aByte.getHeader().getPackageType());
+        log.debug("Sending RTCP packets of types [{}] and [{}]", receiverReport.getHeader().getPackageType(), aByte.getHeader().getPackageType());
         byte[] res = new byte[receiverReport.byteArrayLength() + aByte.byteArrayLength()];
         System.arraycopy(receiverReport.toByteArray(), 0, res, 0, receiverReport.byteArrayLength());
         System.arraycopy(aByte.toByteArray(), 0, res, receiverReport.byteArrayLength(), aByte.byteArrayLength());

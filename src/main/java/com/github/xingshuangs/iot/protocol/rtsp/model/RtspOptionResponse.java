@@ -39,7 +39,7 @@ import static com.github.xingshuangs.iot.protocol.rtsp.constant.RtspCommonKey.*;
 import static com.github.xingshuangs.iot.protocol.rtsp.constant.RtspResponseHeaderFields.PUBLIC;
 
 /**
- * Option response
+ * OPTIONS response.
  *
  * @author xingshuang
  */
@@ -54,7 +54,7 @@ public final class RtspOptionResponse extends RtspMessageResponse {
 
     public static RtspOptionResponse fromHeaderString(String src) {
         if (src == null || src.equals("")) {
-            throw new RtspCommException("src is null or empty in RtspOptionResponse");
+            throw new RtspCommException("RtspOptionResponse: src must not be null or empty");
         }
         RtspOptionResponse response = new RtspOptionResponse();
         Map<String, String> map = response.parseHeaderAndReturnMap(src);

@@ -92,7 +92,7 @@ public class RtspMessage implements IObjectString {
     }
 
     /**
-     * Get new uint16 number.
+     * Get the next unsigned 16-bit sequence number.
      * (获取2字节大小的最新序号，0-65536)
      *
      * @return number

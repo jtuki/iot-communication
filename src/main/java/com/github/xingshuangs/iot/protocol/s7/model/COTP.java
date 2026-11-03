@@ -39,7 +39,7 @@ import lombok.Data;
 public class COTP implements IObjectByteArray {
 
     /**
-     * Length, exclude this length field.
+     * COTP length, excluding the length field itself.
      * 长度（但并不包含length这个字段）<br>
      * 字节大小：1 <br>
      * 字节序数：0

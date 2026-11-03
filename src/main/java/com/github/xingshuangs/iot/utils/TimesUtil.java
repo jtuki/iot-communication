@@ -44,7 +44,7 @@ public class TimesUtil {
     //region NTP
 
     /**
-     * Get NTP total second.
+     * Get the total number of seconds since the NTP epoch.
      * (获取NTP所有的秒时间)
      *
      * @param dateTime dateTime
@@ -103,7 +103,7 @@ public class TimesUtil {
     //region UTC
 
     /**
-     * Get UTC total second.
+     * Get the total number of seconds since the Unix epoch.
      * (获取UTC所有的秒时间)
      *
      * @param dateTime dateTime

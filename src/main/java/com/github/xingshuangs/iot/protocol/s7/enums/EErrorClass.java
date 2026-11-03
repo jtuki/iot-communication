@@ -64,13 +64,13 @@ public enum EErrorClass {
      * error on service processing.
      * 服务处理中错误
      */
-    ERROR_ON_SERVICE_PROCESSING((byte) 0x84, "error on service processing"),
+    ERROR_ON_SERVICE_PROCESSING((byte) 0x84, "error during service processing"),
 
     /**
      * error on supplies.
      * 请求错误
      */
-    ERROR_ON_SUPPLIES((byte) 0x85, "error on supplies"),
+    ERROR_ON_SUPPLIES((byte) 0x85, "supplies error"),
 
     /**
      * access error.

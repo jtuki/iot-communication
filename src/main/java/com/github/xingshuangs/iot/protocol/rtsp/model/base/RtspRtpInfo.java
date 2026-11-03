@@ -55,14 +55,14 @@ public class RtspRtpInfo {
     private Long seq;
 
     /**
-     * Rtp time.
+     * RTP time.
      * (RTP时间，视频开始播放的时间戳)
      */
     private Long rtpTime;
 
     public static RtspRtpInfo fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("RtspRtpInfo, src is null or empty");
+            throw new IllegalArgumentException("RtspRtpInfo: src must not be null or empty");
         }
         Map<String, String> map = StringSpUtil.splitTwoStepByLine(src, SEMICOLON, EQUAL);
         RtspRtpInfo rtpInfo = new RtspRtpInfo();

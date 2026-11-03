@@ -35,7 +35,7 @@ public class LongUtil {
     }
 
     /**
-     * Convert long to a 8-byte array.
+     * Convert a long to an 8-byte array.
      * (将long转换为字节数组)
      *
      * @param data long data
@@ -46,7 +46,7 @@ public class LongUtil {
     }
 
     /**
-     * Convert long to a 8-byte array.
+     * Convert a long to an 8-byte array.
      * (将long转换为字节数组)
      *
      * @param data         long data
@@ -112,10 +112,10 @@ public class LongUtil {
      */
     public static long toInt64(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 8) {
-            throw new IndexOutOfBoundsException("data length < 8");
+            throw new IndexOutOfBoundsException("LongUtil data must contain at least 8 bytes");
         }
         if (offset + 8 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 8 > data length");
+            throw new IndexOutOfBoundsException("offset + 8 must not exceed the data array length");
         }
         int b = littleEndian ? 7 : 0;
         int d = littleEndian ? 1 : -1;

@@ -33,7 +33,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Setup communicate parameter.
+ * Communication setup parameters.
  * 设置通信参数
  *
  * @author xingshuang

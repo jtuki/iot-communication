@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.common.serializer;
 
 
 /**
- * Byte array serialize interface
+ * Byte array serialization interface.
  * (字节数组的序列化接口)
  *
  * @author xingshuang

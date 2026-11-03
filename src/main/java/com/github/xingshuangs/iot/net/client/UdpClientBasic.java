@@ -37,7 +37,7 @@ import java.net.SocketAddress;
 import static com.github.xingshuangs.iot.common.constant.GeneralConst.LOCALHOST;
 
 /**
- * UDP client basic class.
+ * Base class for UDP clients.
  *
  * @author xingshuang
  */
@@ -87,7 +87,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Bind server.
+     * Bind the server socket.
      * (绑定服务器)
      *
      * @param ip   IP address
@@ -121,7 +121,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data byte array
@@ -133,7 +133,7 @@ public class UdpClientBasic implements ICommunicable {
 
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data   byte array
@@ -146,7 +146,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * (写入数据)
      *
      * @param data    byte array
@@ -161,7 +161,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Write data by datagram packet.
+     * Write data from a datagram packet.
      * (写入数据)
      *
      * @param packet DatagramPacket object
@@ -177,7 +177,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @return byte array
@@ -196,7 +196,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data byte array
@@ -208,11 +208,11 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data    byte array
-     * @param timeout timeout in millisecond，0：blocked，big than 0：timeout time.
+     * @param timeout timeout in milliseconds; 0 means wait indefinitely
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -222,7 +222,7 @@ public class UdpClientBasic implements ICommunicable {
 
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data   byte array
@@ -236,13 +236,13 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data    byte array
      * @param offset  the start offset in the data.
      * @param length  the number of bytes to read.
-     * @param timeout timeout in millisecond，0：blocked，big than 0：timeout time.
+     * @param timeout timeout in milliseconds; 0 means wait indefinitely
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -251,7 +251,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data    byte array
@@ -264,12 +264,12 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data    byte array
      * @param address socket address.
-     * @param timeout timeout in millisecond，0：blocked，big than 0：timeout time.
+     * @param timeout timeout in milliseconds; 0 means wait indefinitely
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -278,14 +278,14 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * (读取数据)
      *
      * @param data    byte array
      * @param offset  the start offset in the data.
      * @param length  the number of bytes to read.
      * @param address socket address.
-     * @param timeout timeout in millisecond，0：blocked，big than 0：timeout time.
+     * @param timeout timeout in milliseconds; 0 means wait indefinitely
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -296,7 +296,7 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data into DatagramPacket object
+     * Read data into a DatagramPacket.
      * (读取数据)
      *
      * @param packet DatagramPacket object
@@ -308,11 +308,11 @@ public class UdpClientBasic implements ICommunicable {
     }
 
     /**
-     * Read data into DatagramPacket object
+     * Read data into a DatagramPacket.
      * (读取数据)
      *
      * @param packet  DatagramPacket object
-     * @param timeout timeout in millisecond，0：blocked，big than 0：timeout time.
+     * @param timeout timeout in milliseconds; 0 means wait indefinitely
      * @return DatagramPacket object
      * @throws SocketRuntimeException Socket Runtime Exception
      */

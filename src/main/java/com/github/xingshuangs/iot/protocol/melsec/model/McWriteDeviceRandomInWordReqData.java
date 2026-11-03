@@ -70,7 +70,7 @@ public class McWriteDeviceRandomInWordReqData extends McReqData {
                                             List<McDeviceContent> wordContents,
                                             List<McDeviceContent> dwordContents) {
         if (series.getFrameType() == EMcFrameType.FRAME_1E && !dwordContents.isEmpty()) {
-            throw new McCommException("Frame 1E only supports word, not dword");
+            throw new McCommException("1E frames support word data only; dword data is not supported");
         }
         this.series = series;
         this.command = EMcCommand.DEVICE_ACCESS_RANDOM_WRITE_IN_UNITS;

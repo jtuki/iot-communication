@@ -53,13 +53,13 @@ public class RtcpHeader implements IObjectByteArray {
     protected boolean padding;
 
     /**
-     * Receive report counter
+     * Receiver report count.
      * (接收报告计数器（RC）：5比特，该SR包中的接收报告块的数目，可以为零。)
      */
     protected int receptionCount;
 
     /**
-     * Package type.
+     * Packet type.
      * (包类型（PT）：8比特，SR包是200。)
      */
     protected ERtcpPackageType packageType;
@@ -107,7 +107,7 @@ public class RtcpHeader implements IObjectByteArray {
      */
     public static RtcpHeader fromBytes(final byte[] data, final int offset) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("header, data length < 4");
+            throw new IndexOutOfBoundsException("RtcpHeader data must contain at least 4 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         RtcpHeader res = new RtcpHeader();

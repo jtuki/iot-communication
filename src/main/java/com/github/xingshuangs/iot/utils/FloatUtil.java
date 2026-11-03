@@ -52,7 +52,7 @@ public class FloatUtil {
      * (将double转换为字节数组)
      *
      * @param data         double data
-     * @param littleEndian is little endian
+     * @param littleEndian whether to use little-endian byte order
      * @return byte array
      */
     public static byte[] toByteArray(double data, boolean littleEndian) {
@@ -116,10 +116,10 @@ public class FloatUtil {
      */
     public static float toFloat32(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 4) {
-            throw new IndexOutOfBoundsException("data length < 4");
+            throw new IndexOutOfBoundsException("FloatUtil data must contain at least 4 bytes");
         }
         if (offset + 4 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 4 > data length");
+            throw new IndexOutOfBoundsException("offset + 4 must not exceed the data array length");
         }
         int b = littleEndian ? 3 : 0;
         int d = littleEndian ? 1 : -1;
@@ -164,10 +164,10 @@ public class FloatUtil {
      */
     public static double toFloat64(byte[] data, int offset, boolean littleEndian) {
         if (data.length < 8) {
-            throw new IndexOutOfBoundsException("data length < 8");
+            throw new IndexOutOfBoundsException("FloatUtil data must contain at least 8 bytes");
         }
         if (offset + 8 > data.length) {
-            throw new IndexOutOfBoundsException("offset + 8 > data length");
+            throw new IndexOutOfBoundsException("offset + 8 must not exceed the data array length");
         }
         int b = littleEndian ? 7 : 0;
         int d = littleEndian ? 1 : -1;

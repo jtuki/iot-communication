@@ -42,7 +42,7 @@ public class S7SequentialGroupAlg {
     }
 
     /**
-     * Write recombination function.
+     * Recombine data for write operations.
      * 重组，按照目标最大值进行顺序分组，超过最大值则进行分割
      * 示例：
      * 目标值：226 ，额外数据大小：5
@@ -85,7 +85,7 @@ public class S7SequentialGroupAlg {
     }
 
     /**
-     * Read recombination function.
+     * Recombine data for read operations.
      * 重组，按照目标最大值进行顺序分组，超过最大值则进行分割
      * 示例：
      * 目标值：226 ，额外数据大小：5，阀值数据大小：12

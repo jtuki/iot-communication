@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.protocol.melsec.enums.EMcFrameType;
 import lombok.Data;
 
 /**
- * Ack message.
+ * ACK message (response message).
  * 响应消息
  *
  * @author xingshuang
@@ -46,7 +46,7 @@ public class McMessageAck implements IObjectByteArray {
     private McHeaderAck header;
 
     /**
-     * Ack data.
+     * ACK data (response data).
      * (响应数据)
      */
     private McData data;
@@ -65,7 +65,7 @@ public class McMessageAck implements IObjectByteArray {
     }
 
     /**
-     * Self check for data length.
+     * Check this object's data length.
      * (自我校验，主要核对数据长度)
      */
     public void selfCheck() {

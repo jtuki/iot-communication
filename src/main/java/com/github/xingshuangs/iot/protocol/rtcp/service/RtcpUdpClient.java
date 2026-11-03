@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * Rtcp udp client.
+ * RTCP UDP client.
  * (RTCP协议的UDP客户端)
  *
  * @author xingshuang
@@ -49,19 +49,19 @@ import java.util.function.Consumer;
 public class RtcpUdpClient extends UdpClientBasic implements IRtspDataStream {
 
     /**
-     * Is thread terminal.
+     * Thread termination flag.
      * (是否终止线程)
      */
     private boolean terminal = false;
 
     /**
-     * Rtcp data statistics object.
+     * RTCP statistics.
      * (RTP和RTCP的数据统计)
      */
     private final RtcpDataStatistics statistics = new RtcpDataStatistics();
 
     /**
-     * Communicate callback by bytes.
+     * Callback for communication byte data.
      * (数据收发前自定义处理接口)
      */
     private Consumer<byte[]> commCallback;
@@ -127,7 +127,7 @@ public class RtcpUdpClient extends UdpClientBasic implements IRtspDataStream {
     }
 
     private void waitForReceiveData() {
-        log.debug("[RTSP + UDP] RTCP enables asynchronous data receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + UDP] Starting the asynchronous RTCP receiving thread, remote address [/{}:{}]",
                 this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
         while (!this.terminal) {
             try {
@@ -148,15 +148,15 @@ public class RtcpUdpClient extends UdpClientBasic implements IRtspDataStream {
                 }
             }
         }
-        log.debug("[RTSP + UDP] RTCP closes asynchronous receiving thread, remote IP[/{}:{}]",
+        log.debug("[RTSP + UDP] Stopped the asynchronous RTCP receiving thread, remote address [/{}:{}]",
                 this.serverAddress.getAddress().getHostAddress(), this.serverAddress.getPort());
     }
 
     /**
-     * Process rtp package.
+     * Process an RTP packet.
      * (处理RTP的数据包)
      *
-     * @param rtpPackage RTP package
+     * @param rtpPackage RTP packet
      */
     public void processRtpPackage(RtpPackage rtpPackage) {
         this.statistics.processRtpPackage(rtpPackage, this::sendData);

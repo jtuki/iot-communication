@@ -81,7 +81,7 @@ public class RtspClientPortTransport extends RtspTransport {
 
     public static RtspClientPortTransport fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("RtspTransport, src is null or empty");
+            throw new IllegalArgumentException("RtspClientPortTransport: src must not be null or empty");
         }
         RtspClientPortTransport transport = new RtspClientPortTransport();
         String[] split = src.split(SEMICOLON);
@@ -112,10 +112,10 @@ public class RtspClientPortTransport extends RtspTransport {
     @Override
     public String toString() {
         if (this.protocol == null || this.protocol.equals("")) {
-            throw new RtspCommException("protocol of RtspTransport is null or empty");
+            throw new RtspCommException("RtspTransport protocol must not be null or empty");
         }
         if (this.castMode == null || this.castMode.equals("")) {
-            throw new RtspCommException("castMode of RtspTransport is null or empty");
+            throw new RtspCommException("RtspTransport castMode must not be null or empty");
         }
         List<String> res = new ArrayList<>();
         res.add(this.protocol);

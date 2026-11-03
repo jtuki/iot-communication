@@ -30,7 +30,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Ack data.
+ * ACK data (response data).
  * 协议体数据：响应数据
  *
  * @author xingshuang

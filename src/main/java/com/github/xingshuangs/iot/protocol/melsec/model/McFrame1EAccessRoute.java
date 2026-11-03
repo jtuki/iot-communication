@@ -41,7 +41,7 @@ import lombok.EqualsAndHashCode;
 public class McFrame1EAccessRoute extends McAccessRoute {
 
     /**
-     * Pc number, 1-byte.
+     * Pc number, 1 byte.
      * (可编程控制器编号，1个字节)
      */
     private int pcNumber = 0xFF;

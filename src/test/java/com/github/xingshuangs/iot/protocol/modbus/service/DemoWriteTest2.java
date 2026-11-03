@@ -48,33 +48,33 @@ public class DemoWriteTest2 {
         List<Boolean> booleans = Arrays.asList(true, false, true, false);
         plc.writeCoil(2, 0, booleans);
 
-        // single write hold register
+        // single write holding register
         plc.writeHoldRegister(2, 0, 33);
-        // multiple write hold register
+        // multiple write holding register
         plc.writeHoldRegister(2, 3, new byte[]{(byte) 0x11, (byte) 0x12});
-        // multiple write hold register
+        // multiple write holding register
         List<Integer> integers = Arrays.asList(11, 12, 13, 14);
         plc.writeHoldRegister(2, 3, integers);
 
-        // hold register write int16
+        // holding register write int16
         plc.writeInt16(3, 2, (short) 10, true);
 
-        // hold register write uint16
+        // holding register write uint16
         plc.writeUInt16(3, 2, 20, false);
 
-        // hold register write int32
+        // holding register write int32
         plc.writeInt32(4, 2, 32, EByteBuffFormat.AB_CD);
 
-        // hold register write uint32
+        // holding register write uint32
         plc.writeUInt32(4, 2, 32L, EByteBuffFormat.AB_CD);
 
-        // hold register write float32
+        // holding register write float32
         plc.writeFloat32(4, 2, 12.12f, EByteBuffFormat.AB_CD);
 
-        // hold register write float64
+        // holding register write float64
         plc.writeFloat64(4, 2, 33.21, EByteBuffFormat.AB_CD);
 
-        // hold register write String
+        // holding register write String
         plc.writeString(5, 2, "1234");
 
         plc.close();

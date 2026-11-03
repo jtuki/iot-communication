@@ -30,7 +30,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Username password credential.
+ * Username and password credentials.
  * 用户密码凭证
  *
  * @author xingshuang

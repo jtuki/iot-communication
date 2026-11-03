@@ -54,12 +54,12 @@ public class RtspSdpTime {
 
     public static RtspSdpTime fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("when SDP parses Time, data error");
+            throw new IllegalArgumentException("Failed to parse the SDP time field");
         }
         RtspSdpTime time = new RtspSdpTime();
         String[] split = src.split(SP);
         if (split.length != 2) {
-            throw new RtspCommException("RtspSdpTime data is incorrect and cannot be parsed");
+            throw new RtspCommException("Invalid RtspSdpTime data");
         }
         time.startTime = Integer.parseInt(split[0]);
         time.endTime = Integer.parseInt(split[1]);

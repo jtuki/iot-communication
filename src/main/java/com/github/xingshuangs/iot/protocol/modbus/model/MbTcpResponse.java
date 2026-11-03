@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.exceptions.ModbusCommException;
 import lombok.Data;
 
 /**
- * Modbus tcp response.
+ * Modbus TCP response.
  * (TCP的modbus响应)
  *
  * @author xingshuang
@@ -40,7 +40,7 @@ import lombok.Data;
 public class MbTcpResponse implements IObjectByteArray {
 
     /**
-     * Package header.
+     * Packet header.
      * 报文头， 报文头为 7 个字节长
      */
     private MbapHeader header;
@@ -74,7 +74,7 @@ public class MbTcpResponse implements IObjectByteArray {
     }
 
     /**
-     * Check self.
+     * Check this object.
      * (自我数据校验)
      */
     public void selfCheck() {
@@ -105,7 +105,7 @@ public class MbTcpResponse implements IObjectByteArray {
      * Parses byte array and converts it to object.
      * (解析字节数组数据)
      *
-     * @param header   package header.
+     * @param header   packet header.
      * @param pduBytes pdu byte array.
      * @return MbTcpResponse
      */

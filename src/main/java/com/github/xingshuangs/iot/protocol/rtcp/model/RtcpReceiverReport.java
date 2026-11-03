@@ -142,7 +142,7 @@ public final class RtcpReceiverReport extends RtcpBasePackage {
      */
     public static RtcpReceiverReport fromBytes(final byte[] data, final int offset) {
         if (data.length < 8) {
-            throw new IndexOutOfBoundsException("RtcpReceiverReport, data length < 8");
+            throw new IndexOutOfBoundsException("RtcpReceiverReport data must contain at least 8 bytes");
         }
         int off = offset;
         RtcpReceiverReport res = new RtcpReceiverReport();

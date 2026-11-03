@@ -44,7 +44,7 @@ import static com.github.xingshuangs.iot.common.enums.EDataType.BOOL;
 import static com.github.xingshuangs.iot.common.enums.EDataType.STRING;
 
 /**
- * Tool of byte array serialize class.
+ * Byte array serializer.
  * (字节数组序列化工具)
  *
  * @author xingshuang
@@ -78,12 +78,12 @@ public class ByteArraySerializer implements IByteArraySerializable {
             return bean;
         } catch (Exception e) {
             // 解析成对象错误，原因：
-            throw new ByteArrayParseException("parsing to object error, cause:" + e.getMessage(), e);
+            throw new ByteArrayParseException("Failed to parse data into an object: " + e.getMessage(), e);
         }
     }
 
     /**
-     * To object and extract parameter.
+     * Extract parameter data from a byte array.
      * (转换为对象，提取参数数据)
      *
      * @param parameter byte array parameter
@@ -95,7 +95,7 @@ public class ByteArraySerializer implements IByteArraySerializable {
     }
 
     /**
-     * To list, and extract parameter.
+     * Extract data for a parameter list from a byte array.
      * (转换为list对象，提取参数数据)
      *
      * @param parameters list parameter.
@@ -106,7 +106,7 @@ public class ByteArraySerializer implements IByteArraySerializable {
         try {
             for (final ByteArrayParameter parameter : parameters) {
                 if (parameter == null) {
-                    throw new ByteArrayParseException("null exists in the list of ByteArrayParameter");
+                    throw new ByteArrayParseException("ByteArrayParameter list must not contain null elements");
                 }
 
                 this.checkByteArrayVariable(parameter);
@@ -115,7 +115,7 @@ public class ByteArraySerializer implements IByteArraySerializable {
             }
             return parameters;
         } catch (Exception e) {
-            throw new ByteArrayParseException("parsing to object error, cause:" + e.getMessage(), e);
+            throw new ByteArrayParseException("Failed to parse data into an object: " + e.getMessage(), e);
         }
     }
 
@@ -158,7 +158,7 @@ public class ByteArraySerializer implements IByteArraySerializable {
             }
             return buff.getData();
         } catch (Exception e) {
-            throw new ByteArrayParseException("parsing to object error, cause:" + e.getMessage(), e);
+            throw new ByteArrayParseException("Failed to parse data into an object: " + e.getMessage(), e);
         }
     }
 
@@ -239,7 +239,7 @@ public class ByteArraySerializer implements IByteArraySerializable {
                 break;
             default:
                 // 提取数据的时候无法识别数据类型
-                throw new ByteArrayParseException("The data type can not be recognized when extracting the data");
+                throw new ByteArrayParseException("Unrecognized data type when extracting data");
         }
     }
 
@@ -252,20 +252,20 @@ public class ByteArraySerializer implements IByteArraySerializable {
     private void checkByteArrayVariable(ByteArrayParameter variable) {
         if (variable.getByteOffset() < 0) {
             // 字节偏移量不能为负数
-            throw new ByteArrayParseException("The byte offset can't be negative");
+            throw new ByteArrayParseException("byteOffset must not be negative");
         }
         if (variable.getCount() < 0) {
             // 数据个数不能为负数
-            throw new ByteArrayParseException("The number of data can't be negative");
+            throw new ByteArrayParseException("count must not be negative");
         }
         if (variable.getType() == BOOL && (variable.getBitOffset() > 7 || variable.getBitOffset() < 0)) {
             // 当数据类型为bool时，位偏移量只能是[0,7]
-            throw new ByteArrayParseException("When the data type is bool, the bit offset can only be [0,7].");
+            throw new ByteArrayParseException("bitOffset must be between 0 and 7 for BOOL data");
         }
     }
 
     /**
-     * Fill with one data.
+     * Fill a single data value.
      * (填充一个数据)
      *
      * @param variable annotation of byte array variable
@@ -310,12 +310,12 @@ public class ByteArraySerializer implements IByteArraySerializable {
                 break;
             default:
                 // 填充数据的时候无法识别数据类型
-                throw new ByteArrayParseException("The data type can not be recognized when populating the data");
+                throw new ByteArrayParseException("Unrecognized data type when filling data");
         }
     }
 
     /**
-     * Fill with list data.
+     * Fill a list of data values.
      * (填充多个数据，必须是list的数据)
      *
      * @param variable annotation of byte array variable

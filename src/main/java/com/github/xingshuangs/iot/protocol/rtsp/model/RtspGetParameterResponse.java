@@ -53,7 +53,7 @@ public final class RtspGetParameterResponse extends RtspMessageResponse {
 
     public static RtspGetParameterResponse fromHeaderString(final String src) {
         if (src == null || src.equals("")) {
-            throw new RtspCommException("src is null or empty in RtspGetParameterResponse");
+            throw new RtspCommException("RtspGetParameterResponse: src must not be null or empty");
         }
         RtspGetParameterResponse response = new RtspGetParameterResponse();
         Map<String, String> map = response.parseHeaderAndReturnMap(src);
@@ -67,7 +67,7 @@ public final class RtspGetParameterResponse extends RtspMessageResponse {
     }
 
     /**
-     * Add body info from string.
+     * Parse body information from a string.
      * (通过字符串添加body内容)
      *
      * @param src string

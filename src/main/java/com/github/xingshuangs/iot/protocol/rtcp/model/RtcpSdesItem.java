@@ -38,7 +38,7 @@ import lombok.Data;
 public class RtcpSdesItem implements IObjectByteArray {
 
     /**
-     * RTCP sdes item type.
+     * RTCP SDES item type.
      */
     private ERtcpSdesItemType type;
 
@@ -85,7 +85,7 @@ public class RtcpSdesItem implements IObjectByteArray {
      */
     public static RtcpSdesItem fromBytes(final byte[] data, final int offset) {
         if (data.length < 2) {
-            throw new IndexOutOfBoundsException("RtcpSdesItem, data length < 2");
+            throw new IndexOutOfBoundsException("RtcpSdesItem data must contain at least 2 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         RtcpSdesItem res = new RtcpSdesItem();

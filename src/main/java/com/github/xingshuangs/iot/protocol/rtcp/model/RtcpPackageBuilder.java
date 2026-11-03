@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data package builder.
+ * Data packet builder.
  * (数据包构建器)
  *
  * @author xingshuang

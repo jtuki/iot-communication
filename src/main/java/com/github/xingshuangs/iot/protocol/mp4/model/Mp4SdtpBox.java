@@ -31,9 +31,9 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 import java.util.List;
 
 /**
- * Independent and Disposable Samples Box(sdtp), it is mainly used to describe whether a specific sample is I-frame,
- * leading frame and other related attribute values, which is mainly used as synchronous reference information
- * when performing on-demand playback. Here, a simple assignment can be done.
+ * Independent and Disposable Samples Box (sdtp), describing sample dependencies,
+ * such as whether a sample is an I-frame or a leading frame. These attributes provide synchronization information
+ * for on-demand playback. This implementation assigns the flags directly.
  * 主要是用来描述具体某个 sample 是否是 I 帧，是否是 leading frame 等相关属性值，
  * 主要用来作为当进行点播回放时的同步参考信息,这里简单赋值即可
  *
@@ -42,12 +42,12 @@ import java.util.List;
 public class Mp4SdtpBox extends Mp4Box {
 
     /**
-     * 4-bytes.
+     * 4 bytes.
      */
     private final byte[] reserved;
 
     /**
-     * 3-bytes, flags.
+     * 3-byte flags.
      */
     private final byte[] flags;
 

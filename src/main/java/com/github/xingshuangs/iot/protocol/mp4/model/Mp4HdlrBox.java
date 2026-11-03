@@ -36,32 +36,32 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4HdlrBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4-bytespre_defined
+     * 4-byte pre_defined
      */
     private final byte[] preDefined;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final String handlerType;
 
     /**
-     * 12-bytes reserved
+     * 12-byte reserved
      */
     private final byte[] reserved;
 
     /**
-     * 5-bytes name
+     * 5-byte name
      */
     private final String name;
 

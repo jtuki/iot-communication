@@ -40,22 +40,22 @@ import java.time.LocalDateTime;
 public class Mp4MdhdBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4-bytes creation time.
+     * 4-byte creation time.
      */
     private final LocalDateTime creationTime;
 
     /**
-     * 4-bytes modification time
+     * 4-byte modification time
      */
     private final LocalDateTime modificationTime;
 
@@ -65,7 +65,7 @@ public class Mp4MdhdBox extends Mp4Box {
     private final int timescale;
 
     /**
-     * 4-bytes duration
+     * 4-byte duration
      */
     private final int duration;
 
@@ -75,7 +75,7 @@ public class Mp4MdhdBox extends Mp4Box {
     private final byte[] language;
 
     /**
-     * 2-bytes pre_defined
+     * 2-byte pre_defined
      */
     private final byte[] preDefined;
 

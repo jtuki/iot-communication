@@ -129,37 +129,37 @@ public enum EMcSeries {
     private final int headDeviceNumberByteLength;
 
     /**
-     * device batch in word points count.
+     * Number of device points for a batch operation in word units.
      * (软元件按字批量读写的点数)
      */
     private final int deviceBatchInWordPointsCount;
 
     /**
-     * Device batch in bit points count.
+     * Number of device points for a batch operation in bit units.
      * (软元件按位批量读写的点数)
      */
     private final int deviceBatchInBitPointsCount;
 
     /**
-     * Device random read in word points count.
+     * Number of device points for a random read in word units.
      * (软元件按字随机读的点数)
      */
     private final int deviceRandomReadInWordPointsCount;
 
     /**
-     * Device random write in word points count.
+     * Number of device points for a random write in word units.
      * (软元件按字随机写的点数)
      */
     private final int deviceRandomWriteInWordPointsCount;
 
     /**
-     * Device random write in bit points count.
+     * Number of device points for a random write in bit units.
      * (软元件按位随机写的点数)
      */
     private final int deviceRandomWriteInBitPointsCount;
 
     /**
-     * Device blocks count.
+     * Number of device blocks.
      * (软元件按块批量读写的块数)
      */
     private final int deviceBlocksBlocksCount;
@@ -171,7 +171,7 @@ public enum EMcSeries {
     private final int deviceBlocksWritePointsSize;
 
     /**
-     * Device blocks write points count.
+     * Number of device points to write across blocks.
      * (软元件按块批量写的点数)
      */
     private final int deviceBlocksWritePointsCount;

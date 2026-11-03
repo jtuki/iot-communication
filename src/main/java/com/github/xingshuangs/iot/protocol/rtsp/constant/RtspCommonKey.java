@@ -38,7 +38,7 @@ public class RtspCommonKey {
     }
 
     /**
-     * New line.
+     * Newline.
      * 换行
      */
 //    public static final String CRLF = System.getProperty("line.separator");

@@ -49,7 +49,7 @@ public enum EReturnCode {
     /**
      * 对象不允许访问
      */
-    ACCESSING_THE_OBJECT_NOT_ALLOWED((byte) 0x03, "accessing the object not allowed"),
+    ACCESSING_THE_OBJECT_NOT_ALLOWED((byte) 0x03, "access to the object is not allowed"),
 
     /**
      * 无效地址，所需的地址超出此PLC的极限
@@ -59,12 +59,12 @@ public enum EReturnCode {
     /**
      * 数据类型不支持
      */
-    DATA_TYPE_NOT_SUPPORTED((byte) 0x06, "data type not supported"),
+    DATA_TYPE_NOT_SUPPORTED((byte) 0x06, "data type is not supported"),
 
     /**
      * 数据类型不一致
      */
-    DATA_TYPE_INCONSISTENT((byte) 0x07, "data type inconsistent"),
+    DATA_TYPE_INCONSISTENT((byte) 0x07, "inconsistent data type"),
 
     /**
      * 对象不存在

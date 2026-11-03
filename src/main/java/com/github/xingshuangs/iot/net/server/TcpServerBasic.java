@@ -114,7 +114,7 @@ public class TcpServerBasic {
                 this.serverSocket.close();
                 this.executorService.shutdown();
                 // 关闭服务端，端口号[{}]
-                log.debug("Close the server, port number [{}]", this.port);
+                log.debug("Server closed, port [{}]", this.port);
             }
         } catch (IOException e) {
             throw new SocketRuntimeException(e);
@@ -122,22 +122,22 @@ public class TcpServerBasic {
     }
 
     /**
-     * Is the server alive.
+     * Whether the server is running.
      * (是否活跃着)
      *
-     * @return ture：alive，false：dead
+     * @return true if running; false otherwise
      */
     public boolean isAlive() {
         return this.serverSocket != null && !this.serverSocket.isClosed();
     }
 
     /**
-     * Wait for client come in.
+     * Wait for a client to connect.
      * (等待客户端连入)
      */
     protected void waitForClients() {
         // 开启等待客户端线程，端口号[{}]
-        log.debug("Open accept thread and waiting for clients, port number [{}]", this.port);
+        log.debug("Starting the accept thread and waiting for clients, port [{}]", this.port);
         while (this.isAlive()) {
             try {
                 Socket client = this.serverSocket.accept();
@@ -158,7 +158,7 @@ public class TcpServerBasic {
     //region 客户端
 
     /**
-     * Valid if the client can come in.
+     * Check whether the client connection can be accepted.
      * (校验客户端是否允许连入)
      *
      * @param client client socket object
@@ -169,14 +169,14 @@ public class TcpServerBasic {
     }
 
     /**
-     * Do handler after client connected.
+     * Handle a newly connected client.
      * (客户端连入后要做的业务)
      *
      * @param client client socket object
      */
     protected void doClientConnected(Socket client) {
         // 有客户端[{}]连入
-        log.debug("The client [{}] is connected", client.getRemoteSocketAddress());
+        log.debug("Client [{}] connected", client.getRemoteSocketAddress());
         this.clientConnected(client);
         try {
             if (this.checkHandshake(client) && this.isAlive()) {
@@ -198,11 +198,11 @@ public class TcpServerBasic {
 
         this.clientDisconnected(client);
         // 有客户端[{}]断开
-        log.debug("The client [{}] is disconnected", client.getRemoteSocketAddress());
+        log.debug("Client [{}] disconnected", client.getRemoteSocketAddress());
     }
 
     /**
-     * client connected, can override
+     * Handle a client connection. Subclasses may override this method.
      * (客户端连入)
      *
      * @param socket client socket object
@@ -212,7 +212,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Client disconnected, can override.
+     * Handle a client disconnection. Subclasses may override this method.
      * (客户端断开)
      *
      * @param socket client socket object
@@ -222,7 +222,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Check handshake, true: success, false: fail.
+     * Perform the handshake and check whether it succeeds.
      * (握手校验)
      *
      * @param socket client socket object
@@ -233,7 +233,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Do client message handler, can override.
+     * Handle a client message. Subclasses may override this method.
      * (执行客户端的业务，可重写)
      *
      * @param socket client socket object
@@ -245,7 +245,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Read client data, can override.
+     * Read client data. Subclasses may override this method.
      * (读取客户端数据)
      *
      * @param socket client socket object
@@ -258,7 +258,7 @@ public class TcpServerBasic {
             int firstByte = in.read();
             if (firstByte == -1) {
                 SocketUtils.close(socket);
-                throw new SocketRuntimeException("The client is actively disconnected");
+                throw new SocketRuntimeException("Client closed the connection");
             }
             byte[] data = new byte[in.available() + 1];
             data[0] = (byte) firstByte;
@@ -270,7 +270,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param socket socket object
@@ -286,7 +286,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket socket object
@@ -299,7 +299,7 @@ public class TcpServerBasic {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket socket object
@@ -314,14 +314,14 @@ public class TcpServerBasic {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket    socket object
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to read.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */
@@ -334,16 +334,16 @@ public class TcpServerBasic {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket      socket object
      * @param data        byte array
      * @param offset      the start offset in the data.
      * @param length      the number of bytes to read.
-     * @param maxLength   the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @param timeout     timeout with ms, 0: no timeout
-     * @param waitForMore If the data is not enough, whether to wait for more data, most of them are not waiting, waiting is suitable for subcontracting sticky packages(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
+     * @param maxLength   maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param timeout     timeout in milliseconds; 0 means no timeout
+     * @param waitForMore whether to keep reading until the requested length is reached; useful for messages split across TCP reads(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
      * @return the total number of bytes read into the data
      * @throws SocketRuntimeException Socket Runtime Exception
      */

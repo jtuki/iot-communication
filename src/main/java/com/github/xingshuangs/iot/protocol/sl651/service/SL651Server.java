@@ -58,13 +58,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SL651Server extends TcpServerBasic {
 
     /**
-     * Current connected client number.
+     * Number of currently connected clients.
      * (客户端当前的连接数量)
      */
     private AtomicInteger connectedNumber = new AtomicInteger();
 
     /**
-     * Max available number of client.
+     * Maximum number of connected clients.
      * (客户端连接的最大允许数量)
      */
     private Integer maxAvailableNumber;
@@ -93,7 +93,7 @@ public class SL651Server extends TcpServerBasic {
     }
 
     /**
-     * Is the client valid.
+     * Check whether the client is valid.
      * (校验客户端是否允许连入)
      *
      * @param client client socket.
@@ -162,7 +162,7 @@ public class SL651Server extends TcpServerBasic {
 
 
     /**
-     * Override read client data function.
+     * Override the method that reads client data.
      * (重写读取客户端数据，针对粘包粘包的数据处理)
      *
      * @param socket client socket.

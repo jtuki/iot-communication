@@ -56,12 +56,12 @@ public class RtspSdpBandwidth {
 
     public static RtspSdpBandwidth fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("The SDP failed to parse the Bandwidth part of the data source");
+            throw new IllegalArgumentException("Failed to parse the SDP bandwidth field");
         }
         RtspSdpBandwidth bandwidth = new RtspSdpBandwidth();
         String[] split = src.split(COLON);
         if (split.length != 2) {
-            throw new RtspCommException("RtspSdpBandwidth data is incorrect and cannot be resolved");
+            throw new RtspCommException("Invalid RtspSdpBandwidth data");
         }
         bandwidth.type = split[0];
         bandwidth.value = Integer.parseInt(split[1]);

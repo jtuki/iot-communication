@@ -69,12 +69,12 @@ public class RtspSdpMediaAttrFmtp {
 
     public static RtspSdpMediaAttrFmtp fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("MediaAttrFmtp of SDP data error");
+            throw new IllegalArgumentException("Invalid SDP media FMTP attribute");
         }
         RtspSdpMediaAttrFmtp rtpMap = new RtspSdpMediaAttrFmtp();
         int i = src.indexOf(SP);
         if (i == -1) {
-            throw new RtspCommException("RtspSdpMediaAttrFmtp data error");
+            throw new RtspCommException("Invalid RtspSdpMediaAttrFmtp data");
         }
         rtpMap.number = Integer.parseInt(src.substring(0, i));
         String sub = src.substring(i + 1);

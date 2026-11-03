@@ -95,7 +95,7 @@ public class StartUploadAckParameter extends UploadParameter {
      */
     public static StartUploadAckParameter fromBytes(final byte[] data, final int offset) {
         if (data.length < 8) {
-            throw new IndexOutOfBoundsException("StartUploadAckParameter, data length < 8");
+            throw new IndexOutOfBoundsException("StartUploadAckParameter data must contain at least 8 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         StartUploadAckParameter res = new StartUploadAckParameter();

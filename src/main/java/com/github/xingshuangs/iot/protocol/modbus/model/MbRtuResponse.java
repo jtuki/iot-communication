@@ -35,7 +35,7 @@ import lombok.Data;
 import java.util.Arrays;
 
 /**
- * Modbus rtu response.
+ * Modbus RTU response.
  * (RTU的modbus响应)
  *
  * @author xingshuang
@@ -44,7 +44,7 @@ import java.util.Arrays;
 public class MbRtuResponse implements IObjectByteArray {
 
     /**
-     * Unit id or slave id.
+     * Unit ID (also called the slave ID).
      * 单元标识符<br>
      * 字节大小：1个字节
      * 字节序数：0
@@ -78,7 +78,7 @@ public class MbRtuResponse implements IObjectByteArray {
     }
 
     /**
-     * Check self.
+     * Check this object.
      * (自我数据校验)
      */
     public void selfCheck() {

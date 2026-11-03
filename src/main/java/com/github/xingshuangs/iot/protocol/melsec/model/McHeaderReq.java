@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.protocol.melsec.enums.EMcFrameType;
 import lombok.Data;
 
 /**
- * Req header.
+ * Request header.
  * (请求头)
  *
  * @author xingshuang
@@ -46,7 +46,7 @@ public class McHeaderReq implements IObjectByteArray {
     protected EMcFrameType frameType = EMcFrameType.FRAME_3E;
 
     /**
-     * Sub header, 2-bytes.
+     * Sub header, 2 bytes.
      * 副帧头，2字节，根据报文的类型定义设置的值。
      * 1E帧，1个字节
      */
@@ -70,12 +70,12 @@ public class McHeaderReq implements IObjectByteArray {
 
     @Override
     public int byteArrayLength() {
-        throw new UnsupportedOperationException("not implement");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public byte[] toByteArray() {
-        throw new UnsupportedOperationException("not implement");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     public static McHeaderReq createByFrameType(EMcFrameType frameType, McAccessRoute accessRoute, int timer) {

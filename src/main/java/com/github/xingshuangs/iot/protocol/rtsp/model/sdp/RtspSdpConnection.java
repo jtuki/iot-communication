@@ -60,13 +60,13 @@ public class RtspSdpConnection {
 
     public static RtspSdpConnection fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("The SDP, src is null or empty");
+            throw new IllegalArgumentException("RtspSdpConnection: src must not be null or empty");
         }
 
         RtspSdpConnection connection = new RtspSdpConnection();
         String[] split = src.split(SP);
         if (split.length != 3) {
-            throw new RtspCommException("The RtspSdpConnection data is incorrect and cannot be resolved");
+            throw new RtspCommException("Invalid RtspSdpConnection data");
         }
         connection.networkType = split[0];
         connection.addressType = split[1];

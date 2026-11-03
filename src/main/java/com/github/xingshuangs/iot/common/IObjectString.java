@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.common;
 
 
 /**
- * Transform to string interface.
+ * Interface for converting objects to strings.
  * (字符串相关接口)
  *
  * @author xingshuang
@@ -34,7 +34,7 @@ package com.github.xingshuangs.iot.common;
 public interface IObjectString {
 
     /**
-     * Transform current object to string.
+     * Convert this object to a string.
      * (转换为对象字符串)
      *
      * @return string data.

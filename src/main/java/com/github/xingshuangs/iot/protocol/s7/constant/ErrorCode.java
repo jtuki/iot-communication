@@ -48,7 +48,7 @@ public class ErrorCode {
      * @return error message
      */
     public static String getMessage(Integer data) {
-        return ErrorCode.Holder.INSTANCE.getOrDefault(data, "The error code does not exist.");
+        return ErrorCode.Holder.INSTANCE.getOrDefault(data, "Unknown error code");
     }
 
     // 静态内部类（static 内部类）实现懒加载

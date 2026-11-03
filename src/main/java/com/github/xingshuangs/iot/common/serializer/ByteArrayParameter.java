@@ -30,7 +30,7 @@ import com.github.xingshuangs.iot.common.enums.EDataType;
 import lombok.Data;
 
 /**
- * Byte array parameter
+ * Byte array parameters.
  * (字节数组参数)
  *
  * @author xingshuang
@@ -51,7 +51,7 @@ public class ByteArrayParameter {
     protected int bitOffset = 0;
 
     /**
-     * Count, if count bigger than 1, then must use list type.
+     * Element count. Use a list type when the count is greater than 1.
      * (数量，数量大于1的时候对应的数据必须使用list)
      */
     protected int count = 1;
@@ -63,13 +63,13 @@ public class ByteArrayParameter {
     protected EDataType type = EDataType.BYTE;
 
     /**
-     * Is little endian.
+     * Whether to use little-endian byte order.
      * (是否小端模式)
      */
     protected boolean littleEndian = false;
 
     /**
-     * 4 - or 8-byte encoding format.
+     * 4- or 8-byte encoding format.
      * (4字节和8字节的编码格式)
      */
     protected EByteBuffFormat format = EByteBuffFormat.DC_BA;

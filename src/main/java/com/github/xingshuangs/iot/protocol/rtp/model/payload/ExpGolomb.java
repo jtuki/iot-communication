@@ -29,7 +29,7 @@ import com.github.xingshuangs.iot.common.buff.ByteReadBuff;
 import lombok.Getter;
 
 /**
- * Exp golomb encode class.
+ * Exp-Golomb decoder.
  * (指数哥伦布编码)
  *
  * @author xingshuang
@@ -57,7 +57,7 @@ public class ExpGolomb {
 
     public ExpGolomb(byte[] data) {
         if (data == null || data.length == 0) {
-            throw new IllegalArgumentException("data");
+            throw new IllegalArgumentException("data must not be null or empty");
         }
         this.readBuff = new ByteReadBuff(data);
         this.bitIndex = 0;
@@ -89,7 +89,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Read N bit.
+     * Read N bits.
      * (读取指定位数)
      *
      * @param size bit size
@@ -97,7 +97,7 @@ public class ExpGolomb {
      */
     public long readNBit(int size) {
         if (size > 32) {
-            throw new IllegalArgumentException("size > 32");
+            throw new IllegalArgumentException("size must not exceed 32 bits");
         }
 
         long res = 0;
@@ -109,7 +109,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Skip size bit.
+     * Skip the specified number of bits.
      * (跳过指定size的bit数量)
      *
      * @param size bit数量
@@ -119,7 +119,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Skip leading zero.
+     * Skip leading zeros.
      * (前导零计数)
      *
      * @return 零的个数
@@ -133,7 +133,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Skip an unsigned exponential golomb coded value.
+     * Skip an unsigned Exp-Golomb-coded value.
      * (跳过一个无符号指数哥伦布编码数值)
      */
     public void skipUE() {
@@ -141,7 +141,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Skip a signed exponential golomb coded value
+     * Skip a signed Exp-Golomb-coded value.
      * (跳过一个有符号指数哥伦布编码数值)
      */
     public void skipSE() {
@@ -149,7 +149,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Skip multiple zoom lists.
+     * Skip scaling lists.
      * (跳过多个缩放列表)
      *
      * @param count count
@@ -177,7 +177,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Reads an unsigned exponential golomb coded value.
+     * Read an unsigned Exp-Golomb-coded value.
      * (读取一个无符号指数哥伦布编码数值)
      *
      * @return an unsigned value
@@ -188,7 +188,7 @@ public class ExpGolomb {
     }
 
     /**
-     * Read a signed exponential golomb coded valuel
+     * Read a signed Exp-Golomb-coded value.
      * (读取一个有符号指数哥伦布编码数值)
      *
      * @return a signed value

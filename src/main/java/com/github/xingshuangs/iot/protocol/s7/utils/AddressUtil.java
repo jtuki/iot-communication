@@ -82,7 +82,7 @@ public class AddressUtil {
      */
     public static RequestItem parse(String address, int count, EParamVariableType variableType) {
         if (address == null || address.length() == 0) {
-            throw new IllegalArgumentException("address is null or empty");
+            throw new IllegalArgumentException("address must not be null or empty");
         }
         if (count <= 0) {
             throw new IllegalArgumentException("count must be positive");
@@ -100,7 +100,7 @@ public class AddressUtil {
         item.setBitAddress(parseBitAddress(addList, variableType));
         if (item.getBitAddress() > 7) {
             // address地址信息格式错误，位索引只能[0-7]
-            throw new IllegalArgumentException("address address information format is incorrect, the bit index can only be [0-7]");
+            throw new IllegalArgumentException("Invalid address format: bit index must be between 0 and 7");
         }
         return item;
     }
@@ -130,7 +130,7 @@ public class AddressUtil {
                 return EArea.S7_COUNTERS;
             default:
                 // 传入的参数有误，无法解析Area
-                throw new IllegalArgumentException("The parameter passed in was incorrect and the Area could not be resolved");
+                throw new IllegalArgumentException("Invalid parameter: unable to resolve the area");
         }
     }
 

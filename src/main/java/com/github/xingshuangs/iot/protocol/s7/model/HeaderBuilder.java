@@ -58,7 +58,7 @@ public class HeaderBuilder {
             case USER_DATA:
                 return null;
             default:
-                throw new S7CommException("Header message type can not be recognized");
+                throw new S7CommException("Unrecognized header message type");
         }
     }
 }

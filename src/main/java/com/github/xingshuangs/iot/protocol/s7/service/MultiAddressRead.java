@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wrapper address for reading.
+ * Multiple addresses for read operations.
  * 地址的包装类
  *
  * @author xingshuang

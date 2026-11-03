@@ -54,7 +54,7 @@ public class COTPData extends COTP implements IObjectByteArray {
     private int tpduNumber = 0x00;
 
     /**
-     * Whether the last data unit.
+     * Whether this is the last data unit.
      * 是否最后一个数据单元 <br>
      * 字节大小：1，最高位，7位 <br>
      * 字节序数：2
@@ -86,7 +86,7 @@ public class COTPData extends COTP implements IObjectByteArray {
     public static COTPData fromBytes(final byte[] data) {
         if (data.length < BYTE_LENGTH) {
             // COTPData数据字节长度不够，无法解析
-            throw new S7CommException("COTPData Data byte length is not enough to parse");
+            throw new S7CommException("Insufficient data to parse COTPData");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         COTPData cotpData = new COTPData();

@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Read hold register response.
+ * Response to a holding register read request.
  * (响应读取保持寄存器)
  *
  * @author xingshuang

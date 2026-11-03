@@ -77,7 +77,7 @@ public class StartUploadParameter extends DownloadParameter {
      */
     public static StartUploadParameter fromBytes(final byte[] data, final int offset) {
         if (data.length < 18) {
-            throw new IndexOutOfBoundsException("DownloadParameter, data length < 18");
+            throw new IndexOutOfBoundsException("StartUploadParameter data must contain at least 18 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data, offset);
         StartUploadParameter res = new StartUploadParameter();

@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
 public class PLCNetwork extends TcpClientBasic {
 
     /**
-     * locker.
+     * Communication locker.
      */
     private final ReentrantLock locker = new ReentrantLock();
 
@@ -82,25 +82,25 @@ public class PLCNetwork extends TcpClientBasic {
     protected int rack = 0;
 
     /**
-     * PLC Slot.
+     * PLC slot.
      * (PLC槽号，S7-300 = 2)
      */
     protected int slot = 1;
 
     /**
-     * PDU length, different PLC corresponding to different values, there are 240,480,960.
+     * PDU length in bytes.
      * (最大的PDU长度，不同PLC对应不同值，有240,480,960，目前默认240)
      */
     protected int pduLength;
 
     /**
-     * Persistence, true: long connection, false: short connection.
+     * Connection persistence; true keeps the connection open between requests.
      * (是否持久化，默认是持久化，对应长连接，true：长连接，false：短连接)
      */
     private boolean persistence = true;
 
     /**
-     * Communication callback, first parameter is tag, second is package content.
+     * Communication callback with a message tag and byte data.
      * (通信回调，第一个参数是tag标签，指示该报文含义；第二个参数是具体报文内容)
      */
     private BiConsumer<String, byte[]> comCallback;
@@ -128,7 +128,7 @@ public class PLCNetwork extends TcpClientBasic {
     //region socket连接后握手操作
 
     /**
-     * Do after connected.
+     * Run the post-connection actions.
      * (连接成功之后要做的动作)
      */
     @Override
@@ -136,7 +136,7 @@ public class PLCNetwork extends TcpClientBasic {
         this.connectionRequest();
         // 存在设置的PDULength != 实际PLC的PDULength，因此以PLC的为准
         this.pduLength = this.connectDtData();
-        log.debug("PLC[{}] handshake success, rack[{}]，slot[{}]，PDULength[{}]", this.plcType, this.rack, this.slot, this.pduLength);
+        log.debug("Handshake with PLC [{}] succeeded, rack [{}], slot [{}], PDU length [{}]", this.plcType, this.rack, this.slot, this.pduLength);
     }
 
     /**
@@ -186,12 +186,12 @@ public class PLCNetwork extends TcpClientBasic {
         S7Data ack = this.readFromServer(req);
         if (ack.getCotp().getPduType() != EPduType.CONNECT_CONFIRM) {
             // 连接请求被拒绝
-            throw new S7CommException("The connection request was denied");
+            throw new S7CommException("Connection request rejected");
         }
     }
 
     /**
-     * Connection setup.
+     * Set up the connection using DT data.
      * (连接setup)
      *
      * @return pduLength pdu长度
@@ -201,16 +201,16 @@ public class PLCNetwork extends TcpClientBasic {
         S7Data ack = this.readFromServer(req);
         if (ack.getCotp().getPduType() != EPduType.DT_DATA) {
             // 连接Setup响应错误
-            throw new S7CommException("Connection Setup response error");
+            throw new S7CommException("Invalid connection setup response");
         }
         if (ack.getHeader() == null || ack.getHeader().byteArrayLength() != AckHeader.BYTE_LENGTH) {
             // 连接Setup响应错误，缺失响应头header或响应头长度不够[12]
-            throw new S7CommException("Connection Setup response error, missing response header or insufficient response header length [12]");
+            throw new S7CommException("Invalid connection setup response: the ACK header is missing or its length is not 12 bytes");
         }
         int length = ((SetupComParameter) ack.getParameter()).getPduLength();
         if (length <= 0) {
             // PDU的最大长度小于0
-            throw new S7CommException("The maximum length of a PDU is less than 0");
+            throw new S7CommException("PDU length must be greater than 0");
         }
         return length;
     }
@@ -219,7 +219,7 @@ public class PLCNetwork extends TcpClientBasic {
     //region 底层数据通信部分
 
     /**
-     * Read data from server, core interaction.
+     * Read response data from the server.
      * (从服务器读取数据)
      *
      * @param req req data
@@ -234,7 +234,7 @@ public class PLCNetwork extends TcpClientBasic {
     }
 
     /**
-     * Data interaction with the server as byte array
+     * Read response bytes from the server after sending a request.
      * (以字节数组的方式和服务器进行数据交互)
      *
      * @param sendData byte array of request
@@ -248,7 +248,7 @@ public class PLCNetwork extends TcpClientBasic {
         // 将报文中的TPKT和COTP减掉，剩下PDU的内容，7=4(tpkt)+3(cotp)
         if (this.pduLength > 0 && sendData.length - 7 > this.pduLength) {
             // 发送请求的字节数过长[%d]，已经大于最大的PDU长度[%d]
-            throw new S7CommException(String.format("The number of bytes sent for the request is too long [%d], which is larger than the maximum PDU length [%d].", sendData.length, this.pduLength));
+            throw new S7CommException(String.format("Request length [%d bytes] exceeds the maximum PDU length [%d bytes]", sendData.length, this.pduLength));
         }
 
         TPKT tpkt;
@@ -262,7 +262,7 @@ public class PLCNetwork extends TcpClientBasic {
             len = this.read(data);
             if (len < TPKT.BYTE_LENGTH) {
                 // TPKT 无效，长度不一致
-                throw new S7CommException("The TPKT is invalid and the length is inconsistent");
+                throw new S7CommException("Incomplete TPKT header");
             }
             tpkt = TPKT.fromBytes(data);
             total = new byte[tpkt.getLength()];
@@ -273,7 +273,7 @@ public class PLCNetwork extends TcpClientBasic {
         }
         if (len < total.length - TPKT.BYTE_LENGTH) {
             // TPKT后面的数据长度，长度不一致
-            throw new S7CommException("The length of the data after TPKT is inconsistent");
+            throw new S7CommException("Incomplete response data after the TPKT header");
         }
         if (this.comCallback != null) {
             this.comCallback.accept(GeneralConst.PACKAGE_ACK, total);
@@ -282,7 +282,7 @@ public class PLCNetwork extends TcpClientBasic {
     }
 
     /**
-     * Contains persistent reads from the server, external inheritance uses this method for interaction, not internal use.
+     * Read from the server according to the connection persistence setting.
      * (包含持久化的从服务器读取数据，外部继承使用该方法进行交互，内部不使用)
      *
      * @param req req data
@@ -299,7 +299,7 @@ public class PLCNetwork extends TcpClientBasic {
     }
 
     /**
-     * Contains persistent reads from the server, external inheritance uses this method for interaction, not internal use.
+     * Read from the server according to the connection persistence setting.
      * (包含持久化的从服务器读取数据，外部继承使用该方法进行交互，内部不使用)
      *
      * @param req req data
@@ -316,11 +316,11 @@ public class PLCNetwork extends TcpClientBasic {
     }
 
     /**
-     * Post-communication processing, once verifying the request and response data.
+     * Check communication results using the request and ACK data.
      * (后置通信处理，对请求和响应数据进行一次校验)
      *
      * @param req req data
-     * @param ack ack data
+     * @param ack response data
      */
     private void checkPostedCom(S7Data req, S7Data ack) {
         if (ack.getHeader() == null) {
@@ -330,17 +330,17 @@ public class PLCNetwork extends TcpClientBasic {
         AckHeader ackHeader = (AckHeader) ack.getHeader();
         if (ackHeader.getErrorClass() == null) {
             // 响应异常，未知异常
-            throw new S7CommException(String.format("Response exception, unknown exception：%s", ErrorCode.getMessage(ackHeader.getErrorCode())));
+            throw new S7CommException(String.format("Unknown response error: %s", ErrorCode.getMessage(ackHeader.getErrorCode())));
         }
         if (ackHeader.getErrorClass() != EErrorClass.NO_ERROR) {
             // 响应异常，错误类型：%s，错误原因
-            throw new S7CommException(String.format("Response exception, error type: %s, error cause：%s",
+            throw new S7CommException(String.format("Response error, type: %s, cause: %s",
                     ackHeader.getErrorClass().getDescription(), ErrorCode.getMessage(ackHeader.getErrorCode())));
         }
         // 发送和接收的PDU编号一致
         if (ackHeader.getPduReference() != req.getHeader().getPduReference()) {
             // pdu引用编号不一致，数据有误
-            throw new S7CommException("The PDU references are inconsistent, causing incorrect data");
+            throw new S7CommException("Request and response PDU references do not match");
         }
         if (ack.getDatum() == null) {
             return;
@@ -354,13 +354,13 @@ public class PLCNetwork extends TcpClientBasic {
         ReadWriteParameter parameter = (ReadWriteParameter) req.getParameter();
         if (returnItems.size() != parameter.getItemCount()) {
             // 返回的数据个数和请求的数据个数不一致
-            throw new S7CommException("The returned data quantity is different from the requested data quantity");
+            throw new S7CommException("Response item count does not match the request item count");
         }
         // 返回结果校验
         for (int i = 0; i < returnItems.size(); i++) {
             if (returnItems.get(i).getReturnCode() != EReturnCode.SUCCESS) {
                 // 返回第[%d]个结果异常，原因：%s
-                throw new S7CommException(String.format("Return [%d] result exception, address[%s], cause: %s", i + 1, parameter.getRequestItems().get(i).address(), returnItems.get(i).getReturnCode().getDescription()));
+                throw new S7CommException(String.format("Response item [%d] failed, address [%s], cause: %s", i + 1, parameter.getRequestItems().get(i).address(), returnItems.get(i).getReturnCode().getDescription()));
             }
         }
     }
@@ -379,7 +379,7 @@ public class PLCNetwork extends TcpClientBasic {
     public List<DataItem> readS7Data(List<RequestItem> requestItems) {
         if (requestItems == null || requestItems.isEmpty()) {
             // 请求项缺失，无法获取数据
-            throw new S7CommException("The request item is missing and the data cannot be retrieved");
+            throw new S7CommException("requestItems must not be null or empty");
         }
         // 根据原始请求列表提取每个请求数据大小
         List<Integer> rawNumbers = requestItems.stream().map(RequestItem::getCount).collect(Collectors.toList());
@@ -457,7 +457,7 @@ public class PLCNetwork extends TcpClientBasic {
     public void writeS7Data(List<RequestItem> requestItems, List<DataItem> dataItems) {
         if (requestItems.size() != dataItems.size()) {
             // 写操作过程中，requestItems和dataItems数据个数不一致
-            throw new S7CommException("During the write operation, the number of requestItems and dataItems is inconsistent. Procedure");
+            throw new S7CommException("requestItems and dataItems must have the same number of elements for a write operation");
         }
 
         // 根据原始请求列表提取每个请求数据大小
@@ -592,7 +592,7 @@ public class PLCNetwork extends TcpClientBasic {
                 S7Data ackUpload = this.readFromServer(reqUpload);
                 uploadAckParameter = (UploadAckParameter) ackUpload.getParameter();
                 if (uploadAckParameter.isErrorStatus()) {
-                    throw new S7CommException("Upload error occurred");
+                    throw new S7CommException("File upload failed");
                 }
                 UpDownloadDatum datum = (UpDownloadDatum) ackUpload.getDatum();
                 buff.putBytes(datum.getData());

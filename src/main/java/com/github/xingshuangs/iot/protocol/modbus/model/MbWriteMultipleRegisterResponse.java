@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Write multiple register response.
+ * Response to a multiple-register write request.
  * (响应写多个寄存器)
  *
  * @author xingshuang

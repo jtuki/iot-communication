@@ -117,7 +117,7 @@ public class StartDownloadParameter extends DownloadParameter implements IObject
      */
     public static StartDownloadParameter fromBytes(final byte[] data, final int offset) {
         if (data.length < 32) {
-            throw new IndexOutOfBoundsException("StartDownloadParameter, data length < 32");
+            throw new IndexOutOfBoundsException("StartDownloadParameter data must contain at least 32 bytes");
         }
         StartDownloadParameter res = new StartDownloadParameter();
         ByteReadBuff buff = new ByteReadBuff(data, offset);

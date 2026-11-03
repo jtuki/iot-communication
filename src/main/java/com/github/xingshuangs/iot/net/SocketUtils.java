@@ -32,7 +32,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 /**
- * Socket communication util.
+ * Socket communication utilities.
  * Socket通信工具
  *
  * @author xingshuang
@@ -57,31 +57,31 @@ public class SocketUtils {
     }
 
     /**
-     * Get connected status, true：connected，false：disconnected.
+     * Check whether the connection is active.
      * (是否连接状态)
      *
      * @param socket socket object
-     * @return true：connected，false：disconnected
+     * @return true if connected; false otherwise
      */
     public static boolean isConnected(final Socket socket) {
         return socket != null && (socket.isConnected() && !socket.isClosed());
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket socket object
      * @param data   byte array
      * @return the total number of bytes read into the data
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static int read(final Socket socket, final byte[] data) throws IOException {
         return read(socket, data, 0, data.length, -1, 0);
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket socket object
@@ -89,40 +89,40 @@ public class SocketUtils {
      * @param offset the start offset in the data.
      * @param length the number of bytes to read.
      * @return the total number of bytes read into the data
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static int read(final Socket socket, final byte[] data, int offset, final int length) throws IOException {
         return read(socket, data, offset, length, -1, 0);
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket    socket object
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to read.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
      * @return the total number of bytes read into the data
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static int read(final Socket socket, final byte[] data, int offset, final int length, final int maxLength) throws IOException {
         return read(socket, data, offset, length, maxLength, 0);
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket    socket object
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to read.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @param timeout   timeout with ms, 0: no timeout
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param timeout   timeout in milliseconds; 0 means no timeout
      * @return the total number of bytes read into the data
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static int read(final Socket socket, final byte[] data, final int offset, final int length,
                            final int maxLength, final int timeout) throws IOException {
@@ -130,26 +130,26 @@ public class SocketUtils {
     }
 
     /**
-     * Read data and store it in the position of the specified byte array.
+     * Read data into the specified byte array.
      * （读取数据）
      *
      * @param socket      socket object
      * @param data        byte array
      * @param offset      the start offset in the data.
      * @param length      the number of bytes to read.
-     * @param maxLength   the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @param timeout     timeout with ms, 0: no timeout
-     * @param waitForMore If the data is not enough, whether to wait for more data, most of them are not waiting, waiting is suitable for subcontracting sticky packages(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
+     * @param maxLength   maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @param timeout     timeout in milliseconds; 0 means no timeout
+     * @param waitForMore whether to keep reading until the requested length is reached; useful for messages split across TCP reads(若数据不够，是否等待，等待更多数据，大部分都是不等待的，等待都适用于分包粘包的情况)
      * @return the total number of bytes read into the data
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static int read(final Socket socket, final byte[] data, final int offset, final int length,
                            final int maxLength, final int timeout, final boolean waitForMore) throws IOException {
         if (offset + length > data.length) {
-            throw new IllegalArgumentException("offset+length");
+            throw new IllegalArgumentException("offset + length must not exceed the data array length");
         }
         if (timeout < 0) {
-            throw new IllegalArgumentException("timeout>=0");
+            throw new IllegalArgumentException("timeout must not be negative");
         }
         // 阻塞不是指read的时间长短，可以理解为没有数据可读，线程一直在这等待
         socket.setSoTimeout(timeout);
@@ -163,7 +163,7 @@ public class SocketUtils {
             int num = in.read(data, off, len);
             if (num < 0) {
                 // 读取数据异常，未读取到数据，连接断开
-                throw new SocketException("The end of the stream has been reached, and disconnected");
+                throw new SocketException("End of stream reached: the connection has been closed");
             }
             count += num;
             off += num;
@@ -176,45 +176,45 @@ public class SocketUtils {
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param socket socket object
      * @param data   byte array
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static void write(final Socket socket, final byte[] data) throws IOException {
         write(socket, data, 0, data.length, -1);
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param socket socket object
      * @param data   byte array
      * @param offset the start offset in the data.
      * @param length the number of bytes to write.
-     * @throws IOException IO Exception
+     * @throws IOException if an I/O error occurs
      */
     public static void write(final Socket socket, final byte[] data, int offset, final int length) throws IOException {
         write(socket, data, offset, length, -1);
     }
 
     /**
-     * Write data by byte array.
+     * Write data from a byte array.
      * （写入数据）
      *
      * @param socket    socket object
      * @param data      byte array
      * @param offset    the start offset in the data.
      * @param length    the number of bytes to write.
-     * @param maxLength the maximum length allowed for a single communication,if litter than 0, then ignore. (单次通信允许的对最大长度，若小于等于0则不考虑)
-     * @throws IOException IO Exception
+     * @param maxLength maximum number of bytes per read or write; ignored if less than or equal to 0. (单次通信允许的对最大长度，若小于等于0则不考虑)
+     * @throws IOException if an I/O error occurs
      */
     public static void write(final Socket socket, final byte[] data, final int offset, final int length, final int maxLength) throws IOException {
         if (offset + length > data.length) {
-            throw new IllegalArgumentException("offset+length");
+            throw new IllegalArgumentException("offset + length must not exceed the data array length");
         }
         // 写入个数
         int count = 0;

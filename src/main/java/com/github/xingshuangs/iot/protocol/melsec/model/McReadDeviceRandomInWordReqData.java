@@ -70,7 +70,7 @@ public class McReadDeviceRandomInWordReqData extends McReqData {
                                            List<McDeviceAddress> wordAddresses,
                                            List<McDeviceAddress> dwordAddresses) {
         if (series.getFrameType() == EMcFrameType.FRAME_1E) {
-            throw new McCommException("Frame 1E not supported");
+            throw new McCommException("1E frames are not supported");
         }
         this.series = series;
         this.command = EMcCommand.DEVICE_ACCESS_RANDOM_READ_IN_UNITS;

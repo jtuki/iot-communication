@@ -25,7 +25,7 @@
 package com.github.xingshuangs.iot.exceptions;
 
 /**
- * Hex data parse runtime exception class.
+ * Runtime exception for hexadecimal parsing errors.
  * (16进制解析异常)
  *
  * @author ShuangPC

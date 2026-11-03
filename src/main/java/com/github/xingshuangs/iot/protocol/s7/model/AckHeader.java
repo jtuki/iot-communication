@@ -33,7 +33,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Ack header.
+ * ACK header (response header).
  * 响应头
  *
  * @author xingshuang
@@ -82,7 +82,7 @@ public class AckHeader extends Header {
      */
     public static AckHeader fromBytes(final byte[] data) {
         if (data.length < BYTE_LENGTH) {
-            throw new IndexOutOfBoundsException("header, data length < 12");
+            throw new IndexOutOfBoundsException("AckHeader data must contain at least 12 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         AckHeader header = new AckHeader();

@@ -49,7 +49,7 @@ public final class RtspTeardownResponse extends RtspMessageResponse {
 
     public static RtspTeardownResponse fromHeaderString(String src) {
         if (src == null || src.equals("")) {
-            throw new RtspCommException("src is null or empty in RtspTeardownResponse");
+            throw new RtspCommException("RtspTeardownResponse: src must not be null or empty");
         }
         RtspTeardownResponse response = new RtspTeardownResponse();
         Map<String, String> map = response.parseHeaderAndReturnMap(src);

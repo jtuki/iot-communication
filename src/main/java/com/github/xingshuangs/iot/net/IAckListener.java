@@ -26,7 +26,7 @@ package com.github.xingshuangs.iot.net;
 
 
 /**
- * Ack listener interface, do success or failed.
+ * ACK listener for success and failure callbacks.
  * (响应监听器)
  *
  * @author xingshuang
@@ -34,15 +34,15 @@ package com.github.xingshuangs.iot.net;
 public interface IAckListener<T> {
 
     /**
-     * Execute success.
+     * Handle a successful response.
      * (成功执行业务)
      *
-     * @param ack ack data
+     * @param ack response data
      */
     void ok(T ack);
 
     /**
-     * Execute failed.
+     * Handle a failed response.
      * (失败执行业务)
      *
      * @param message error message

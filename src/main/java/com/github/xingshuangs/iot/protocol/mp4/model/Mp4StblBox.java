@@ -30,7 +30,7 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 
 /**
  * The Sample Table Box(stbl) is the most important part of the mdia and stores information about each Sample in the file.
- * First, introduce the concepts of Sample and trunk.
+ * Samples are organized into chunks.
  * Sample Table Box(stbl)是mdia中最主要的部分，存放文件中每个 Sample信息.首先介绍下Sample和trunk的概念，
  * 在 MP4文件中，Sample 是一个媒体流的基本单元
  *

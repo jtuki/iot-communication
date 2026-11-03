@@ -39,7 +39,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Read and write parameter.
+ * Read/write parameters.
  * 读写参数
  *
  * @author xingshuang
@@ -110,7 +110,7 @@ public class ReadWriteParameter extends Parameter implements IObjectByteArray {
     public static ReadWriteParameter fromBytes(final byte[] data) {
         if (data.length < 2) {
             // Parameter解析有误，parameter字节数组长度 < 2
-            throw new S7CommException("Parameter parsing error, parameter byte array length < 2");
+            throw new S7CommException("ReadWriteParameter data must contain at least 2 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         ReadWriteParameter readWriteParameter = new ReadWriteParameter();
@@ -151,7 +151,7 @@ public class ReadWriteParameter extends Parameter implements IObjectByteArray {
                 return RequestNckItem.fromBytes(data, offset);
             default:
                 // 无法解析RequestBaseItem对应的类型
-                throw new S7CommException("Unable to resolve the corresponding type of RequestBaseItem");
+                throw new S7CommException("Unrecognized RequestBaseItem type");
         }
     }
 

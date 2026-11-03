@@ -70,7 +70,7 @@ public class McWriteDeviceBatchMultiBlocksReqData extends McReqData {
                                                 List<McDeviceContent> wordContents,
                                                 List<McDeviceContent> bitContents) {
         if (series.getFrameType() == EMcFrameType.FRAME_1E) {
-            throw new McCommException("Frame 1E not supported");
+            throw new McCommException("1E frames are not supported");
         }
         this.series = series;
         this.command = EMcCommand.DEVICE_ACCESS_BATCH_WRITE_MULTIPLE_BLOCKS;

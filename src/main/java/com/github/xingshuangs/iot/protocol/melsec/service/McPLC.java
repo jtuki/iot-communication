@@ -94,7 +94,7 @@ public class McPLC extends McNetwork {
     //region 软元件读取
 
     /**
-     * Read multi address
+     * Read data from multiple addresses.
      * (读多地址)
      *
      * @param multiAddressRead multi address
@@ -433,7 +433,7 @@ public class McPLC extends McNetwork {
     //region 软元件写入
 
     /**
-     * Write multi address.
+     * Write data to multiple addresses.
      * (写多地址)
      *
      * @param multiAddressWrite addresses
@@ -655,7 +655,7 @@ public class McPLC extends McNetwork {
      */
     public void writeUInt32(String address, List<Long> data) {
         if (data.isEmpty()) {
-            throw new IllegalArgumentException("data list is empty");
+            throw new IllegalArgumentException("data list must not be empty");
         }
         ByteWriteBuff buff = ByteWriteBuff.newInstance(data.size() * 4, EByteBuffFormat.AB_CD);
         data.forEach(buff::putInteger);
@@ -694,7 +694,7 @@ public class McPLC extends McNetwork {
      */
     public void writeInt64(String address, List<Long> data) {
         if (data.isEmpty()) {
-            throw new IllegalArgumentException("data list is empty");
+            throw new IllegalArgumentException("data list must not be empty");
         }
         ByteWriteBuff buff = ByteWriteBuff.newInstance(data.size() * 8, EByteBuffFormat.AB_CD);
         data.forEach(buff::putLong);
@@ -733,7 +733,7 @@ public class McPLC extends McNetwork {
      */
     public void writeFloat32(String address, List<Float> data) {
         if (data.isEmpty()) {
-            throw new IllegalArgumentException("data list is empty");
+            throw new IllegalArgumentException("data list must not be empty");
         }
         ByteWriteBuff buff = ByteWriteBuff.newInstance(data.size() * 4, EByteBuffFormat.AB_CD);
         data.forEach(buff::putFloat);
@@ -772,7 +772,7 @@ public class McPLC extends McNetwork {
      */
     public void writeFloat64(String address, List<Double> data) {
         if (data.isEmpty()) {
-            throw new IllegalArgumentException("data list is empty");
+            throw new IllegalArgumentException("data list must not be empty");
         }
         ByteWriteBuff buff = ByteWriteBuff.newInstance(data.size() * 8, EByteBuffFormat.AB_CD);
         data.forEach(buff::putDouble);

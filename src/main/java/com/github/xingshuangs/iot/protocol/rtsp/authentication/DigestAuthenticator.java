@@ -52,7 +52,7 @@ public class DigestAuthenticator extends AbstractAuthenticator {
     private String realm = "";
 
     /**
-     * Protective quality.
+     * Quality of protection.
      * 保护质量，包含auth（默认的）和auth-int（增加了报文完整性检测）两种策略，（可以为空，但是）不推荐为空值
      */
     private String qop = "";
@@ -115,16 +115,16 @@ public class DigestAuthenticator extends AbstractAuthenticator {
 
     public String createResponse() {
         if (this.realm == null || this.realm.equals("")) {
-            throw new AuthenticationException("realm is empty");
+            throw new AuthenticationException("realm must not be empty");
         }
         if (this.nonce == null || this.nonce.equals("")) {
-            throw new AuthenticationException("nonce is empty");
+            throw new AuthenticationException("nonce must not be empty");
         }
         if (this.uri == null || this.uri.equals("")) {
-            throw new AuthenticationException("uri is empty");
+            throw new AuthenticationException("uri must not be empty");
         }
         if (this.method == null || this.method.equals("")) {
-            throw new AuthenticationException("method is empty");
+            throw new AuthenticationException("method must not be empty");
         }
         StringBuilder sb = new StringBuilder();
         sb.append(DIGEST_NAME).append(" ")
@@ -152,7 +152,7 @@ public class DigestAuthenticator extends AbstractAuthenticator {
      * ---
      * Digest算法
      * A1 = username:realm:password
-     * A2 = mthod:uri
+     * A2 = method:uri
      * ---
      * HA1 = MD5(A1)
      * 如果 qop 值为“auth”或未指定，那么 HA2 为
@@ -212,7 +212,7 @@ public class DigestAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * Add server feedback based on a string.
+     * Parse the server response from a string.
      * 根据字符串添加服务端反馈的信息
      *
      * @param src 服务端反馈的信息
@@ -223,7 +223,7 @@ public class DigestAuthenticator extends AbstractAuthenticator {
         int i = src.indexOf(" ");
         if (i < 0) {
             // 传入的服务端Digest数据格式错误
-            throw new AuthenticationException("the format of the incoming server Digest data is incorrect");
+            throw new AuthenticationException("Invalid Digest challenge format received from the server");
         }
         Map<String, String> map = new HashMap<>();
         String content = src.substring(i + 1);

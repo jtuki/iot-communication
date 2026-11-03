@@ -38,7 +38,7 @@ public class BCDUtil {
     }
 
     /**
-     * Byte to int by BCD.
+     * Decode a BCD byte as an integer.
      * 转换为int
      *
      * @param data byte data
@@ -49,7 +49,7 @@ public class BCDUtil {
     }
 
     /**
-     * Byte array to int by BCD.
+     * Decode a BCD byte array as an integer.
      * 0x23 0x01 = 2301 <br>
      *
      * @param data byte array
@@ -64,7 +64,7 @@ public class BCDUtil {
     }
 
     /**
-     * Byte array to int by BCD with max digits.<br>
+     * Decode a BCD byte array as an integer using the specified maximum number of digits.<br>
      * 0x23 0x01 = 2301 <br>
      * maxDigits = 3 to 301
      *
@@ -79,14 +79,14 @@ public class BCDUtil {
     }
 
     /**
-     * Int to byte by BCD.
+     * Encode an integer as a BCD byte.
      *
-     * @param data int data
+     * @param data int value
      * @return byte
      */
     public static byte toByte(int data) {
         if (data > 99 || data < 0) {
-            throw new IllegalArgumentException("data > 99 || data < 0");
+            throw new IllegalArgumentException("data must be between 0 and 99");
         }
         return (byte) (((data / 10) << 4) | (data % 10));
     }
@@ -105,7 +105,7 @@ public class BCDUtil {
     }
 
     /**
-     * Int to byte array by BCD.
+     * Encode an integer as a BCD byte array.
      * 2301 to 0x23 0x01 <br>
      * 123 to 0x01 0x23 <br>
      * 5 to 0x05 <br>
@@ -133,7 +133,7 @@ public class BCDUtil {
     }
 
     /**
-     * Int to byte array by BCD.
+     * Encode an integer as a BCD byte array.
      * 根据整数的位数自动分配字节数组长度 <br>
      * 2301 to 0x23 0x01 <br>
      * 123 to 0x01 0x23 <br>

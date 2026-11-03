@@ -43,14 +43,14 @@ public class RtspSessionInfo {
     private String sessionId;
 
     /**
-     * Timeout millisecond.
+     * Timeout in milliseconds.
      * 毫秒级的超时时间，实际是秒级，最终转换成毫秒级
      */
     private int timeout = 6000;
 
     public static RtspSessionInfo fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("RtspSessionInfo, src is null or empty");
+            throw new IllegalArgumentException("RtspSessionInfo: src must not be null or empty");
         }
         RtspSessionInfo sessionInfo = new RtspSessionInfo();
         int commaIndex = src.indexOf(";");

@@ -28,7 +28,7 @@ package com.github.xingshuangs.iot.common.algorithm;
 import lombok.Data;
 
 /**
- * Loop group item, include basic parameter.
+ * Group item containing the basic parameters for loop execution.
  * (基础数据参数)
  *
  * @author xingshuang
@@ -62,7 +62,7 @@ public class LoopGroupItem {
     }
 
     /**
-     * If current data is in valid range.
+     * Check whether the current data is within the valid range.
      * (判定是否在有效范围内)
      *
      * @return true：in range，false：out range.

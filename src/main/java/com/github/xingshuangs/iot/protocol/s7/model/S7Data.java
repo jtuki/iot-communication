@@ -103,7 +103,7 @@ public class S7Data implements IObjectByteArray {
     }
 
     /**
-     * Self check data length, parameter length and byte length.
+     * Check this object's data, parameter, and byte lengths.
      * (自我数据校验)
      */
     public void selfCheck() {
@@ -141,7 +141,7 @@ public class S7Data implements IObjectByteArray {
      * (根据字节数据解析S7协议数据)
      *
      * @param tpkt   tpkt
-     * @param remain remain bytes
+     * @param remain remaining bytes
      * @return s7 data
      */
     public static S7Data fromBytes(TPKT tpkt, final byte[] remain) {

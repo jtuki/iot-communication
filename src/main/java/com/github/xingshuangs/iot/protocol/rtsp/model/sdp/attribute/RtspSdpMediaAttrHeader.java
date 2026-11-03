@@ -44,13 +44,13 @@ public class RtspSdpMediaAttrHeader {
 
     public static RtspSdpMediaAttrHeader fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("MediaAttrHeader data error");
+            throw new IllegalArgumentException("Invalid SDP media attribute header");
         }
         RtspSdpMediaAttrHeader header = new RtspSdpMediaAttrHeader();
         int start = src.indexOf(EQUAL);
         int end = src.indexOf(SEMICOLON);
         if (start == -1) {
-            throw new RtspCommException("RtspSdpMediaAttrHeader data error");
+            throw new RtspCommException("Invalid RtspSdpMediaAttrHeader data");
         }
         if (end == -1) {
             header.mediaInfo = src.substring(start + 1);

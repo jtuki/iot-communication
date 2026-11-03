@@ -42,19 +42,19 @@ import lombok.Data;
 public class McDeviceAddress {
 
     /**
-     * Head device number, Q/L series: 3-bytes, iQ-R series: 4-bytes.
+     * Head device number, Q/L series: 3-byte iQ-R series: 4 bytes.
      * (起始软元件编号，Q/L系列是3个字节，iQ-R系列是4个字节)
      */
     protected int headDeviceNumber = 0;
 
     /**
-     * Device code, Q/L series: 1-bytes, iQ-R series: 2-bytes.
+     * Device code, Q/L series: 1-byte iQ-R series: 2 bytes.
      * (软元件代码，Q/L系列是1个字节，iQ-R系列是2个字节)
      */
     protected EMcDeviceCode deviceCode = EMcDeviceCode.D;
 
     /**
-     * Device points count, 2-bytes.
+     * Device points count, 2 bytes.
      * (软元件点数，2个字节，注意：该字段不统计在字节计算中，给外部统计使用)
      */
     protected int devicePointsCount = 1;
@@ -95,7 +95,7 @@ public class McDeviceAddress {
     }
 
     /**
-     * Byte content that does not contain the number of device points
+     * Byte content excluding the number of device points.
      * (不包含软元件点数的字节内容)
      *
      * @param series PLC series
@@ -108,7 +108,7 @@ public class McDeviceAddress {
     }
 
     /**
-     * Byte content that contains the number of software component points
+     * Byte content including the number of device points.
      * (包含软元件点数的字节内容)
      *
      * @param series PLC series
@@ -203,22 +203,22 @@ public class McDeviceAddress {
      */
     public static McDeviceAddress createBy(String address, int count) {
         if (address == null || address.length() == 0) {
-            throw new IllegalArgumentException("address is null or empty");
+            throw new IllegalArgumentException("address must not be null or empty");
         }
         if (count <= 0) {
-            throw new IllegalArgumentException("count <= 0");
+            throw new IllegalArgumentException("count must be greater than 0");
         }
         // 转换为大写
         address = address.toUpperCase();
         EMcDeviceCode deviceCode = EMcDeviceCode.identifyDeviceCodeByStart(address);
         if (deviceCode == null) {
-            throw new McCommException("device code is not exist");
+            throw new McCommException("Device code does not exist");
         }
         // 提取数字数据
         int startIndex = deviceCode.getSymbol().length();
         String number = address.substring(startIndex).trim();
         if ("".equals(number)) {
-            throw new McCommException("address of device is error");
+            throw new McCommException("Invalid device address");
         }
         int headDeviceNumber = Integer.parseInt(number, deviceCode.getNotation());
         return new McDeviceAddress(deviceCode, headDeviceNumber, count);

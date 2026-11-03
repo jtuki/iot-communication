@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Read input register request.
+ * Request to read input registers.
  * (请求读输入寄存器)
  *
  * @author xingshuang

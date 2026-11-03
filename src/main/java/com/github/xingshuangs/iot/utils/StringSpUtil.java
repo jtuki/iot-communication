@@ -43,7 +43,7 @@ public class StringSpUtil {
     }
 
     /**
-     * Two-step segmentation, divided by row and converted to Map.
+     * Split into rows, then split each row into key/value pairs and convert to a map.
      * (两步分割，按行分割并转化为Map)
      *
      * @param src     string
@@ -64,7 +64,7 @@ public class StringSpUtil {
     }
 
     /**
-     * One-step split, split by row converted to List.
+     * Split into rows and convert to a list.
      * (一步分割，按行分割转化为List)
      *
      * @param src     string

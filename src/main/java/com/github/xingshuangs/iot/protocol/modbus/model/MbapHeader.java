@@ -33,7 +33,7 @@ import lombok.Data;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Package header.
+ * Packet header.
  * (报文头)
  *
  * @author xingshuang
@@ -62,7 +62,7 @@ public class MbapHeader implements IObjectByteArray {
     private int protocolId = 0;
 
     /**
-     * Package length, include unitId and data, exclude length.
+     * Message length, including the unit ID and data but excluding the length field.
      * 长度，长度域是下一个域的字节数，包括单元标识符和数据域。length后面的所有字节长度，不包含前面和length<br>
      * 字节大小：2个字节
      * 字节序数：4-5
@@ -70,7 +70,7 @@ public class MbapHeader implements IObjectByteArray {
     private int length = 0;
 
     /**
-     * Unit id, or slave id.
+     * Unit ID (also called the slave ID).
      * 单元标识符<br>
      * 字节大小：1个字节
      * 字节序数：6
@@ -100,7 +100,7 @@ public class MbapHeader implements IObjectByteArray {
     }
 
     /**
-     * Get new number, range in [0,65536]
+     * Get the next sequence number in the range [0, 65535].
      * 获取新的pduNumber
      *
      * @return number

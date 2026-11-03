@@ -38,22 +38,22 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
 public class Mp4VmhdBox extends Mp4Box {
 
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 2-bytes graphics mode
+     * 2-byte graphics mode
      */
     private final byte[] graphicsMode;
 
     /**
-     * 6-bytes op color
+     * 6-byte op color
      */
     private final byte[] opColor;
 

@@ -29,7 +29,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 /**
- * Loop execute by group algorithm utility class
+ * Utility for executing grouped operations in a loop.
  * (循环处理相关工具)
  *
  * @author xingshuang
@@ -41,7 +41,7 @@ public class LoopGroupAlg {
     }
 
     /**
-     * Loop execute each item.
+     * Execute each item in a loop.
      * (循环执行)
      *
      * @param actualLength actual length
@@ -59,7 +59,7 @@ public class LoopGroupAlg {
     }
 
     /**
-     * Loop execute by condition and order, input two group items.
+     * Execute operations on two group items according to the condition and order.
      * 寻找满足条件的索引和长度，存在两个组
      *
      * @param item1       group item1

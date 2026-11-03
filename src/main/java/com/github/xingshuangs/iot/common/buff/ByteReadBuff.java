@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
- * Read byte array buffer class.
+ * Buffer for reading a byte array.
  * (字节读取缓存)
  *
  * @author xingshuang
@@ -42,7 +42,7 @@ import java.util.Arrays;
 public class ByteReadBuff {
 
     /**
-     * 4 - or 8-byte encoding format.
+     * 4- or 8-byte encoding format.
      * (4字节或8字节的编码格式)
      */
     private final EByteBuffFormat format;
@@ -60,7 +60,7 @@ public class ByteReadBuff {
     private int offset;
 
     /**
-     * Is little endian. The default is not, big endian mode.
+     * Whether to use little-endian byte order. Defaults to big-endian.
      * (是否为小端模式，默认不是，为大端模式)
      */
     private final boolean littleEndian;
@@ -140,11 +140,11 @@ public class ByteReadBuff {
     private void checkCondition(int index) {
         if (index < 0) {
             // 索引不能小于0
-            throw new IndexOutOfBoundsException("Index less than 0");
+            throw new IndexOutOfBoundsException("index must not be negative");
         }
         if (index >= data.length) {
             // 超过字节数组最大容量
-            throw new IndexOutOfBoundsException("Exceeds the maximum capacity of the byte array");
+            throw new IndexOutOfBoundsException("Index exceeds the byte array bounds");
         }
     }
 
@@ -198,7 +198,7 @@ public class ByteReadBuff {
     }
 
     /**
-     * Get int data from one byte.
+     * Convert a byte to an unsigned integer.
      * (获取1个字节的整形数据
      *
      * @return int data
@@ -334,7 +334,7 @@ public class ByteReadBuff {
     }
 
     /**
-     * Get one int data from boolean data by byte index and bit index.
+     * Read a bit as an integer at the specified byte and bit indexes.
      * (获取一位的int值数据)
      *
      * @param index byte index
@@ -372,7 +372,7 @@ public class ByteReadBuff {
     }
 
     /**
-     * Get one int data from one byte by byte index
+     * Read a byte as an unsigned integer at the specified byte index.
      * (获取一个字节的整形数据)
      *
      * @param index byte index

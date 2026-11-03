@@ -37,7 +37,7 @@ import static com.github.xingshuangs.iot.common.constant.GeneralConst.LOCALHOST;
 import static com.github.xingshuangs.iot.common.constant.GeneralConst.MODBUS_PORT;
 
 /**
- * Modbus rtu over tcp.
+ * Modbus RTU over TCP.
  * (modbus 1个寄存器占2个字节)
  *
  * @author xingshuang
@@ -87,7 +87,7 @@ public class ModbusRtuOverTcp extends ModbusSkeletonAbstract<MbRtuRequest, MbRtu
         }
         if (len <= 0) {
             // Modbus数据读取长度有误
-            throw new ModbusCommException("The length of Modbus data read is incorrect");
+            throw new ModbusCommException("Incomplete Modbus response data");
         }
         byte[] total = new byte[len];
         System.arraycopy(data, 0, total, 0, len);
@@ -111,12 +111,12 @@ public class ModbusRtuOverTcp extends ModbusSkeletonAbstract<MbRtuRequest, MbRtu
         if (ack.getPdu().getFunctionCode().getCode() == (req.getPdu().getFunctionCode().getCode() | (byte) 0x80)) {
             MbErrorResponse response = (MbErrorResponse) ack.getPdu();
             // 响应返回异常，异常码:
-            throw new ModbusCommException("The response returns an exception, the exception code:" + response.getErrorCode().getDescription());
+            throw new ModbusCommException("Modbus exception response, error: " + response.getErrorCode().getDescription());
         }
         if (ack.getPdu().getFunctionCode().getCode() != req.getPdu().getFunctionCode().getCode()) {
             MbErrorResponse response = (MbErrorResponse) ack.getPdu();
             // 返回功能码和发送功能码不一致，异常码:
-            throw new ModbusCommException("The return function code is inconsistent with the send function code. The exception code is: " + response.getErrorCode().getDescription());
+            throw new ModbusCommException("Response function code does not match the request function code, error: " + response.getErrorCode().getDescription());
         }
     }
 
@@ -128,7 +128,7 @@ public class ModbusRtuOverTcp extends ModbusSkeletonAbstract<MbRtuRequest, MbRtu
             return response.getPdu();
         } finally {
             if (!this.persistence) {
-                log.debug("Due to the short connection mode, the communication is triggered to close the connection channel, and the server IP[{}]", this.socketAddress);
+                log.debug("Closing the connection after communication in non-persistent mode, server address [{}]", this.socketAddress);
                 this.close();
             }
         }

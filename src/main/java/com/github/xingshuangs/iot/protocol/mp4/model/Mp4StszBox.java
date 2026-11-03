@@ -36,22 +36,22 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
  */
 public class Mp4StszBox extends Mp4Box {
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     private final int version;
 
     /**
-     * 3-bytes flags
+     * 3-byte flags
      */
     private final byte[] flags;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int sampleSize;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     private final int sampleCount;
 

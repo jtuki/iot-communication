@@ -41,7 +41,7 @@ import static com.github.xingshuangs.iot.protocol.rtsp.constant.RtspCommonKey.SP
 public class RtspSdpMediaAttrRtpMap {
 
     /**
-     * Payload number.
+     * Payload type number.
      * (负载编号)
      */
     private Integer payloadNumber;
@@ -59,19 +59,19 @@ public class RtspSdpMediaAttrRtpMap {
     private Integer clockFrequency;
 
     /**
-     * Sound track number.
+     * Audio track number.
      * (声道数量)
      */
     private Integer soundTrackNumber;
 
     public static RtspSdpMediaAttrRtpMap fromString(String src) {
         if (src == null || src.equals("")) {
-            throw new IllegalArgumentException("MediaAttrRtpMap data error");
+            throw new IllegalArgumentException("Invalid SDP media RTP map attribute");
         }
         RtspSdpMediaAttrRtpMap rtpMap = new RtspSdpMediaAttrRtpMap();
         int i = src.indexOf(SP);
         if (i == -1) {
-            throw new RtspCommException("RtspSdpMediaAttrRtpMap data error");
+            throw new RtspCommException("Invalid RtspSdpMediaAttrRtpMap data");
         }
         rtpMap.payloadNumber = Integer.parseInt(src.substring(0, i));
         String sub = src.substring(i + 1).trim();

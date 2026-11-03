@@ -64,7 +64,7 @@ public class Mc7File {
     private int mC7CodeLength;
 
     /**
-     * Byte array total length.
+     * Total length of the byte array.
      * 字节数组总长度
      *
      * @return length
@@ -82,7 +82,7 @@ public class Mc7File {
      */
     public static Mc7File fromBytes(final byte[] data) {
         if (data == null || data.length < 36) {
-            throw new IllegalArgumentException("MC7, data length < 36");
+            throw new IllegalArgumentException("Mc7File data must contain at least 36 bytes");
         }
         ByteReadBuff buff = new ByteReadBuff(data);
         Mc7File res = new Mc7File();

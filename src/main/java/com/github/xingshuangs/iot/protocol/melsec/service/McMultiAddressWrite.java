@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Multi address write.
+ * Multi-address write operations.
  * 多address string写
  *
  * @author xingshuang

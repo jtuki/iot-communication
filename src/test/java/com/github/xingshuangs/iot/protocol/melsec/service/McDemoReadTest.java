@@ -90,7 +90,7 @@ public class McDemoReadTest {
         // read string
         String stringData = mcPLC.readString("D100", 6);
 
-        // read multi address, only support word and dword
+        // read multi address, support only word and dword
         McMultiAddressRead addressRead = new McMultiAddressRead();
         addressRead.addWordData("D100");
         addressRead.addWordData("D150");

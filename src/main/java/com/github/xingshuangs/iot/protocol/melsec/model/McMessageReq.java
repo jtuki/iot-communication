@@ -31,7 +31,7 @@ import com.github.xingshuangs.iot.protocol.melsec.enums.EMcFrameType;
 import lombok.Data;
 
 /**
- * Req message.
+ * Request message.
  * (请求消息)
  *
  * @author xingshuang
@@ -40,13 +40,13 @@ import lombok.Data;
 public class McMessageReq implements IObjectByteArray {
 
     /**
-     * Req header.
+     * Request header.
      * (请求头)
      */
     private McHeaderReq header;
 
     /**
-     * Req data.
+     * Request data.
      * (请求体，数据)
      */
     private McData data;
@@ -73,7 +73,7 @@ public class McMessageReq implements IObjectByteArray {
     }
 
     /**
-     * Self check for data length.
+     * Check this object's data length.
      * (自我校验，主要核对数据长度)
      */
     public void selfCheck() {

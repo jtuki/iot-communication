@@ -36,17 +36,17 @@ import com.github.xingshuangs.iot.protocol.mp4.enums.EMp4Type;
  */
 public class Mp4StcoBox extends Mp4Box {
     /**
-     * 1-bytes, version
+     * 1-byte version
      */
     protected int version;
 
     /**
-     * 3-bytes, flags
+     * 3-byte flags
      */
     protected byte[] flags;
 
     /**
-     * 4-bytes
+     * 4 bytes
      */
     protected int entryCount;
 

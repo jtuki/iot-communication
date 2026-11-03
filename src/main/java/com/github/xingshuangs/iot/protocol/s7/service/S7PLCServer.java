@@ -63,7 +63,7 @@ public class S7PLCServer extends TcpServerBasic {
     private final ReentrantLock locker = new ReentrantLock();
 
     /**
-     * Write and read lock.
+     * Read/write lock.
      * (读写锁)
      */
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -104,7 +104,7 @@ public class S7PLCServer extends TcpServerBasic {
     }
 
     /**
-     * Add DB area when needing.
+     * Add a DB area as needed.
      * (添加所需的DB块)
      *
      * @param dbNumbers db number
@@ -129,7 +129,7 @@ public class S7PLCServer extends TcpServerBasic {
         if (!(s7Data.getCotp() instanceof COTPConnection)
                 || s7Data.getCotp().getPduType() != EPduType.CONNECT_REQUEST) {
             // 客户端[{}]握手失败，不是连接请求
-            log.error("Client [{}] Handshake failed, not connection request", socket.getRemoteSocketAddress());
+            log.error("Handshake with client [{}] failed: expected a connection request", socket.getRemoteSocketAddress());
             return false;
         }
         S7Data connectConfirm = S7Data.createConnectConfirm(s7Data);
@@ -140,12 +140,12 @@ public class S7PLCServer extends TcpServerBasic {
         if (!(s7Data.getCotp() instanceof COTPData)
                 || s7Data.getCotp().getPduType() != EPduType.DT_DATA) {
             // 客户端[{}]握手失败，不是参数设置
-            log.error("Client [{}] handshake failed, not parameter setting", socket.getRemoteSocketAddress());
+            log.error("Handshake with client [{}] failed: expected a communication setup request", socket.getRemoteSocketAddress());
             return false;
         }
         S7Data connectAckDtData = S7Data.createConnectAckDtData(s7Data);
         this.write(socket, connectAckDtData.toByteArray());
-        log.debug("The client [{}] handshake succeeded", socket.getRemoteSocketAddress());
+        log.debug("Handshake with client [{}] succeeded", socket.getRemoteSocketAddress());
         return true;
     }
 
@@ -178,7 +178,7 @@ public class S7PLCServer extends TcpServerBasic {
     }
 
     /**
-     * Read data handler.
+     * Handle a variable read request.
      * (读数据处理)
      *
      * @param socket socket object
@@ -195,7 +195,7 @@ public class S7PLCServer extends TcpServerBasic {
                 String area = AddressUtil.parseArea(p);
                 if (!this.dataMap.containsKey(area)) {
                     // 客户端[{}]读取[{}]数据，区域[{}]，字节索引[{}]，位索引[{}]，长度[{}]，无该区域地址数据
-                    log.error("Client[{}] read [{}] data, area[{}], byte index[{}], bit index[{}], length[{}], no the address data",
+                    log.error("Client [{}] failed to read [{}] data: area [{}] does not exist, byte index [{}], bit index [{}], length [{}]",
                             socket.getRemoteSocketAddress(), p.getVariableType(), area, p.getByteAddress(), p.getBitAddress(), p.getCount());
                     returnItems.add(ReturnItem.createDefault(EReturnCode.OBJECT_DOES_NOT_EXIST));
                     return;
@@ -212,7 +212,7 @@ public class S7PLCServer extends TcpServerBasic {
                     data = buff.getBytes(p.getByteAddress() * num, p.getByteCount());
                 }
                 // 客户端[{}]读取[{}]数据，区域[{}]，字节索引[{}]，位索引[{}]，长度[{}]，区域地址数据{}
-                log.debug("Client[{}] read [{}] data, area[{}], byte index[{}], bit index[{}], length[{}], address data{}",
+                log.debug("Client [{}] read [{}] data, area [{}], byte index [{}], bit index [{}], length [{}], data {}",
                         socket.getRemoteSocketAddress(), p.getVariableType(), area, p.getByteAddress(), p.getBitAddress(), p.getCount(), data);
                 DataItem dataItem = DataItem.createAckBy(data, p.getVariableType() == EParamVariableType.BIT ? EDataVariableType.BIT : EDataVariableType.BYTE_WORD_DWORD);
                 returnItems.add(dataItem);
@@ -225,7 +225,7 @@ public class S7PLCServer extends TcpServerBasic {
     }
 
     /**
-     * Write data handler.
+     * Handle a variable write request.
      * (写入数据处理)
      *
      * @param socket socket object
@@ -245,7 +245,7 @@ public class S7PLCServer extends TcpServerBasic {
                 String area = AddressUtil.parseArea(p);
                 if (!this.dataMap.containsKey(area)) {
                     // 客户端[{}]写入[{}]数据，区域[{}]，字节索引[{}]，位索引[{}]，长度[{}]，无该区域地址
-                    log.error("Client[{}] write [{}] data, area[{}], byte index[{}], bit index[{}], length[{}], no the address data",
+                    log.error("Client [{}] failed to write [{}] data: area [{}] does not exist, byte index [{}], bit index [{}], length [{}]",
                             socket.getRemoteSocketAddress(), p.getVariableType(), area, p.getByteAddress(), p.getBitAddress(), p.getCount());
                     returnItems.add(ReturnItem.createDefault(EReturnCode.OBJECT_DOES_NOT_EXIST));
                     continue;
@@ -260,7 +260,7 @@ public class S7PLCServer extends TcpServerBasic {
                     System.arraycopy(d.getData(), 0, bytes, p.getByteAddress() * num, d.getData().length);
                 }
                 // 客户端[{}]写入[{}]数据，区域[{}]，字节索引[{}]，位索引[{}]，长度[{}]，区域地址数据{}
-                log.debug("Client[{}] write [{}] data, area[{}], byte index[{}], bit index[{}], length[{}], address data{}",
+                log.debug("Client [{}] wrote [{}] data, area [{}], byte index [{}], bit index [{}], length [{}], data {}",
                         socket.getRemoteSocketAddress(), p.getVariableType(), area, p.getByteAddress(), p.getBitAddress(), p.getCount(), d.getData());
                 returnItems.add(ReturnItem.createDefault(EReturnCode.SUCCESS));
             }
@@ -285,7 +285,7 @@ public class S7PLCServer extends TcpServerBasic {
     }
 
     /**
-     * Rewrite read client data, sticky packet data processing
+     * Read client data while handling messages combined in the TCP stream.
      * (重写读取客户端数据，针对粘包的数据处理)
      *
      * @param socket client socket object

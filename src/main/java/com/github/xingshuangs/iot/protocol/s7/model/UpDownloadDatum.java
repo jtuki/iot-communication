@@ -97,7 +97,7 @@ public class UpDownloadDatum extends Datum {
     public static UpDownloadDatum fromBytes(byte[] data, int offset, EMessageType messageType) {
         if (EMessageType.ACK_DATA != messageType) {
             // 不是响应数据
-            throw new S7CommException("Not response data");
+            throw new S7CommException("Expected response data");
         }
         UpDownloadDatum res = new UpDownloadDatum();
         ByteReadBuff buff = new ByteReadBuff(data, offset);
@@ -116,7 +116,7 @@ public class UpDownloadDatum extends Datum {
      */
     public static UpDownloadDatum createDownloadData(byte[] data) {
         if (data == null || data.length == 0) {
-            throw new IllegalArgumentException("data");
+            throw new IllegalArgumentException("data must not be null or empty");
         }
         UpDownloadDatum res = new UpDownloadDatum();
         // 这里长度最长是0xD0，即208，对应最长是240

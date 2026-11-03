@@ -64,37 +64,37 @@ public class RtspFMp4Proxy {
     private RtspTrackInfo trackInfo;
 
     /**
-     * Sequence number of Fmp4.
+     * fMP4 sequence number.
      * (接收帧数据的序列号)
      */
     private long sequenceNumber = 1;
 
     /**
-     * Fmp4 data buffer.
+     * fMP4 data buffer.
      * (数据缓存)
      */
     private final ConcurrentLinkedQueue<IObjectByteArray> buffers = new ConcurrentLinkedQueue<>();
 
     /**
-     * Fmp4 data handle.
+     * fMP4 data handler.
      * (FMp4数据事件)
      */
     private Consumer<byte[]> fmp4DataHandle;
 
     /**
-     * Codec data handle.
+     * Codec data handler.
      * (codec的处理事件)
      */
     private Consumer<String> codecHandle;
 
     /**
-     * Destroy handle.
+     * Cleanup handler.
      * (销毁的处理事件)
      */
     private Runnable destroyHandle;
 
     /**
-     * Is thread terminal.
+     * Thread termination flag.
      * (是否终止)
      */
     private boolean terminal = false;
@@ -112,7 +112,7 @@ public class RtspFMp4Proxy {
     private Mp4TrackInfo mp4TrackInfo;
 
     /**
-     * Is send async.
+     * Asynchronous sending flag.
      * (是否异步步发送)
      */
     private boolean asyncSend = false;
@@ -172,7 +172,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * SPS handle, do only once.
+     * SPS handler, invoked only once.
      * (处理SPS，只处理一次)
      *
      * @param frame video frame
@@ -183,7 +183,7 @@ public class RtspFMp4Proxy {
         }
         byte[] spsBytes = frame.getFrameSegment();
         if (spsBytes == null || spsBytes.length < 4) {
-            throw new RtspCommException("SPS is not exist");
+            throw new RtspCommException("SPS is missing");
         }
         ByteReadBuff buff = new ByteReadBuff(spsBytes);
         byte[] bytes = buff.getBytes(1, 3);
@@ -200,7 +200,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * PPS handle, do only once.
+     * PPS handler, invoked only once.
      * (处理PPS，只处理一次)
      *
      * @param frame video frame
@@ -215,7 +215,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Mp4 header handle, do only once.
+     * MP4 header handler, invoked only once.
      * (处理Mp4，只处理一次)
      */
     private void handleMp4Header() {
@@ -236,7 +236,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Frame handle.
+     * Frame handler.
      * (帧处理事件)
      *
      * @param frame video frame
@@ -261,7 +261,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Do video frame handle.
+     * Handle a video frame.
      * (执行处理)
      *
      * @param videoFrame video frame
@@ -303,7 +303,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Transfer to Mp4 track info.
+     * Convert to MP4 track information.
      * (数据转换，包装成Mp4需要的轨道信息)
      *
      * @param track track info
@@ -324,7 +324,7 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Add fmp4 data.
+     * Add fMP4 data.
      * (添加FMp4数据)
      *
      * @param iObjectByteArray data
@@ -343,12 +343,12 @@ public class RtspFMp4Proxy {
     }
 
     /**
-     * Execute handle for sending data.
+     * Invoke the data sending handler.
      * (事件执行)
      */
     private void executeHandle() {
         // 开启代理服务端发送FMp4字节数据的异步线程
-        log.debug("Start the asynchronous thread that sends FMp4 bytes of data from the proxy server");
+        log.debug("Starting the asynchronous thread for sending fMP4 data from the proxy server");
         while (!this.terminal) {
             // 没数据的时候等待
             while (this.buffers.isEmpty() && !this.terminal) {
@@ -374,7 +374,7 @@ public class RtspFMp4Proxy {
             }
         }
         // 关闭代理服务端发送FMp4字节数据的异步线程
-        log.debug("Shut down the asynchronous thread that sends FMp4 bytes of data from the proxy server");
+        log.debug("Stopped the asynchronous thread for sending fMP4 data from the proxy server");
     }
 
     /**
@@ -385,7 +385,7 @@ public class RtspFMp4Proxy {
      */
     public CompletableFuture<Void> start() {
         // 开启FMp4代理服务端，模式[{}]，地址[{}]
-        log.info("Open FMp4 agent server, mode [{}], address [{}]", this.asyncSend ? "async" : "sync", this.client.getUri());
+        log.info("Starting the fMP4 proxy server, mode [{}], address [{}]", this.asyncSend ? "async" : "sync", this.client.getUri());
         return this.client.start();
     }
 
@@ -407,6 +407,6 @@ public class RtspFMp4Proxy {
         }
         this.client.stop();
         // 关闭FMp4代理服务端，地址[{}]
-        log.info("Close FMp4 agent server, address [{}]", this.client.getUri());
+        log.info("Stopped the fMP4 proxy server, address [{}]", this.client.getUri());
     }
 }

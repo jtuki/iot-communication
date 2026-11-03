@@ -28,7 +28,7 @@ package com.github.xingshuangs.iot.common.buff;
 import com.github.xingshuangs.iot.exceptions.HexParseException;
 
 /**
- * 4 - or 8-byte encoding format.
+ * 4- or 8-byte encoding format.
  * (字节缓存格式)
  *
  * @author xingshuang
@@ -41,13 +41,13 @@ public enum EByteBuffFormat {
     AB_CD("AB_CD"),
 
     /**
-     * Invert as a single byte.
+     * Reverse the byte order.
      * (按照单字节反转)
      */
     BA_DC("BA_DC"),
 
     /**
-     * Reverse by double byte.
+     * Reverse the order of two-byte units.
      * (按照双字节反转)
      */
     CD_AB("CD_AB"),
@@ -112,7 +112,7 @@ public enum EByteBuffFormat {
                 break;
             default:
                 // 未实现该数据格式
-                throw new HexParseException("The data format is not implemented");
+                throw new HexParseException("Data format is not implemented");
         }
         return res;
     }
@@ -180,7 +180,7 @@ public enum EByteBuffFormat {
                 res[7] = data[index + 7];
                 break;
             default:
-                throw new HexParseException("The data format is not implemented");
+                throw new HexParseException("Data format is not implemented");
         }
         return res;
     }
